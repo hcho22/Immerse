@@ -75,6 +75,23 @@
 > **2026-10-30 note (the PRD's "Decision of 2026-10-30").**
 > The captain gave the Instant the Disposable's optional flash ("please add flash option for instant camera") and a flash look of its own ("add harsh flash look for instant too", then "real flash - brighter subject").
 > The Instant's catalog entry, which read "a 1970s instant camera; a 10-Exposure pack of square pictures, each on a white card, with brilliant, warm, saturated color, soft detail, a slight print-to-print variation, and individual Exposure Development.", gained them, and a Relationships rule after the Disposable's says how the Instant's flash develops.
+>
+> **2026-11-22 note (the v2 PRD; ADRs 0025 to 0033).**
+> The captain settled the v2 plan, which the [v2 PRD](../2026-11-22-film-camera-experience-v2-prd.md) states and ADRs 0025 to 0033 record: Group Films are photo events modeled on the Once app, in which each guest takes one **Roll** of the Host's Camera; anyone 13 or over can host after signing in, paying once per event in Rolls; guests join by one lasting link or QR code in a no-install mini-app or the full app, give a name and need no Account; the reveal is automatic at the **End Time** or after a **Reveal Delay**; and pictures are developed on the phone that took them.
+> The v2 terms below were rewritten to match: **Group Film**, **Host**, **Join Code**, **Join Film**, **Join Confirmation**, **Guest Identity**, **Claim Guest Identity**, **Account**, **Delete Account**, **Subscription**, **Camera Lock**, **Contributor Attribution**, **Withdraw**, **Report Capture**, **Leave Film**, **Save Originals to Photos**, **Save Developed to Photos**, **Completed Film** and **Cancel Unused Trial**.
+> **Participant** became **Guest**, **Remove Participant** became **Remove Guest**, **Withdraw Unreleased Captures** became **Withdraw Before Reveal**, and **Release Notification** became **Reveal Notification**.
+> New terms: **Member**, **Event**, **Roll**, **Roll Balance**, **Free Rolls**, **Guest Name**, **Mini-app**, **Join Page**, **Pause Joining**, **Replace Join Code**, **End Time**, **Reveal Delay**, **End Early**, **Reveal**, **Sealed**, **Event Album**, **Web Album** and **Delete Event**.
+> Retired with the parked design, and kept verbatim in the section "Superseded by the v2 PRD - the parked Group design": **Member Limit**, **Camera Load Limit**, **Host Load**, **Subscriber Load**, **Add Shared Exposures**, **Group Exposure Pool**, **Group Duration Pool**, **Recording Turn**, **Capacity Pause**, **Close Group Film**, **Closure Warning**, **Develop Without Missing Captures**, **Private Review**, **Release**, **Release Notification**, **Private Print**, **Original Export Window**, **Deletion Pending**, and the old definitions of **Participant**, **Withdraw Unreleased Captures** and **Remove Participant**.
+> The Relationships rules about Groups were replaced by the "Group Films (v2)" rules, with the parked rules moved verbatim to the same superseded section, and the personal rules that mentioned Groups were edited only where a Group clause no longer held; the Flagged ambiguities written before this date that speak of Groups describe the parked design.
+> The Trial stays one personal Film per iPhone in v2 ([ADR 0012](../adr/0012-v1-trial-is-one-film-per-iphone-with-no-accounts.md)), so the "Deferred to v2 - Account rules" section's Account-scoped Trial does not return, and Dodge/Burn stays parked beyond v2.
+>
+> **2026-11-22 note, later (the v2 PRD's version 1.1; ADR 0034).**
+> The captain answered the v2 PRD's open questions, all but who answers the support address and how fast.
+> **Remove Guest** now removes every picture the Guest took in the Group Film, and its entry, which read "The **Host** action that ends a **Guest**'s shooting and access to one **Group Film** for good, without removing their pictures or their right to withdraw them.", was rewritten.
+> **Leave Film**, which read "The voluntary departure of a **Guest** from a **Group Film**, ending their shooting while their **Roll** stays used and their pictures and their right to withdraw them remain.", now says a Guest who left still sees the **Event Album** after the **Reveal** and may rejoin while the Group Film is open.
+> **End Early** now reveals at once, without the **Reveal Delay**, and **Reveal**, **Reveal Delay**, **End Time**, **Host**, **Member**, **Roll** and **Free Rolls** were edited to match; **Free Rolls** are given once ever per Account.
+> New term: **Start Time**; before it the Host may already add Rolls, **Pause Joining** and **Replace Join Code**.
+> The "Group Films (v2)" rules were edited to match, and two Flagged ambiguities were added.
 
 An iOS camera experience built around completing and developing bounded films, rather than applying vintage filters to immediately reviewable captures.
 
@@ -90,11 +107,11 @@ _Avoid_: Apple Photos library, shared album, Camera catalog
 
 **Start a Film**:
 The primary **Film Library** action that begins setup of a new **Film**.
-_Avoid_: Capture, Join Film, Add Shared Exposures, apply filter
+_Avoid_: Capture, Join Film, apply filter
 
 **Load Film**:
 The explicit final setup confirmation that fixes a Film's selected **Camera**, and for the 6×6 and the 16mm its **Film Stock**, before capture becomes available.
-_Avoid_: Capture, Development, Trial Activation, Add Shared Exposures
+_Avoid_: Capture, Development, Trial Activation
 
 **Film Title**:
 An editable label describing a **Film** without restricting when or where that film may be continued.
@@ -129,7 +146,7 @@ Curated sample media demonstrating a Camera's expected framing, behavior, and De
 _Avoid_: Live filter preview, unrevealed capture review, reroll, Trial capture
 
 **Camera Lock**:
-The irreversible fixation of a Group Film's Camera through its Host's **Load Film** confirmation before capture becomes available.
+The irreversible fixation of a **Group Film**'s **Camera**, and on the 6×6 its **Film Stock**, through its **Host**'s **Load Film** confirmation, before anyone can join.
 _Avoid_: First-capture side effect, post-capture Camera change
 
 **Historical Format**:
@@ -205,7 +222,7 @@ The one-time Camera-defined visual and audible result assigned during Developmen
 _Avoid_: Rerollable filter, interchangeable Camera treatment, aged or faded vintage look
 
 **Save Originals to Photos**:
-The optional export of original source captures to the user's Apple Photos library after personal reveal or Group Film Release.
+The optional export of a personal Film's original source captures to the user's Apple Photos library after reveal; a **Group Film** picture's original never leaves the phone that took it.
 _Avoid_: Automatic capture export, pre-Development preview
 
 **Developed Export**:
@@ -213,12 +230,8 @@ An independent copy of a revealed developed Exposure or Developed Movie saved ou
 _Avoid_: Original source export, revocable album access, Development
 
 **Save Developed to Photos**:
-The optional saving of a Developed Export, including a Private Print, to the user's Apple Photos library.
+The optional saving of a Developed Export, including any picture of a revealed **Group Film**, to the user's Apple Photos library, with no **Account**.
 _Avoid_: Save Originals to Photos, Film backup, automatic pre-reveal export
-
-**Original Export Window**:
-The seven days after Group Film Release during which a Participant may save their own original captures to Photos.
-_Avoid_: Developed Film expiry, subscription grace period
 
 **Authentic Imperfection**:
 A Camera-specific variation or flaw that the Historical Format's own capture or processing produced in its era, or that actual capture conditions cause, without arbitrarily destroying an otherwise valid capture.
@@ -237,32 +250,32 @@ The optional, reversible removal of a personal or Group **Film** from one user's
 _Avoid_: Delete Film, leave Group Film, media backup, shared closure
 
 **Report Capture**:
-A Participant's request for Host moderation of a released Group Film capture they consider inappropriate or unsafe.
+A **Guest**'s report of a revealed **Group Film** picture they consider inappropriate or unsafe, sent to the **Host** and to Immerse's support address.
 _Avoid_: Automatic Discard, Withdraw, editing another contributor's work
 
 **Withdraw**:
-The Participant action that permanently removes one of their own revealed Group Film captures for everyone without restoring consumed Group Film capacity.
+The **Guest** action that permanently removes one of their own revealed **Group Film** pictures for everyone without returning any **Exposure**.
 _Avoid_: Host moderation, private hide, reversible removal
 
-**Withdraw Unreleased Captures**:
-The irreversible bulk removal of all a Participant's own saved captures from one Group Film before Release, without preview or capacity restoration.
-_Avoid_: Selective sealed-frame deletion, pre-reveal review, refund Exposure, reversible hide
+**Withdraw Before Reveal**:
+The irreversible one-step removal of all a **Guest**'s own pictures from one **Group Film** before its **Reveal**, unseen, returning no **Exposures**; pictures still waiting on the phone never upload.
+_Avoid_: Withdraw Unreleased Captures (the parked name), selective sealed-frame deletion, pre-reveal review, refund Exposure, reversible hide
 
 **Contributor Attribution**:
-The Participant display name stored in a Group Film capture's metadata and shown only when viewing its details.
+The **Guest Name** kept with a **Group Film** picture and shown only in its details, never printed on the image.
 _Avoid_: Watermark, burned-in credit, anonymous capture
 
 **Account**:
-Deferred to v2. A persistent identity authenticated through Apple or Google that will enable Group Film hosting, subscriber load contribution and persistent participation; v1 has no Account or sign-in, and the v1 Trial does not use one.
-_Avoid_: Guest identity, display name, role-specific account, sign-in for the Trial
+A v2 persistent identity, signed in through Clerk with Apple, Google or email by a person 13 or over, that hosting a **Group Film** needs and a **Guest** may add to keep their place across phones; v1 has no Account or sign-in, and neither personal Films nor the Trial ever use one.
+_Avoid_: Guest Identity, Guest Name, role-specific account, sign-in for the Trial
 
 **Delete Account**:
-Deferred to v2 with Accounts. The irreversible removal of a persistent **Account**, its associated personal data, and all its **Group Film** contributions, distinct from deleting an entire **Film**.
+The v2, in-app, irreversible removal of an **Account**, its **Roll Balance**, its personal data on the server, and its holder's own pictures from every **Group Film**, distinct from deleting an entire **Film**; a deleted Host's Group Films still reveal.
 _Avoid_: Sign out, cancel Subscription, Delete Film, Leave Film
 
 **Subscription**:
-The single all-inclusive v1 plan, billed monthly or yearly, that unlocks every Camera and unlimited personal Film creation; Group Film creation and one Camera load contribution per Photo Group Film are deferred to v2.
-_Avoid_: Exposure wallet, per-event purchase, feature tier, lifetime unlock
+The single all-inclusive plan, billed monthly or yearly, that unlocks every Camera and unlimited personal Film creation with no Account; in v2 it also brings a larger number of **Free Rolls** to the one Account it is linked to, and hosting never needs it.
+_Avoid_: Roll Balance, per-event purchase, feature tier, lifetime unlock
 
 **Manage Subscription**:
 The Apple subscription-management flow for changing or canceling the app's monthly or yearly **Subscription**, separate from identity and Film deletion.
@@ -277,108 +290,132 @@ The on-phone start of the iPhone's Trial Film, which involves no server, needs n
 _Avoid_: Trial consumption, server reservation, Account reservation
 
 **Cancel Unused Trial**:
-Deferred to v2. The connected action on the original activating device that ended a Trial Activation with no successfully saved captures and released the Account's reserved trial eligibility; v1 has no server reservation to release, so an unused Trial Film is simply deleted.
+Retired: v1 and v2 keep the per-iPhone Trial. The connected action on the original activating device that ended a Trial Activation with no successfully saved captures and released the Account's reserved trial eligibility; v1 has no server reservation to release, so an unused Trial Film is simply deleted.
 _Avoid_: Refund used trial, offline reset, replacement of lost captured media
 
 **Guest Identity**:
-The secure device-bound identity created without an account when a Participant joins a Group Film.
+The identity a **Guest**'s phone creates, with no **Account**, on joining a **Group Film**; it holds their place, **Roll** and pictures, and is lost with the phone unless claimed.
 _Avoid_: Account, anonymous access
 
 **Delete Guest Identity**:
 The irreversible removal of an account-free **Guest Identity**, its identifying details, and all its **Group Film** contributions without removing anyone else's captures.
 _Avoid_: Leave Film, sign out, Claim Guest Identity, Delete Film
 
-**Deletion Pending**:
-Deferred to v2 with Accounts. An accepted **Delete Account** or **Delete Guest Identity** request whose Group contributions are unavailable in-app while permanent identity and contribution removal remains unconfirmed.
-_Avoid_: Deletion complete, sign out, local-only identity removal
-
 **Claim Guest Identity**:
-The optional action that attaches a Guest Identity and its Film participation to a persistent Account.
+The optional action of signing in that attaches a **Guest Identity**, its place and its pictures to an **Account**, so they follow the Guest to another iPhone.
 _Avoid_: Required signup, new participation
 
-**Remove Participant**:
-The Host action that permanently blocks a Participant's known identity from capture and general access to that Group Film without erasing their contributions or withdrawal rights.
-_Avoid_: Discard contributions, app-wide account ban, revoke Join Code, Leave Film
+**Remove Guest**:
+The **Host** action that ends a **Guest**'s shooting and access to one **Group Film** for good and removes every picture they took in it, for everyone.
+_Avoid_: Remove Participant (the parked name), Discard (one picture), app-wide ban, Replace Join Code, Leave Film
 
 **Discarded Frame**:
 An empty numbered placeholder that preserves a Film's chronology after the underlying capture media has been permanently removed.
 _Avoid_: Hidden photo, recoverable capture
 
 **Group Film**:
-A Host-named event and shared Film captured collaboratively by Participants using their own devices.
-_Avoid_: Event container, folder of multiple Films
+A Host's shared photo **Film** for one event, shot with one Host-chosen photo **Camera** by guests on their own iPhones, each taking one **Roll**, sealed until one automatic **Reveal**; it has at most 200 Rolls and lasts at most 7 days.
+_Avoid_: Event container, folder of multiple Films, shared video, Group Movie
+
+**Event**:
+The everyday word for a **Group Film** and the occasion it is made for; the two name one thing, and there is no event container above a Group Film.
+_Avoid_: Separate event object, calendar event
 
 **Host**:
-The Account-authenticated creator who alone holds a Group Film's non-transferable hosting authority in v1.
-_Avoid_: Owner, admin, organizer
+The one signed-in person, 13 or over, who creates a **Group Film**, pays for its **Rolls**, and alone holds its hosting authority for its whole life, with no co-host or handover; the Host may shoot in it by taking one of its Rolls, like any **Guest**.
+_Avoid_: Owner, admin, organizer, co-host
 
-**Participant**:
-A person who joins a Group Film on their own device and captures within the access granted by its Host.
-_Avoid_: Guest Photographer, account member
+**Guest**:
+A person who joins a **Group Film** by its **Join Code**, gives a **Guest Name** and takes one **Roll**, with or without an **Account**.
+_Avoid_: Participant (the parked name), Guest Photographer, account member
 
-**Member Limit**:
-The maximum number of active people in one Group Film, counting its Host and Participants together.
-_Avoid_: Exposure Limit, Camera load limit, simultaneous recorder count
+**Member**:
+The **Host** and every **Guest** who has joined a **Group Film** and has not been removed, a Guest who used **Leave Film** included.
+_Avoid_: Web-album viewer, follower
 
-**Camera Load Limit**:
-The maximum number of full Camera loads contributed to one Photo Group Film over its entire lifetime, including its Host Load.
-_Avoid_: Member Limit, remaining Exposure count, monthly load allowance
+**Guest Name**:
+The name a **Guest** chooses when joining, shown with their pictures only in each picture's details.
+_Avoid_: Watermark, username, Account name
+
+**Roll**:
+One **Guest**'s set of **Exposures** in a **Group Film**: the normal **Exposure Limit** of the event's **Camera**, and the unit a **Host** pays for, one per guest; a Roll is used only when a guest takes it, and a Host who shoots in their own Group Film takes one too.
+_Avoid_: Shared pool, load, Roll Film (a personal Film), shot bundle
+
+**Roll Balance**:
+The **Rolls** a **Host**'s **Account** holds, bought through in-app purchase, credited as **Free Rolls** or returned unclaimed from an event, from which the Host sets Rolls aside for events; it never expires.
+_Avoid_: Wallet of exposures, subscription credit, per-event purchase receipt
+
+**Free Rolls**:
+**Rolls** credited to a **Roll Balance** at no charge, once ever: a very small number for every **Account**, and a clearly larger number, also once, for an Account linked to a **Subscription** once the server has confirmed it with Apple.
+_Avoid_: Trial Film, Host Load, free subscription
 
 **Join Code**:
-A revocable code or QR representation that permits confirmed entry into one open Group Film without individual Host approval and becomes invalid when the Host closes the Group Film or deletes their Account.
-_Avoid_: Album link, account password
+The one random code, carried by a link and a QR code, that lets people join one **Group Film** for its whole life; the **Host** can **Pause Joining** or **Replace Join Code**.
+_Avoid_: Album link, account password, short typed code
+
+**Join Page**:
+The web page a **Join Code**'s link opens: it shows the event, sends an iPhone to the **Mini-app** or the full app, tells anyone who cannot join why, and holds the **Web Album** while the Host has it on.
+_Avoid_: Browser camera, web upload page
+
+**Mini-app**:
+The no-install part of Immerse, Apple's App Clip, that a **Join Code** opens on an iPhone without the full app, in which a **Guest** joins, shoots, uploads and sees the **Event Album**.
+_Avoid_: Web app, browser capture, Lite app
 
 **Join Film**:
-The flow in which a Participant uses a Join Code in the installed iOS app on their own device to enter and capture into a Group Film.
+The flow in which a **Guest** opens a **Join Code** in the **Mini-app** or the full app, confirms, gives a **Guest Name** and takes a **Roll**.
 _Avoid_: Give Camera, device handoff, browser capture, Android capture
 
 **Join Confirmation**:
-The required Participant confirmation of a Group Film's title, selected Camera, and sharing rules before joining through its Join Code.
-_Avoid_: Host approval, Camera Lock, Add Shared Exposures, capture preview
+The screen a **Guest** confirms before joining, showing the Film Title, the Host's name, the Camera, the exposures per Roll, when shooting ends, when the event reveals, and that everyone who joined sees every picture after the reveal.
+_Avoid_: Host approval, Camera Lock, capture preview
+
+**Pause Joining**:
+The **Host**'s reversible stop on new **Guests** joining while the **Join Code** keeps working for those already in.
+_Avoid_: Replace Join Code, End Early, Remove Guest
+
+**Replace Join Code**:
+The **Host**'s action, behind a warning, that issues a new **Join Code** and makes the old link and QR code, printed copies included, stop working for good, without removing anyone.
+_Avoid_: Pause Joining, Remove Guest
 
 **Leave Film**:
-The voluntary departure of a non-Host **Participant** from a **Group Film**, ending capture and general album access while preserving existing contributions and their withdrawal rights.
-_Avoid_: Archive Film, Withdraw, Remove Participant, Close Group Film
+The voluntary departure of a **Guest** from a **Group Film**, ending their shooting while their **Roll** stays used, their pictures and their right to withdraw them remain, and they still see the **Event Album** after the **Reveal**; they may rejoin while the Group Film is open.
+_Avoid_: Archive Film, Withdraw, Remove Guest, End Early
 
-**Group Duration Pool**:
-The single Camera-defined recording-time budget shared by all Participants in a Movie Group Film.
-_Avoid_: Per-Participant duration allowance, subscriber-added recording time
+**Start Time**:
+The later time a **Host** may set at which a **Group Film** opens for joining and shooting, so its **Join Code** can be printed and shared ahead; without one, the Group Film opens at **Load Film**.
+_Avoid_: Load Film, event date, Pause Joining
 
-**Recording Turn**:
-The exclusive use of a Movie Group Film's Camera by one Participant for one Recorded Clip.
-_Avoid_: Simultaneous recording, personal recording allowance
+**End Time**:
+The time the **Host** sets at which shooting in a **Group Film** stops for everyone, at most 7 days after the event opens at **Load Film** or at its **Start Time**.
+_Avoid_: Closing Time, manual closure, upload deadline
 
-**Host Load**:
-The subscribed Host's one full Exposure Limit of the selected Photo Camera that creates the initial Group Exposure Pool.
-_Avoid_: Free event capacity, Host reload, per-Participant allowance
+**Reveal Delay**:
+The wait the **Host** chooses, from none to 24 hours, between a **Group Film**'s **End Time** and its **Reveal**; **End Early** skips it.
+_Avoid_: Private Review, review period
 
-**Subscriber Load**:
-One full, event-scoped Exposure Limit of the Host-selected Photo Camera contributed by an eligible subscribed Participant to a Photo Group Film's Group Exposure Pool.
-_Avoid_: Arbitrary exposure count, monthly credit balance, personal reserve
+**End Early**:
+The **Host**'s confirmed action that makes now a **Group Film**'s **End Time** and reveals it at once, without the **Reveal Delay**.
+_Avoid_: Close Group Film, Delete Event, Pause Joining
 
-**Add Shared Exposures**:
-An eligible subscribed Participant's explicit, confirmed, irreversible choice to contribute their one full Subscriber Load to an open Photo Group Film.
-_Avoid_: Add My Camera, automatic upgrade bonus, personal Exposure reserve, reloading an already-contributed Camera
+**Reveal**:
+The automatic moment, at the **End Time** plus the **Reveal Delay**, or at once on **End Early**, when every picture of a **Group Film** becomes visible to every **Member** at once; nobody starts or holds it back.
+_Avoid_: Release, Private Review, Host approval
 
-**Group Exposure Pool**:
-All Exposures contributed through the Host Load and Subscriber Loads for any Participant in one Photo Group Film to consume first-come, first-served.
-_Avoid_: Per-Participant allowance, video duration
+**Sealed**:
+The state of a **Group Film** picture before the **Reveal**, when the server shows it to nobody, its shooter included; the one exception is on the phone: an Instant guest's own prints, whose developed copies stay on their phone after upload, seen there by that guest until the Reveal.
+_Avoid_: Blurred preview, hidden from Host only
 
-**Capacity Pause**:
-The open Group Film state in which capture is disabled because its shared exposure or recording-time pool is empty.
-_Avoid_: Closed Film, automatic Development
+**Event Album**:
+The revealed pictures of one **Group Film**, seen by every **Member** in the app and, while the **Host** has it on, in the **Web Album**; kept 12 months after the **Reveal**.
+_Avoid_: Shared album (Apple Photos), Film Library
 
-**Close Group Film**:
-The irreversible Host action that stops new captures, expires all unused Group Film capacity, invalidates the Join Code, and makes a Group Film complete.
-_Avoid_: Closing Time, automatic deadline, Development
+**Web Album**:
+The view-only **Event Album** on a **Group Film**'s **Join Page**, which anyone with the link can see and save from while the **Host** has switched it on after the **Reveal**; off unless the Host turns it on.
+_Avoid_: Public gallery, browser camera, album link
 
-**Closure Warning**:
-The confirmation shown before Close Group Film when its Group Exposure Pool or Group Duration Pool remains unused, warning that all remaining capacity will be permanently wasted.
-_Avoid_: Silent expiration, automatic closure
-
-**Develop Without Missing Captures**:
-The explicit Host override available 48 hours after Group Film closure that permanently excludes unresolved uploads and permits Development.
-_Avoid_: Automatic upload timeout, silent capture loss
+**Delete Event**:
+The **Host**'s action, behind a warning, that removes a whole **Group Film** and every picture in it for everyone, for good.
+_Avoid_: Delete Film (personal), End Early, Remove Guest
 
 **Finish & Develop Early**:
 The irreversible personal Roll Film action that wastes every remaining Exposure and makes the Film ready for Development.
@@ -392,17 +429,9 @@ _Avoid_: Silent early finish, reversible confirmation
 The irreversible personal Movie Film action that wastes all remaining recording time and makes the Film ready for Development.
 _Avoid_: Clip preview, refundable duration, temporary pause
 
-**Private Review**:
-The Host-only state after Group Film Development and before Participants can view the developed captures.
-_Avoid_: Participant preview, public album
-
-**Release**:
-The Host action that ends Private Review and makes a developed Group Film visible to its Participants.
-_Avoid_: Development, export, public sharing
-
-**Release Notification**:
-An optional text-only alert containing the Film Title and "Your Film is ready" when the Host releases a Group Film.
-_Avoid_: Capture reminder, shot-by-shot activity alert, Development completion alert, capture thumbnail
+**Reveal Notification**:
+The one push alert of v2: the Film Title and "Your Film is ready", text only, sent at a **Group Film**'s **Reveal** to **Members** with the full app.
+_Avoid_: Release Notification (the parked name), capture reminder, activity alert, upload alert, capture thumbnail
 
 **Reveal Rule**:
 The Camera-defined condition and ritual that determine when captured media becomes viewable.
@@ -415,10 +444,6 @@ _Avoid_: Camera swap, film-type change, digital reprocessing, adjustment (which 
 **Darkroom**:
 The photo-only v1 post-Development workspace where reversible analog-printing **Basic Edits** are applied to individual **Exposures** while preserving each original developed result.
 _Avoid_: Filter picker, camera editor
-
-**Private Print**:
-A contributor-only, reversibly edited version of their own released Group Exposure that may be exported without changing the shared Film.
-_Avoid_: Shared Film edit, replacement developed master, another Participant's edited capture
 
 **Adjust**:
 The **Darkroom** tool that crops a print with a crop box, in the print's own shape, freeform, square, 4:3 or 3:2, turns it a quarter turn left or right, and straightens it with a dial, as the phone's Photos app does; on a 6×6 print the crop stays square, and on an Instant print it offers only the quarter turns, which turn the whole print, card included.
@@ -433,7 +458,7 @@ Looking closer at a developed print, in the full-screen photo view or the **Dark
 _Avoid_: Zoom Step, digital zoom, crop
 
 **Completed Film**:
-A **Film** whose capture has irreversibly ended through full capacity, an early personal Development action, or Host closure.
+A **Film** whose capture has irreversibly ended through full capacity, an early personal Development action, or a **Group Film**'s **End Time**.
 _Avoid_: Paused film, previewed film
 
 **Unfinished Film**:
@@ -445,52 +470,49 @@ _Avoid_: Draft, incomplete album
 - The v1 home is the **Film Library**, showing the user's unfinished and developed Films, including intermediate capture and Development states under their existing access rules.
 - **Start a Film** is the home library's primary action; **Join Film** as its secondary action is deferred to v2 with Groups.
 - In v1, Start a Film begins directly with Camera selection for a personal Film; the Personal or Group choice, with Personal selected by default, is deferred to v2.
-- Group creation (deferred to v2) presents only Group-compatible Cameras; Instant Cameras are not offered as selectable Group options.
+- Group creation (v2) offers only the photo Cameras: the Disposable, the 6×6 and the Instant.
 - **Camera Preview** is available to everyone browsing a new personal or Group Film, including prospective Trial users, before subscribing or starting a Trial Film.
 - Camera Preview uses curated sample photos or a short sample movie plus the Camera's capacity, controls, Reveal Rule, and audio behavior; it never applies the treatment to a live feed or displays a user's unrevealed captures.
 - Browsing Camera Previews does not create or activate a Trial Film, consume Trial eligibility, lock a Film's Camera, or grant Group capture access.
 - Both personal and Group Film creation use an explicit **Load Film** confirmation showing the selected Camera, capture capacity, and Reveal Rule before capture becomes available.
 - Load Film irreversibly fixes the selected Camera package for the Film; it is not an Exposure, a recording, or Development and does not bypass existing Trial Activation, Subscription, permission, or Group capture-access requirements.
-- For a Group Film, the Host's Load Film confirmation performs the existing **Camera Lock**, rather than requiring a second locking step or a separate loading action from each Participant.
+- For a Group Film, the Host's Load Film confirmation performs the existing **Camera Lock**, rather than requiring a second locking step or a separate loading action from each **Guest**.
 - For the 6×6 and the 16mm only, Load Film also confirms and irreversibly fixes the **Film Stock**, color or black-and-white; a Film Stock never changes mid-Film or after Development ([ADR 0014](../adr/0014-two-cameras-offer-a-film-stock-choice-at-load-film.md)).
 - Locking the Camera package does not freeze supported Camera-authentic capture controls; focus, flash, and exposure remain adjustable where the selected Camera and active phone lens support them.
 - Every Camera focuses on Auto, the phone's continuous autofocus with tap-to-focus on the **Viewfinder**, unless its Film is set otherwise: the Disposable and the Super 8 switch between Auto and Fixed, and the 6×6 between Auto and Manual; every new Film starts on Auto, and each Film keeps its setting.
 - The **Darkroom** opens from an eligible developed photo rather than from a standalone top-level navigation tab; Movie Films have no Darkroom entry.
 - A developed photo opened from its Film opens in a full-screen view of the Film's developed photos, which swipes between them in capture order, skips sealed and Discarded frames, and turns with the phone; an Instant print revealed at the camera opens in the same view alone, with no swiping, and stays upright while the shooting screen is up; the **Darkroom** opens from either on the photo shown, and keeps its portrait layout whichever way the phone is held.
 - **Print Zoom** works on every developed photo in that view, the Instant's reveal included, and in the **Darkroom** on every tool but **Adjust**, whose pinch is part of cropping; the view swipes to another photo only while the photo shown is whole; Developed Movies and a Film's small prints have no Print Zoom, and Print Zoom never changes a print, its **Basic Edits** or an export.
-- Opening a Film from the library never bypasses its Camera's Reveal Rule, Group Film Private Review or Release, contributor editing restrictions, or current access requirements.
+- Opening a Film from the library never bypasses its Camera's Reveal Rule, a **Group Film**'s **Reveal**, contributor editing restrictions, or current access requirements.
 - Personal Films remain device-local in v1, including unfinished captures, developed masters, Film details, and reversible Darkroom edits; the app provides no app-managed backup or cross-device sync.
 - Films are included in iOS device backups, so restoring a phone restores its Films; the per-iPhone Trial record stays bound to the device and does not come back through a restore, while restored Trial Films retain separate Film-bound rights and do not consume or block the destination iPhone's entitlement.
 - The owner may **Delete Film** for an entire personal Photo or Movie Film, unfinished or revealed, only after a clear warning and explicit confirmation; deleting a Trial Film with no successfully saved captures needs no cancellation step and does not consume Trial eligibility.
 - Delete Film removes the Film's local details, retained source captures, developed media, and reversible Darkroom edits from current app-controlled storage without developing or revealing hidden captures.
 - The deletion warning explains the loss from current app-controlled storage, that a used **Trial Film** entitlement is not restored, that copies already exported to Photos or elsewhere remain unaffected, and that restoring an iOS backup made before the deletion can bring the whole Film back (DEC-17).
-- V1 **Delete Film** is personal-only; neither the **Host** nor another **Participant** may delete an entire **Group Film** for everyone, while existing capture withdrawal and Host moderation rights remain unchanged.
+- **Delete Film** is personal-only; a **Group Film** is removed for everyone only by its **Host**'s **Delete Event**.
 - V1 **Archive Film** is an explicit, optional action available for personal Films (Group Films: v2); it affects only the archiving user's main library list, not another person's library.
 - Archived Films remain reachable in that user's archived list and may be returned to the main list without restoring deleted or withdrawn media or previously revoked access.
-- Archive Film does not delete media, change a Film's reveal or Development state, end a Trial Activation, free Group membership or Camera load slots, change capture capacity, or relinquish the Host role.
-- Existing Group Film access checks, online viewing requirements, withdrawal rights, and original-export deadlines continue to apply to archived Films.
-- **Save Developed to Photos** is available after personal reveal or Group Film Release, subject to Photos permission and existing Group Film access and export rules.
-- Save Developed to Photos supports developed photographs, Private Prints, and Developed Movies independently of the Save Originals to Photos choice.
+- Archive Film does not delete media, change a Film's reveal or Development state, end a Trial Activation, return a Group Film's **Rolls**, change capture capacity, or relinquish the Host role.
+- A **Group Film**'s access, withdrawal and **Event Album** end rules continue to apply to an archived Group Film.
+- **Save Developed to Photos** is available after personal reveal or a **Group Film**'s **Reveal**, subject to Photos permission and the Group Film's access rules.
+- Save Developed to Photos supports developed photographs and Developed Movies independently of the Save Originals to Photos choice.
 - Saving developed media to Photos preserves the selected visual or audiovisual result, not a restorable app Film or its reversible Darkroom edit history, and does not automatically remove the local Film.
 - Users are told that device-local Films may be lost without a recoverable device backup, and that saving developed media to Photos preserves exported results rather than the complete app Film.
 - Unrevealed original captures remain in private app storage and are never saved to Apple Photos before reveal.
 - V1 Films are capture-only: every Exposure and Recorded Clip must be newly captured inside the app using that Film's selected Camera, for personal Films (and Group Films in v2).
 - Existing photos or videos cannot be imported from Apple Photos, Files, or another app into a v1 Film or given a Film's Developed Treatment through an import flow.
 - Apple Photos integration saves revealed Developed Exports and optional original source captures; it does not import existing media into Films.
-- **Save Originals to Photos** is optional and available after personal reveal or Group Film Release, subject to Photos permission.
+- **Save Originals to Photos** is optional and available after personal reveal, subject to Photos permission; a Group Film picture's original never leaves the phone that took it.
 - The developed master and reversible Darkroom edit data are retained after source cleanup.
 - When original export is chosen, source copies are removed only after saving to Photos succeeds.
-- When original export is declined, follow the source-cleanup and disclosure rules in [PRD FR-08](../2026-10-06-film-camera-experience-v1-prd-version-2.0.md#fr-08--personal-local-storage-photos-export-and-source-cleanup) for personal Films and [FR-15](../2026-10-06-film-camera-experience-v1-prd-version-2.0.md#fr-15--group-export-original-export-deadline-and-notifications) for deferred v2 Groups.
-- The original-export choice is presented at personal Development or Group Film Release.
+- When original export is declined, follow the source-cleanup and disclosure rules in [PRD FR-08](../2026-10-06-film-camera-experience-v1-prd-version-2.0.md#fr-08--personal-local-storage-photos-export-and-source-cleanup) for personal Films.
+- The original-export choice is presented at personal Development.
 - An **Instant Film** presents the original-export choice once, at the camera, after its last Exposure's print is revealed, for every print still undecided; a choice missed or cancelled there is not presented again, and its owner may make it at any time from the Film (2026-10-26).
-- For Group Films, each Participant may export only their own originals during the **Original Export Window**, including when they first return after Release.
-- Group Film source captures awaiting an export choice remain private for seven days after Release; at window expiry they are permanently deleted after verifying the developed master is safely stored, regardless of whether an export attempt succeeded.
-- Participants are told the export deadline and that unexported originals will be permanently deleted; the developed master and reversible edits remain available after expiry.
 - Exported originals are independent copies outside the app's control; Discard and Withdraw cannot recall copies exported by others.
 
 - A **Film** uses exactly one **Camera**.
-- V1 supports rear-facing capture and **Selfie Capture** in personal Photo and Movie Films (and Group Photo and Movie Films in v2).
-- Choosing the phone's front or rear lens does not replace the selected **Camera**, undo **Camera Lock**, add capture capacity, or bypass **Development** or **Release**.
+- V1 supports rear-facing capture and **Selfie Capture** in personal Photo and Movie Films (and Group Films, which are photo only, in v2).
+- Choosing the phone's front or rear lens does not replace the selected **Camera**, undo **Camera Lock**, add capture capacity, or bypass **Development** or a **Reveal**.
 - Front/rear switching is available only between **Exposures** or between **Recorded Clips**, never during capture or active recording.
 - **Selfie Capture** uses a mirrored live **Viewfinder** for framing, but its developed photos and movies are unmirrored.
 - Capture controls must belong to the selected **Camera** and be genuinely supported by the active phone lens; unsupported controls are hidden with a brief explanation rather than presented as nonfunctional controls.
@@ -512,18 +534,18 @@ _Avoid_: Draft, incomplete album
 - A personal owner or Group Host may change the Film Title after **Load Film**, including after Development; renaming never changes the selected Camera, capture capacity, chronology, or Reveal Rule.
 - A **Photo Film** has exactly one **Exposure Limit** and contains zero or more **Exposures**.
 - A **Movie Film** has exactly one **Duration Limit** and contains one or more recorded clips when complete.
-- V1 **Movie Films** support both portrait and landscape capture in personal Films (and Group Films in v2), including **Selfie Capture**; landscape capture is not mandatory.
+- V1 **Movie Films** support both portrait and landscape capture in personal Films, including **Selfie Capture**; landscape capture is not mandatory.
 - A **Movie Film** may mix portrait and landscape **Recorded Clips**; users may change capture orientation between clips.
 - Each **Recorded Clip** keeps the capture orientation selected when recording begins until that recording stops.
-- Each **Movie Film** has one **Movie Orientation** chosen at setup by its personal owner or, for a Group Film, its **Host**.
-- **Movie Orientation** is irreversibly locked before the first recording begins; for a Movie Group Film, it is fixed as part of **Camera Lock**.
+- Each **Movie Film** has one **Movie Orientation** chosen at setup by its owner.
+- **Movie Orientation** is irreversibly locked before the first recording begins.
 - Movie capture and presentation retain the selected **Camera**'s native frame proportions, rotated for portrait rather than replaced with modern widescreen proportions; a 4:3 Camera uses 4:3 landscape or 3:4 portrait, not 9:16.
 - The **Developed Movie** uses that Movie Orientation throughout, fitting opposite-orientation clips within its frame with borders rather than cropping or stretching them.
 - Each **Movie Camera** provides one fixed Camera-defined **Duration Limit** in v1; the user does not select a different capacity.
 - A **Movie Film** consumes its **Duration Limit** only while actively recording; paused time consumes nothing.
-- An interruption such as a call, screen lock, or leaving the app ends the current **Recorded Clip**; recoverable footage is saved as a completed clip, only its successfully saved duration consumes personal or Group Film recording time, and it remains hidden under the Film's existing reveal rules.
-- Recording never resumes automatically after an interruption; the user must explicitly start a new **Recorded Clip**, subject to the existing capacity and **Recording Turn** rules.
-- A personal **Movie Film** exhausts its capacity when the combined duration of its **Recorded Clips** reaches its Duration Limit; a Movie Group Film remains open until Host closure unless Host Account deletion disables joining and capture.
+- An interruption such as a call, screen lock, or leaving the app ends the current **Recorded Clip**; recoverable footage is saved as a completed clip, only its successfully saved duration consumes the Film's recording time, and it remains hidden under the Film's existing reveal rules.
+- Recording never resumes automatically after an interruption; the user must explicitly start a new **Recorded Clip**, subject to the existing capacity rules.
+- A personal **Movie Film** exhausts its capacity when the combined duration of its **Recorded Clips** reaches its Duration Limit.
 - Developing a **Movie Film** produces exactly one **Developed Movie**.
 - Each Recorded Clip produces one **Developed Clip**, retained independently of the assembled Developed Movie after original source cleanup.
 - A **Developed Movie** orders every **Recorded Clip** chronologically and preserves each start/stop boundary as a cut.
@@ -531,9 +553,6 @@ _Avoid_: Draft, incomplete album
 - Both v1 Movie Cameras capture **Live Audio** on a Film loaded with the app build that adds it or a later one, whose locked Camera package records that the Film has sound, and ask for microphone permission the first time a movie Camera opens; while the microphone is declined or turned off they record silent **Recorded Clips**, and once it is allowed the next clips record sound, so such a Film's **Developed Movie** can mix silent clips and clips with sound and nothing is blocked.
 - A Movie Film loaded with an earlier build stays silent throughout, whatever the date it was loaded, because its locked Camera package records no sound, and the rule that a **Developed Movie** never mixes sound and silent clips holds only for such a Film.
 - A **Developed Movie**'s sound is its **Live Audio**, one built-in **Soundtrack** in its place, or silence; choosing a Soundtrack or silence never discards the Live Audio, and the choice can be changed back without repeating Development.
-- For a silent Movie Group Film, only the Host may choose silence or one built-in Soundtrack during Private Review.
-- Release permanently locks that Movie Group Film's Soundtrack choice; Participants cannot select a different soundtrack for the shared movie or its in-app Developed Exports.
-- The shared Group Movie and its Developed Exports use the same released Soundtrack choice; reassembly after Discard or Withdraw preserves that choice without blocking the removal of private content.
 - Adding a **Soundtrack** does not permit trimming, reordering, voice-over, or arbitrary music import.
 - A personal **Roll Film** becomes a Completed Film when its full Exposure Limit is consumed or its owner performs **Finish & Develop Early**.
 - Finish & Develop Early permanently wastes every remaining Exposure and requires an **Early Development Warning**.
@@ -543,50 +562,66 @@ _Avoid_: Draft, incomplete album
 - A **Roll Film** and **Movie Film** may be developed only after becoming a **Completed Film**.
 - Development of a completed **Roll Film** or **Movie Film** begins only when the user explicitly chooses to develop, then reveals it after a brief ritual without an artificial waiting period.
 - An **Instant Film** develops and reveals each Exposure individually after capture, even while the Film remains unfinished.
-- Instant Cameras are available only for personal Films in v1 and cannot be selected for a Group Film.
+- In v1 the Instant is available only for personal Films; in v2 a **Host** may choose it for a **Group Film**.
 - Captures cannot be previewed or reviewed before their Camera's **Reveal Rule** reveals them.
-- Individual capture deletion before reveal is prohibited; **Withdraw Unreleased Captures** permits bulk removal of a Participant's own Group contributions, while **Delete Film** permits removal of an entire personal Film without preview.
+- Individual capture deletion before reveal is prohibited; **Withdraw Before Reveal** permits bulk removal of a **Guest**'s own Group Film pictures, while **Delete Film** permits removal of an entire personal Film without preview.
 - A revealed capture may be **Discarded**, but its consumed capacity is never restored.
-- A **Participant** may **Withdraw** any of their own revealed Group Film captures at any time.
-- Before Release, a Participant may choose Withdraw Unreleased Captures while a Group Film is open, closed awaiting Development, or in Private Review; the action does not depend on the Host completing or releasing the Film.
-- Withdraw Unreleased Captures removes all of that Participant's already-saved contributions together without offering previews or individual capture selection, permanently removes their app-controlled source and developed media, and retains metadata-only numbered Discarded Frame placeholders.
-- Withdraw Unreleased Captures restores no Exposures, recording time, contributed Subscriber Load, or Camera load slot; the Host cannot undo the removal, and delayed uploads cannot restore the removed content.
-- A Withdrawn capture is permanently removed for everyone, cannot be restored by the Host, and leaves a **Discarded Frame** placeholder.
-- Withdrawing a Movie Group Film's Recorded Clip permanently removes that clip's picture and audio, including its original source if retained and its Developed Clip, and leaves a numbered Discarded Frame placeholder in the chronology.
-- After a Movie Discard or withdrawal, the app rebuilds the Developed Movie from the remaining unchanged Developed Clips in their original order; rebuilding does not repeat Development or regenerate any Developed Treatment.
+- After a Movie Discard, the app rebuilds the Developed Movie from the remaining unchanged Developed Clips in their original order; rebuilding does not repeat Development or regenerate any Developed Treatment.
 - App-controlled movie versions containing a Discarded or Withdrawn clip are retired from viewing and export; copies already exported outside the app cannot be recalled.
-- A **Guest Identity** may Withdraw or Withdraw Unreleased Captures only for captures created under that same identity.
-- An account-free Participant may choose **Delete Guest Identity** to permanently remove that identity and all its contributions across Group Films, whether those contributions are sealed or revealed.
-- Delete Guest Identity removes the guest's identifying details, including their display name and Contributor Attribution, together with their app-controlled source media, developed results, and Private Prints; it does not remove another contributor's captures or delete an entire Group Film.
-- The guest's removed contributions leave numbered, metadata-only **Discarded Frame** placeholders without identifying attribution; sealed captures are never previewed or revealed by deletion.
-- Guest deletion follows existing privacy-removal rules: it restores no consumed Exposures or recording time, delayed uploads cannot restore deleted contributions, and affected Developed Movies are rebuilt from surviving unchanged Developed Clips without repeating Development.
-- Delete Guest Identity never automatically Develops or Releases a Film and cannot recall copies already exported outside the app.
 - A discarded Instant Exposure remains a used frame in its Instant Film pack.
 - A developed Instant Exposure is the whole print: its square picture on a white card, shown and exported together everywhere, including **Save Developed to Photos**; the card is never an optional frame.
 - Discard creates a **Discarded Frame** in the developed Film while permanently removing the underlying private media.
-- A **Group Film** is created with exactly one **Host** and zero or more other **Participants**; deletion of the Host's Account never assigns a successor.
-- V1 fixes the **Host** role to the Group Film's original creating **Account** for the Film's lifetime, with no co-hosts, Host transfers, reassignment, or automatic takeover.
-- If the original Host permanently loses Account access, other Participants cannot close, Develop, privately review, or Release an unreleased Group Film in their place; contributors retain their existing withdrawal rights.
-- When a Host's **Delete Account** request is accepted, all their hosted Group Films stop accepting new joins and captures, and their Join Codes become invalid.
-- Host Account deletion permanently removes the Host's own Group Film contributions and associated app-controlled source media, developed results, and Private Prints, without deleting other contributors' media.
-- Removing the Host's contributions uses the existing privacy-removal rules: numbered metadata-only Discarded Frame placeholders preserve chronology, and any affected Developed Movie is rebuilt from surviving unchanged Developed Clips without repeating Development.
-- Host Account deletion never automatically Develops or Releases a Group Film; other contributors' unreleased media remains sealed, including media already developed into Private Review.
-- Other contributors retain their existing withdrawal rights after Host Account deletion; already released Group Films remain accessible to Participants with current access under the existing online viewing and export rules.
-- Every v1 Group Film has a **Member Limit** of 10 active people total: one Host and up to nine other Participants, counting both Accounts and Guest Identities.
-- A Group Film at its Member Limit does not admit additional Participants through its Join Code until an existing Participant is removed or chooses **Leave Film**.
-- A Group Film is the event itself; there is no separate Event container above it.
-- The Host must choose a **Film Title** for a Group Film before **Load Film** or sharing a Join Code; the title remains editable by that Host afterward.
-- The Host selects exactly one **Camera** for a Group Film, and every Participant uses that Camera's Viewfinder, capture behavior, and treatment.
-- Participants cannot select individual Cameras within a Group Film.
-- Before Camera Lock, the Host may inspect a **Camera Preview** for every Group-compatible Camera and change the selection.
-- A Group Film cannot accept captures until the Host performs **Camera Lock** through **Load Film**.
-- Camera Lock is irreversible for that Group Film.
-- A Host must use an **Account** authenticated through Apple or Google.
-- A Host must have an active monthly or yearly **Subscription** to create a Group Film.
+- **Group Films (v2).** The rules below state the v2 PRD of 2026-11-22; the parked Group rules they replace are kept verbatim in the section "Superseded by the v2 PRD - the parked Group design".
+- A **Group Film** has exactly one **Host**, the **Account** that created it, for its whole life, with no co-host, handover or replacement, even after the Host deletes their Account.
+- Only hosting needs an **Account**; joining, shooting, saving and every personal Film action never ask anyone to sign in, and an Account is for people 13 or over.
+- Hosting needs no **Subscription**; the Host pays for the event's **Rolls** from their **Roll Balance**.
+- **Free Rolls** are given once ever per **Account**, both the small amount for everyone and a Subscription's larger amount; Subscription Rolls already credited stay if the Subscription lapses.
+- Start a Film offers Personal or Group, with Personal selected by default.
+- The Host picks one **Camera** for a Group Film from the Disposable, the 6×6 and the Instant, and on the 6×6 the **Film Stock**, for everyone; the Super 8 and the 16mm are not offered, and no Group Film records video.
+- The Host must give a Group Film a **Film Title** before **Load Film** and may change it until the **Event Album** ends.
+- The Host's **Load Film** confirmation performs the **Camera Lock** and issues the **Join Code** at once; nobody can join before it.
+- The Host may set a later **Start Time**, before which nobody can join or shoot; shooting lasts at most 7 days from the opening, at Load Film or the Start Time.
+- Before the Start Time the Host may already add Rolls, **Pause Joining** and resume it, and **Replace Join Code** behind the same warning; a pause made then holds when the Group Film opens.
+- Each Group Film camera behaves, looks and develops as it does in a personal Film, with the Camera package and Developed Treatment version current at Load Film.
+- A **Join Code** lasts the event's whole life; the Host may **Pause Joining** and resume it, and may **Replace Join Code** only behind a warning that printed copies stop working.
+- Joining needs an iPhone on iOS 26 or later, in the **Mini-app** or the full app; nobody shoots in a browser, on Android or anywhere else, and anyone who cannot join is told why on the **Join Page**.
+- Opening a Join Code joins nobody: the **Guest** confirms the **Join Confirmation**, gives a **Guest Name** and takes one **Roll**, with no Host approval and no sign-in.
+- A Guest's place, Roll and pictures belong to a **Guest Identity** on their phone; a Guest may **Claim Guest Identity** by signing in in the full app, which keeps both places where the Account already has one in the same Group Film, and an unsigned Guest who loses or replaces their phone loses their place with no recovery.
+- Each Guest takes exactly one **Roll**: the event Camera's normal **Exposure Limit**, 27 on the Disposable, 12 on the 6×6 and 10 on the Instant; a Guest's exposures are theirs alone, with no shared pool.
+- The Host may shoot in their own Group Film by taking one of its Rolls, like any Guest.
+- A Group Film has at most 200 Rolls; the Host sets Rolls aside from the **Roll Balance** and can add more until the End Time, before the Start Time included.
+- A Roll is used only when a Guest takes it; at the **End Time** every Roll no Guest took returns to the Host's Roll Balance, and a Roll a Guest took stays used however many exposures they shoot.
+- Joining or shooting in a Group Film never starts, uses or blocks the iPhone's **Trial Film**.
+- Every Group Film picture is newly captured in the Mini-app or the full app with the event's Camera; nothing is imported.
+- A Guest can shoot with no connection after joining; shooting stops at the End Time.
+- Each picture is developed on the phone that took it, by the same **Development** as a personal Film; there is no server-side Development.
+- Only the finished, developed picture is uploaded, and it stays **Sealed** until the **Reveal**; the original never leaves the phone, and there is no **Save Originals to Photos** for Group Film pictures.
+- A picture stays on its phone until the server confirms it has it whole; an Instant print's developed copy stays on its shooter's phone until the Reveal, while its original is deleted on confirmation like any other.
+- A Disposable or 6×6 picture is Sealed even from its shooter; an Instant print develops for its shooter at once, as in a personal **Instant Film**, stays viewable on the shooter's phone until the Reveal, and others see it at the Reveal; the server returns nothing to anyone before the Reveal.
+- At the **End Time** plus the **Reveal Delay**, or at once on **End Early**, the Group Film reveals itself automatically: nobody, the Host included, sees a picture before it, and nobody starts or holds it back.
+- The Host may **End Early**, which makes now the End Time and reveals the Group Film at once, without the Reveal Delay.
+- Running out of Rolls or every Guest finishing never reveals anything; only the scheduled Reveal, or End Early, does.
+- A picture taken before the End Time that reaches the server after the Reveal joins the **Event Album** when it arrives, until the Event Album ends, in its place by capture time.
+- After the Reveal every **Member** sees every picture, a Guest who used **Leave Film** included; this is one fixed rule.
+- Any Member may save any picture, or the whole Event Album, to Photos with no Account; saved copies are outside Immerse's control.
+- A Group Film picture has no **Darkroom** and no **Basic Edits** in v2.
+- Each picture carries its shooter's **Guest Name** as **Contributor Attribution**, shown only in its details and never printed on the image.
+- The Event Album shows every picture in capture order, with a numbered **Discarded Frame** where a picture was withdrawn or removed.
+- After the Reveal the Host may switch on the **Web Album**, which is off unless the Host turns it on and goes off when the Host switches it off.
+- The Event Album and the Web Album are kept 12 months after the Reveal, with a warning before they end, and then removed.
+- Before the Reveal a Guest may **Withdraw Before Reveal**, removing all their own pictures in one step, unseen, for good, with no exposure returned; pictures still waiting on their phone never upload.
+- After the Reveal a Guest may **Withdraw** any of their own pictures, one at a time, for everyone, with no exposure returned.
+- After the Reveal the Host may **Discard** any picture for everyone; the Host can never edit, crop, caption or reorder another person's picture.
+- The Host may **Remove Guest**, which ends that Guest's shooting and access to the Group Film for good and removes every picture they took in it, for everyone, including pictures still waiting on their phone and the Instant prints it keeps.
+- A Guest may **Leave Film**, which ends their shooting while their Roll stays used and their pictures stay; they still see the Event Album after the Reveal and may rejoin while the Group Film is open.
+- After the Reveal a Guest may **Report Capture**; the report reaches the Host and Immerse's support address and removes nothing by itself.
+- The Host may **Delete Event** after a warning, removing the whole Group Film and every picture in it for everyone.
+- **Delete Account** removes that person's own pictures from every Group Film; a deleted Host's Group Films still run to their Reveal and stay available to their Guests for the 12 months, with nobody able to change their settings.
+- The one push alert is the **Reveal Notification**, sent at the Reveal to Members with the full app; Mini-app Guests come back through the same link and are invited to install the full app.
+- Personal Films never leave the iPhone; Group Film pictures are stored on Immerse's server; nothing is used for advertising or tracking.
 - V1 offers one all-inclusive Subscription with no feature or Camera tiers.
-- An active Subscription permits unlimited personal Film creation (and, in v2, Group Film creation) with no per-Film charge.
+- An active Subscription permits unlimited personal Film creation with no per-Film charge; in v2 it also brings a larger number of **Free Rolls**, and hosting a Group Film never needs it.
 - Personal Film use, including Subscription purchase, capture, Development, Darkroom work, export and the Trial Film, does not require an Account; v1 has no Account or sign-in.
-- Apple or Google Account authentication is a v2 requirement for hosting a Group Film or contributing a Subscriber Load; joining a Group Film as a Guest Identity remains account-free.
 - V1 Trial eligibility and unused-Film replacement are defined in [PRD FR-21](../2026-10-06-film-camera-experience-v1-prd-version-2.0.md#fr-21--one-complete-trial-film).
 - The iPhone remembers its Trial entitlement in the Keychain, which normally survives deleting and reinstalling the app (to be confirmed on iOS 26 by an early device check); the record is bound to the physical device and does not come back through a device-backup restore.
 - **Trial Activation** is starting the Trial Film on the phone; it involves no server and does not consume eligibility, and it never needs connectivity (DEC-15).
@@ -601,114 +636,14 @@ _Avoid_: Draft, incomplete album
 - Every v1 Camera is available for the Trial Film.
 - A developed Trial Film remains available permanently; starting another personal Film after Trial Film eligibility is consumed requires a Subscription.
 - Joining or capturing in a Group Film does not consume the Trial Film entitlement.
-- Subscription expiration never removes access to existing Films or contributed Camera Loads.
-- After expiration, existing personal Films may be completed and developed, and existing hosted Group Films may be closed, developed, privately reviewed, and released.
-- A user with an expired Subscription cannot create a new personal Film, create a new Group Film, or contribute a new Subscriber Load until the Subscription is renewed, regardless of whether they use an Account.
-- A Participant may join without an account using a **Guest Identity** and display name.
-- A Participant may optionally **Claim Guest Identity** with an Account without interrupting capture or changing contribution ownership.
-- **Join Film** grants a **Participant** capture access to exactly one Group Film through its **Join Code**.
-- V1 Join Film requires the installed iOS app; account-free Guest Identity entry does not mean install-free participation.
-- Browser capture, Android capture, and App Clip capture are outside the v1 Join Film scope; exported media may still be shared outside the app under the existing export rules.
-- Opening or entering a valid **Join Code** presents a brief **Join Confirmation** before membership is granted; the Participant must explicitly confirm **Join Film** rather than being enrolled merely by opening the code.
-- Join Confirmation shows the **Film Title**, selected **Camera**, and sharing rules: captures remain hidden from Participants until Host **Release**, the Host privately reviews the developed Film first, and current members may view and export released media under the existing access rules.
-- Join Confirmation never displays the Group Film's unrevealed captures or allows the joining Participant to change its Camera.
-- A valid Join Code admits an eligible Participant immediately after Join Confirmation without individual Host approval, subject to the Member Limit and permanent removal blocks.
-- A Join Code cannot be generated until Camera Lock and all capacity configuration are complete.
-- Generating the Join Code makes the fully configured Group Film available to Participants.
-- A Host may revoke and replace a Join Code while the Group Film is open without removing existing Participants.
-- A Join Code expires automatically when the Host closes its Group Film and also becomes invalid when the Host deletes their Account.
-- While the Group Film is open, a Host may **Remove Participant** to stop that Participant's future capture and access.
-- V1 Remove Participant permanently blocks the removed **Guest Identity** or **Account** from rejoining that same Group Film, even with a valid current or replacement **Join Code**; the Host cannot reverse the removal or readmit that identity to that Film.
-- **Claim Guest Identity** preserves a removal block on the linked Account rather than restoring participation; removal applies to that Group Film, not as an app-wide ban.
-- V1 retains account-free Guest joining while accepting that removal blocks apply to known identities, not guaranteed person-level bans; the same person using another device and a new, unlinked **Guest Identity** may not be recognized as previously removed.
-- The Host may revoke a leaked **Join Code** to stop further entry through it and deliberately issue a replacement; code revocation does not remove existing Participants or identify the person behind a new Guest Identity.
-- Removing a Participant does not erase their existing sealed captures; those remain for Private Review.
-- A removed Participant retains the right to Withdraw their own revealed captures and to use Withdraw Unreleased Captures before Release, without regaining general Group Film access.
-- A non-Host Participant may voluntarily **Leave Film**, ending future capture and general album access and freeing their active membership slot without erasing their existing contributions.
-- A Participant who leaves retains **Withdraw** rights for their own revealed captures and **Withdraw Unreleased Captures** rights before Release, without retaining general Group Film access.
-- Leave Film refunds no consumed Exposures or recording time, returns no contributed **Subscriber Load**, and frees no **Camera Load Limit** slot; contributed Exposures remain in the **Group Exposure Pool**.
-- A Participant who voluntarily leaves may rejoin the same Group Film through **Join Film** using the same identity and a current valid **Join Code**, only while the Film is open and a **Member Limit** slot is available.
-- Voluntary rejoining retains the Participant's existing contribution ownership and Camera-load contribution history; it does not grant a second **Subscriber Load**, reset the Film's **Camera Load Limit**, or restore withdrawn media.
-- A Photo Group Film begins with exactly one subscription-backed **Host Load** in its **Group Exposure Pool**; the Host receives no separate free or bonus load.
-- A subscribed Participant authenticated with an Account may explicitly choose **Add Shared Exposures** when joining a Photo Group Film if they have not previously contributed and its Camera Load Limit has not been reached.
-- A subscriber using a Guest Identity may participate without adding a Subscriber Load, but must Claim Guest Identity with an Account before contributing that load.
-- Joining, purchasing a Subscription, or claiming a Guest Identity never automatically contributes a Participant's Subscriber Load.
-- An existing Participant who subscribes while a Photo Group Film is open is offered Add Shared Exposures after Account sign-in.
-- An eligible Participant may choose Add Shared Exposures immediately or later while the Film remains open, provided they have not already contributed and the Camera Load Limit has not been reached.
-- The contribution button states the selected Camera's full Exposure Limit, such as **Add 27 Shared Exposures** or **Add 12 Shared Exposures**.
-- Add Shared Exposures uses the included Subscription benefit at no extra charge, never changes the Group Film's Camera, and never transfers an existing personal Film or its captures.
-- Before confirming Add Shared Exposures, the Participant is shown the exact Exposure count and told that the Exposures become shared, the contribution cannot be taken back, and unused Exposures expire when the Host closes the Film.
-- A confirmed Subscriber Load cannot be canceled, retracted, or returned to its contributor, even before any of its Exposures are consumed.
-- Declining Add Shared Exposures does not remove participation or prevent capture from an available Group Exposure Pool; a Capacity Pause continues until a load is actually contributed.
-- Each subscribed Account contributes at most one Camera load to a given Photo Group Film, whether acting as Host or Participant.
-- Every v1 Photo Group Film has a **Camera Load Limit** of ten full loads over its entire lifetime, counting the initial Host Load and up to nine Subscriber Loads.
-- Consuming Exposures or removing a Participant never frees a contributed Camera load slot or resets the Camera Load Limit; a removed Participant's contributed Exposures remain in the Group Exposure Pool.
-- The Member Limit and Camera Load Limit are independent: an available membership slot does not guarantee an available Camera load slot.
-- Neither the Host nor a Participant may reload the same Group Film after contributing their one Camera load.
-- A Subscriber Load contains the full Exposure Limit of the Group Film's selected Camera.
-- Every Subscriber Load is added entirely to the **Group Exposure Pool**; no contributed Exposures are reserved personally.
-- Subscriber Loads and Group Exposure Pools apply only to **Photo Group Films** in v1.
-- A Subscriber Load belongs to one Photo Group Film, does not carry between events, and expires unused when that Group Film closes.
-- A **Movie Group Film** begins with one **Group Duration Pool** equal to the selected Camera's Duration Limit, shared by all Participants with no individual duration allowances.
-- Subscriber participation does not add recording time to Movie Group Films in v1.
-- Only recorded footage consumes the Group Duration Pool; paused time consumes nothing.
-- A Movie Group Film permits exactly one active **Recording Turn** at a time; other Participants see who is recording and may take a turn after that recording stops and its consumed duration is confirmed.
-- Starting a Recording Turn requires connectivity to obtain exclusive recording access and confirm the remaining Group Duration Pool.
-- If connectivity drops during a Recording Turn, the active Recorded Clip may finish and save locally; upload and duration confirmation retry when connectivity returns.
-- No other Participant may begin a Recording Turn while the previous turn's consumed duration remains unresolved.
-- An exhausted Group Duration Pool pauses further recording without automatically closing or developing the Movie Group Film; further recording requires a new Group Film.
-- Group Exposure Pool Exposures are consumed first-come, first-served, all Participants can see the remaining count, and one Participant may consume the entire pool.
-- A Photo Group Film requires connectivity to reserve one pooled Exposure before capture; simultaneous Participants cannot reserve the same Exposure.
-- After reservation, a captured Exposure is saved locally and can be uploaded through retries if connectivity is interrupted.
-- A reserved Exposure is consumed only when the capture is safely saved locally; a failure before successful local saving returns the reservation to the Group Exposure Pool.
-- A safely saved capture consumes its Exposure even when upload is delayed; upload retries do not consume additional Exposures.
+- Subscription expiration never removes access to existing Films.
+- After expiration, existing personal Films may be completed and developed, and a **Group Film** never depended on a Subscription.
+- A user with an expired Subscription cannot create a new personal Film until the Subscription is renewed; hosting a **Group Film** never needs a Subscription.
 - Personal Films support capture without connectivity, including a Trial Film and its start (DEC-15).
 - Revealed personal Films remain viewable without connectivity; offline access never bypasses their Camera's Reveal Rule.
-- An empty Group Exposure Pool places the Photo Group Film into **Capacity Pause** without closing it.
-- Adding a Subscriber Load during Capacity Pause resumes capture; otherwise the Host may close the Group Film.
-- If the pool is empty and no further Subscriber Load can be added, including when the Camera Load Limit has been reached, continued capture requires a separate Group Film with its own title, Camera Lock, membership, and Join Code.
-- Participants do not carry into a new Group Film automatically; each person must explicitly rejoin through that Group Film's new Join Code.
-- A Group Film combines all Participant captures chronologically under its selected Camera treatment.
-- Each Group Film capture includes **Contributor Attribution** in metadata only; attribution is never burned into the media.
-- A **Group Film** has no automatic closing deadline and normally remains open until the Host performs **Close Group Film**; Host Account deletion separately disables joining and capture without triggering Development or Release.
-- Closing a Group Film makes it a Completed Film even when Group Film capacity remains unused.
-- Closing a Group Film blocks new captures and permanently wastes unused Group Exposure Pool Exposures or Group Duration Pool recording time, except for the authorized time budget of an already-started Recording Turn.
-- Closure stops new reservations but preserves captures safely saved under valid reservations before closure, including captures whose uploads are pending.
-- A Recording Turn started before Movie Group Film closure may finish within its previously authorized remaining time budget and save locally after closure; its Recorded Clip remains eligible for Development.
-- Closing a Movie Group Film never permits a new Recording Turn; any authorized recording time left unused when the active turn ends is permanently wasted.
-- Movie Group Film Development waits for an already-started Recording Turn to finish and its upload and consumed duration to resolve, subject to the explicit missing-capture override.
-- A closed Group Film cannot begin Development until pending capture uploads have resolved; closure must not silently omit those captures.
-- After 48 hours from closure, the Host may choose **Develop Without Missing Captures**, with a warning identifying missing contributions and confirming their permanent exclusion.
-- Unresolved uploads are never excluded automatically; captures excluded through the override cannot later be inserted into the developed Film.
-- Close Group Film is irreversible.
-- If any Group Film capacity remains, the Host must confirm a **Closure Warning** before the Group Film closes.
-- No Group Film capture becomes visible merely because the pool reaches zero; visibility still requires Host-initiated Development, Private Review, and Release.
-- Only the **Host** may initiate Development of a completed Group Film.
-- Closing a Group Film never triggers Development automatically.
-- Developing a Group Film places it into **Private Review** visible only to the Host.
-- Participants cannot view developed Group Film captures until the Host performs **Release**.
-- V1 offers an optional **Release Notification** to Participants with current Group Film access when the Host performs Release, not when capacity runs out, the Film closes, or Development enters Private Review.
-- A Release Notification contains the **Film Title** and "Your Film is ready" as text only, with no photo or video thumbnails or media attachments.
-- Opening a Release Notification checks current Group Film viewing permissions before displaying media; receiving an earlier notification never preserves access that has since been revoked.
-- Choosing not to receive Release Notifications does not prevent joining, capturing, or viewing a released Film under the existing access rules.
-- V1 sends no shot-by-shot activity alerts or capture reminders; a Release Notification does not Develop a Film, grant access, or bypass its existing online viewing and withdrawal checks.
-- Viewing a released Group Film in v1 requires connectivity and a current access and withdrawal check before displaying its media.
-- V1 does not offer offline in-app viewing or playback of released Group Films, including cached Group Film media.
-- After Release, the Host and any Participant with current Group Film access may create a Developed Export of any visible Group Exposure or the complete Developed Movie, regardless of who captured it.
-- Group Developed Exports require a current access and withdrawal check and exclude Discarded or Withdrawn content.
-- A clear notice before Group Developed Export explains that exported copies cannot be recalled after Discard or Withdraw.
-- Developed Export permission does not grant access to another contributor's originals; Save Originals to Photos remains limited to the user's own captures.
-- Copies exported outside the app remain independent of online Group Film access checks and cannot be recalled after Discard or Withdraw.
-- During Private Review and after Release, the **Host** may **Discard** inappropriate or unsafe captures.
-- After Release, a Participant with current Group Film access may **Report Capture** for any visible Group Exposure or Recorded Clip, including another contributor's work.
-- Report Capture requests a Host moderation decision; the report itself does not automatically remove or alter the capture.
-- A Host Discard after Release permanently removes the app-controlled capture, retains its numbered Discarded Frame placeholder, and restores no Exposures or recording time; existing external exports cannot be recalled.
-- The Host cannot edit, reorder, or otherwise alter a Participant's developed capture; choosing a silent Group Movie's composition-level Soundtrack during Private Review does not change its Developed Clips or their visual treatment.
-- A **Participant** cannot access the Host's other Films, developed media, Darkroom, or protected settings.
 - Development assigns each capture one **Developed Treatment** that cannot be regenerated or rerolled in v1.
 - If Development is interrupted, including by app closure, it can resume as the same Development while preserving saved captures and every already-assigned **Developed Treatment**; the interruption itself never erases captures or rerolls their look.
 - Affected unfinished results remain hidden until their Development completes under the existing **Reveal Rule**; resuming does not reseal previously revealed Instant Exposures or restore content removed through existing privacy actions.
-- Resuming Group Film Development remains Host-only and leads to **Private Review** on completion, never automatic Release or Participant preview.
 - A **Developed Treatment** may include **Authentic Imperfections**, but random Development effects must not make an otherwise valid capture completely unusable.
 - A **Developed Treatment** shows its **Historical Format** as freshly processed in its era, not as surviving prints or reels look decades later; fading, yellowing, dye shift, and wear from storage or repeated projection are not **Authentic Imperfections** ([ADR 0013](../adr/0013-developed-treatments-show-the-medium-fresh-not-aged.md)).
 - Severe failures may result from authentic capture conditions such as darkness, motion, an obstructed lens, or incorrect manual exposure.
@@ -725,17 +660,13 @@ _Avoid_: Draft, incomplete album
 - The 6×6's focus is optical only: its **Developed Treatment** never synthesizes background blur, so depth of field is whatever the device lens produced at capture.
 - The Disposable's **Viewfinder** shows a live low-light cue advising flash when the scene is too dim for its fixed exposure; the cue is exposure guidance and never previews the developed result.
 - The **Darkroom** may change how a Developed Treatment prints within analog constraints but cannot replace it.
-- V1 **Basic Edits** apply only to Photo Films, including personal Exposures (and, in v2, eligible Group Film Private Prints); Movie Films have no Darkroom or post-Development Basic Edits.
-- A Developed Movie retains its fixed Developed Treatment and chronological cuts; permitted Discard, Withdraw, Developed Export, and the Movie's sound choice remain separate actions, not Movie Darkroom editing.
+- V1 **Basic Edits** apply only to Photo Films, including personal Exposures (Group Film pictures have none in v2); Movie Films have no Darkroom or post-Development Basic Edits.
+- A Developed Movie retains its fixed Developed Treatment and chronological cuts; permitted Discard, Developed Export, and the Movie's sound choice remain separate actions, not Movie Darkroom editing.
 - A developed **Exposure** may receive its own **Basic Edits** independently of every other Exposure in the Film.
 - Developed Exposures from every Photo Camera are eligible for the **Darkroom**, including Instant prints; the original developed print is preserved, and Reset returns to it.
 - Each developed Instant Exposure carries a slight variation in color and density of its own, assigned once at Development, so no two prints are identical; the Instant adds no uneven-chemistry or spread flaws.
 - The **Darkroom** offers no crop and no straightening for an Instant print, only **Adjust**'s quarter turns, which turn the whole print, white card included; its square picture and white card always stay whole, and every other Basic Edit reaches the picture only.
 - Instant prints are one of two stated exceptions to the physical-technique test for **Basic Edits**: they receive the same Basic Edits as other color Exposures, except crop and straightening, even though an instant print has no darkroom printing stage.
-- After Group Film Release, the Host and Participants with current access may use the Darkroom only on Group Exposures they captured themselves.
-- Group Film Basic Edits belong to a **Private Print**, visible only to its contributor and available for Developed Export; each Private Print derives from exactly one Group Exposure.
-- The shared Group Film always displays the original developed results, never a contributor's Private Print or Darkroom edits.
-- A Private Print does not bypass Group Film access, online viewing, Discard, or Withdraw rules; exported copies remain outside the app's control.
 - **Basic Edits** cannot replace the vintage treatment chosen when the **Film** began.
 - **Basic Edits** are non-destructive and can always be reset to the original developed result.
 - The **Darkroom** never alters or replaces the preserved original developed result.
@@ -752,6 +683,8 @@ _Avoid_: Draft, incomplete album
 
 ## Deferred to v2 - Account rules
 
+> **2026-11-22.** The v2 PRD defines Accounts anew (see **Account** and **Delete Account** above) and keeps the per-iPhone Trial ([ADR 0028](../adr/0028-hosts-sign-in-with-apple-google-or-email-through-clerk.md)), so the Account-scoped Trial, Trial Activation as a server reservation, Cancel Unused Trial and Deletion Pending below do not return; they stay as history.
+>
 > **Deferred to v2 (version 1.2, 2026-09-30).**
 > By captain decision, v1 has no server, Account, sign-in or Account deletion flow, and the Trial is one Film per iPhone.
 > The rules below are the version 1.1 wording that applied to Accounts, kept verbatim because v2 needs them when Groups bring Accounts back.
@@ -842,6 +775,7 @@ _Avoid_: Refund used trial, offline reset, replacement of lost captured media
 > **Deferred to v2 (2026-10-26).**
 > By captain decision, the v1 **Darkroom** has no Dodge/Burn tool ([ADR 0023](../adr/0023-dodge-and-burn-are-deferred-to-v2.md)).
 > The term and rule below are kept as they stood so v2 can take them up; they are not v1 rules.
+> On 2026-11-22 the v2 PRD left Dodge/Burn out: it stays parked beyond v2.
 > A v1 print saved with Dodge/Burn strokes before the app build that removes the tool keeps printing as saved, and Reset to Original clears them.
 
 **Dodge/Burn**:
@@ -849,6 +783,274 @@ A local Darkroom adjustment that selectively withholds or adds print exposure to
 _Avoid_: Retouch brush, object removal
 
 - The **Darkroom** includes reversible **Dodge/Burn** adjustments.
+
+## Superseded by the v2 PRD - the parked Group design
+
+> **Superseded (2026-11-22).**
+> The [v2 PRD](../2026-11-22-film-camera-experience-v2-prd.md) and ADRs 0025 to 0033 overtake the parked Group design.
+> The terms and rules below are the ones that design used, moved here verbatim from the Language and Relationships sections so the history stays readable; they are not v1 or v2 rules.
+> "v1" inside them means the version 1.0 baseline that included Groups.
+
+### Terms as they stood before 2026-11-22
+
+**Group Film**:
+A Host-named event and shared Film captured collaboratively by Participants using their own devices.
+_Avoid_: Event container, folder of multiple Films
+
+**Host**:
+The Account-authenticated creator who alone holds a Group Film's non-transferable hosting authority in v1.
+_Avoid_: Owner, admin, organizer
+
+**Participant**:
+A person who joins a Group Film on their own device and captures within the access granted by its Host.
+_Avoid_: Guest Photographer, account member
+
+**Member Limit**:
+The maximum number of active people in one Group Film, counting its Host and Participants together.
+_Avoid_: Exposure Limit, Camera load limit, simultaneous recorder count
+
+**Camera Load Limit**:
+The maximum number of full Camera loads contributed to one Photo Group Film over its entire lifetime, including its Host Load.
+_Avoid_: Member Limit, remaining Exposure count, monthly load allowance
+
+**Join Code**:
+A revocable code or QR representation that permits confirmed entry into one open Group Film without individual Host approval and becomes invalid when the Host closes the Group Film or deletes their Account.
+_Avoid_: Album link, account password
+
+**Join Film**:
+The flow in which a Participant uses a Join Code in the installed iOS app on their own device to enter and capture into a Group Film.
+_Avoid_: Give Camera, device handoff, browser capture, Android capture
+
+**Join Confirmation**:
+The required Participant confirmation of a Group Film's title, selected Camera, and sharing rules before joining through its Join Code.
+_Avoid_: Host approval, Camera Lock, Add Shared Exposures, capture preview
+
+**Leave Film**:
+The voluntary departure of a non-Host **Participant** from a **Group Film**, ending capture and general album access while preserving existing contributions and their withdrawal rights.
+_Avoid_: Archive Film, Withdraw, Remove Participant, Close Group Film
+
+**Group Duration Pool**:
+The single Camera-defined recording-time budget shared by all Participants in a Movie Group Film.
+_Avoid_: Per-Participant duration allowance, subscriber-added recording time
+
+**Recording Turn**:
+The exclusive use of a Movie Group Film's Camera by one Participant for one Recorded Clip.
+_Avoid_: Simultaneous recording, personal recording allowance
+
+**Host Load**:
+The subscribed Host's one full Exposure Limit of the selected Photo Camera that creates the initial Group Exposure Pool.
+_Avoid_: Free event capacity, Host reload, per-Participant allowance
+
+**Subscriber Load**:
+One full, event-scoped Exposure Limit of the Host-selected Photo Camera contributed by an eligible subscribed Participant to a Photo Group Film's Group Exposure Pool.
+_Avoid_: Arbitrary exposure count, monthly credit balance, personal reserve
+
+**Add Shared Exposures**:
+An eligible subscribed Participant's explicit, confirmed, irreversible choice to contribute their one full Subscriber Load to an open Photo Group Film.
+_Avoid_: Add My Camera, automatic upgrade bonus, personal Exposure reserve, reloading an already-contributed Camera
+
+**Group Exposure Pool**:
+All Exposures contributed through the Host Load and Subscriber Loads for any Participant in one Photo Group Film to consume first-come, first-served.
+_Avoid_: Per-Participant allowance, video duration
+
+**Capacity Pause**:
+The open Group Film state in which capture is disabled because its shared exposure or recording-time pool is empty.
+_Avoid_: Closed Film, automatic Development
+
+**Close Group Film**:
+The irreversible Host action that stops new captures, expires all unused Group Film capacity, invalidates the Join Code, and makes a Group Film complete.
+_Avoid_: Closing Time, automatic deadline, Development
+
+**Closure Warning**:
+The confirmation shown before Close Group Film when its Group Exposure Pool or Group Duration Pool remains unused, warning that all remaining capacity will be permanently wasted.
+_Avoid_: Silent expiration, automatic closure
+
+**Develop Without Missing Captures**:
+The explicit Host override available 48 hours after Group Film closure that permanently excludes unresolved uploads and permits Development.
+_Avoid_: Automatic upload timeout, silent capture loss
+
+**Private Review**:
+The Host-only state after Group Film Development and before Participants can view the developed captures.
+_Avoid_: Participant preview, public album
+
+**Release**:
+The Host action that ends Private Review and makes a developed Group Film visible to its Participants.
+_Avoid_: Development, export, public sharing
+
+**Release Notification**:
+An optional text-only alert containing the Film Title and "Your Film is ready" when the Host releases a Group Film.
+_Avoid_: Capture reminder, shot-by-shot activity alert, Development completion alert, capture thumbnail
+
+**Private Print**:
+A contributor-only, reversibly edited version of their own released Group Exposure that may be exported without changing the shared Film.
+_Avoid_: Shared Film edit, replacement developed master, another Participant's edited capture
+
+**Original Export Window**:
+The seven days after Group Film Release during which a Participant may save their own original captures to Photos.
+_Avoid_: Developed Film expiry, subscription grace period
+
+**Deletion Pending**:
+Deferred to v2 with Accounts. An accepted **Delete Account** or **Delete Guest Identity** request whose Group contributions are unavailable in-app while permanent identity and contribution removal remains unconfirmed.
+_Avoid_: Deletion complete, sign out, local-only identity removal
+
+**Withdraw Unreleased Captures**:
+The irreversible bulk removal of all a Participant's own saved captures from one Group Film before Release, without preview or capacity restoration.
+_Avoid_: Selective sealed-frame deletion, pre-reveal review, refund Exposure, reversible hide
+
+**Remove Participant**:
+The Host action that permanently blocks a Participant's known identity from capture and general access to that Group Film without erasing their contributions or withdrawal rights.
+_Avoid_: Discard contributions, app-wide account ban, revoke Join Code, Leave Film
+
+### Relationships rules as they stood before 2026-11-22
+
+- Group creation (deferred to v2) presents only Group-compatible Cameras; Instant Cameras are not offered as selectable Group options.
+- V1 **Delete Film** is personal-only; neither the **Host** nor another **Participant** may delete an entire **Group Film** for everyone, while existing capture withdrawal and Host moderation rights remain unchanged.
+- Existing Group Film access checks, online viewing requirements, withdrawal rights, and original-export deadlines continue to apply to archived Films.
+- For Group Films, each Participant may export only their own originals during the **Original Export Window**, including when they first return after Release.
+- Group Film source captures awaiting an export choice remain private for seven days after Release; at window expiry they are permanently deleted after verifying the developed master is safely stored, regardless of whether an export attempt succeeded.
+- Participants are told the export deadline and that unexported originals will be permanently deleted; the developed master and reversible edits remain available after expiry.
+- For a silent Movie Group Film, only the Host may choose silence or one built-in Soundtrack during Private Review.
+- Release permanently locks that Movie Group Film's Soundtrack choice; Participants cannot select a different soundtrack for the shared movie or its in-app Developed Exports.
+- The shared Group Movie and its Developed Exports use the same released Soundtrack choice; reassembly after Discard or Withdraw preserves that choice without blocking the removal of private content.
+- Instant Cameras are available only for personal Films in v1 and cannot be selected for a Group Film.
+- A **Participant** may **Withdraw** any of their own revealed Group Film captures at any time.
+- Before Release, a Participant may choose Withdraw Unreleased Captures while a Group Film is open, closed awaiting Development, or in Private Review; the action does not depend on the Host completing or releasing the Film.
+- Withdraw Unreleased Captures removes all of that Participant's already-saved contributions together without offering previews or individual capture selection, permanently removes their app-controlled source and developed media, and retains metadata-only numbered Discarded Frame placeholders.
+- Withdraw Unreleased Captures restores no Exposures, recording time, contributed Subscriber Load, or Camera load slot; the Host cannot undo the removal, and delayed uploads cannot restore the removed content.
+- A Withdrawn capture is permanently removed for everyone, cannot be restored by the Host, and leaves a **Discarded Frame** placeholder.
+- Withdrawing a Movie Group Film's Recorded Clip permanently removes that clip's picture and audio, including its original source if retained and its Developed Clip, and leaves a numbered Discarded Frame placeholder in the chronology.
+- A **Guest Identity** may Withdraw or Withdraw Unreleased Captures only for captures created under that same identity.
+- An account-free Participant may choose **Delete Guest Identity** to permanently remove that identity and all its contributions across Group Films, whether those contributions are sealed or revealed.
+- Delete Guest Identity removes the guest's identifying details, including their display name and Contributor Attribution, together with their app-controlled source media, developed results, and Private Prints; it does not remove another contributor's captures or delete an entire Group Film.
+- The guest's removed contributions leave numbered, metadata-only **Discarded Frame** placeholders without identifying attribution; sealed captures are never previewed or revealed by deletion.
+- Guest deletion follows existing privacy-removal rules: it restores no consumed Exposures or recording time, delayed uploads cannot restore deleted contributions, and affected Developed Movies are rebuilt from surviving unchanged Developed Clips without repeating Development.
+- Delete Guest Identity never automatically Develops or Releases a Film and cannot recall copies already exported outside the app.
+- A **Group Film** is created with exactly one **Host** and zero or more other **Participants**; deletion of the Host's Account never assigns a successor.
+- V1 fixes the **Host** role to the Group Film's original creating **Account** for the Film's lifetime, with no co-hosts, Host transfers, reassignment, or automatic takeover.
+- If the original Host permanently loses Account access, other Participants cannot close, Develop, privately review, or Release an unreleased Group Film in their place; contributors retain their existing withdrawal rights.
+- When a Host's **Delete Account** request is accepted, all their hosted Group Films stop accepting new joins and captures, and their Join Codes become invalid.
+- Host Account deletion permanently removes the Host's own Group Film contributions and associated app-controlled source media, developed results, and Private Prints, without deleting other contributors' media.
+- Removing the Host's contributions uses the existing privacy-removal rules: numbered metadata-only Discarded Frame placeholders preserve chronology, and any affected Developed Movie is rebuilt from surviving unchanged Developed Clips without repeating Development.
+- Host Account deletion never automatically Develops or Releases a Group Film; other contributors' unreleased media remains sealed, including media already developed into Private Review.
+- Other contributors retain their existing withdrawal rights after Host Account deletion; already released Group Films remain accessible to Participants with current access under the existing online viewing and export rules.
+- Every v1 Group Film has a **Member Limit** of 10 active people total: one Host and up to nine other Participants, counting both Accounts and Guest Identities.
+- A Group Film at its Member Limit does not admit additional Participants through its Join Code until an existing Participant is removed or chooses **Leave Film**.
+- A Group Film is the event itself; there is no separate Event container above it.
+- The Host must choose a **Film Title** for a Group Film before **Load Film** or sharing a Join Code; the title remains editable by that Host afterward.
+- The Host selects exactly one **Camera** for a Group Film, and every Participant uses that Camera's Viewfinder, capture behavior, and treatment.
+- Participants cannot select individual Cameras within a Group Film.
+- Before Camera Lock, the Host may inspect a **Camera Preview** for every Group-compatible Camera and change the selection.
+- A Group Film cannot accept captures until the Host performs **Camera Lock** through **Load Film**.
+- Camera Lock is irreversible for that Group Film.
+- A Host must use an **Account** authenticated through Apple or Google.
+- A Host must have an active monthly or yearly **Subscription** to create a Group Film.
+- Apple or Google Account authentication is a v2 requirement for hosting a Group Film or contributing a Subscriber Load; joining a Group Film as a Guest Identity remains account-free.
+- After expiration, existing personal Films may be completed and developed, and existing hosted Group Films may be closed, developed, privately reviewed, and released.
+- A user with an expired Subscription cannot create a new personal Film, create a new Group Film, or contribute a new Subscriber Load until the Subscription is renewed, regardless of whether they use an Account.
+- A Participant may join without an account using a **Guest Identity** and display name.
+- A Participant may optionally **Claim Guest Identity** with an Account without interrupting capture or changing contribution ownership.
+- **Join Film** grants a **Participant** capture access to exactly one Group Film through its **Join Code**.
+- V1 Join Film requires the installed iOS app; account-free Guest Identity entry does not mean install-free participation.
+- Browser capture, Android capture, and App Clip capture are outside the v1 Join Film scope; exported media may still be shared outside the app under the existing export rules.
+- Opening or entering a valid **Join Code** presents a brief **Join Confirmation** before membership is granted; the Participant must explicitly confirm **Join Film** rather than being enrolled merely by opening the code.
+- Join Confirmation shows the **Film Title**, selected **Camera**, and sharing rules: captures remain hidden from Participants until Host **Release**, the Host privately reviews the developed Film first, and current members may view and export released media under the existing access rules.
+- Join Confirmation never displays the Group Film's unrevealed captures or allows the joining Participant to change its Camera.
+- A valid Join Code admits an eligible Participant immediately after Join Confirmation without individual Host approval, subject to the Member Limit and permanent removal blocks.
+- A Join Code cannot be generated until Camera Lock and all capacity configuration are complete.
+- Generating the Join Code makes the fully configured Group Film available to Participants.
+- A Host may revoke and replace a Join Code while the Group Film is open without removing existing Participants.
+- A Join Code expires automatically when the Host closes its Group Film and also becomes invalid when the Host deletes their Account.
+- While the Group Film is open, a Host may **Remove Participant** to stop that Participant's future capture and access.
+- V1 Remove Participant permanently blocks the removed **Guest Identity** or **Account** from rejoining that same Group Film, even with a valid current or replacement **Join Code**; the Host cannot reverse the removal or readmit that identity to that Film.
+- **Claim Guest Identity** preserves a removal block on the linked Account rather than restoring participation; removal applies to that Group Film, not as an app-wide ban.
+- V1 retains account-free Guest joining while accepting that removal blocks apply to known identities, not guaranteed person-level bans; the same person using another device and a new, unlinked **Guest Identity** may not be recognized as previously removed.
+- The Host may revoke a leaked **Join Code** to stop further entry through it and deliberately issue a replacement; code revocation does not remove existing Participants or identify the person behind a new Guest Identity.
+- Removing a Participant does not erase their existing sealed captures; those remain for Private Review.
+- A removed Participant retains the right to Withdraw their own revealed captures and to use Withdraw Unreleased Captures before Release, without regaining general Group Film access.
+- A non-Host Participant may voluntarily **Leave Film**, ending future capture and general album access and freeing their active membership slot without erasing their existing contributions.
+- A Participant who leaves retains **Withdraw** rights for their own revealed captures and **Withdraw Unreleased Captures** rights before Release, without retaining general Group Film access.
+- Leave Film refunds no consumed Exposures or recording time, returns no contributed **Subscriber Load**, and frees no **Camera Load Limit** slot; contributed Exposures remain in the **Group Exposure Pool**.
+- A Participant who voluntarily leaves may rejoin the same Group Film through **Join Film** using the same identity and a current valid **Join Code**, only while the Film is open and a **Member Limit** slot is available.
+- Voluntary rejoining retains the Participant's existing contribution ownership and Camera-load contribution history; it does not grant a second **Subscriber Load**, reset the Film's **Camera Load Limit**, or restore withdrawn media.
+- A Photo Group Film begins with exactly one subscription-backed **Host Load** in its **Group Exposure Pool**; the Host receives no separate free or bonus load.
+- A subscribed Participant authenticated with an Account may explicitly choose **Add Shared Exposures** when joining a Photo Group Film if they have not previously contributed and its Camera Load Limit has not been reached.
+- A subscriber using a Guest Identity may participate without adding a Subscriber Load, but must Claim Guest Identity with an Account before contributing that load.
+- Joining, purchasing a Subscription, or claiming a Guest Identity never automatically contributes a Participant's Subscriber Load.
+- An existing Participant who subscribes while a Photo Group Film is open is offered Add Shared Exposures after Account sign-in.
+- An eligible Participant may choose Add Shared Exposures immediately or later while the Film remains open, provided they have not already contributed and the Camera Load Limit has not been reached.
+- The contribution button states the selected Camera's full Exposure Limit, such as **Add 27 Shared Exposures** or **Add 12 Shared Exposures**.
+- Add Shared Exposures uses the included Subscription benefit at no extra charge, never changes the Group Film's Camera, and never transfers an existing personal Film or its captures.
+- Before confirming Add Shared Exposures, the Participant is shown the exact Exposure count and told that the Exposures become shared, the contribution cannot be taken back, and unused Exposures expire when the Host closes the Film.
+- A confirmed Subscriber Load cannot be canceled, retracted, or returned to its contributor, even before any of its Exposures are consumed.
+- Declining Add Shared Exposures does not remove participation or prevent capture from an available Group Exposure Pool; a Capacity Pause continues until a load is actually contributed.
+- Each subscribed Account contributes at most one Camera load to a given Photo Group Film, whether acting as Host or Participant.
+- Every v1 Photo Group Film has a **Camera Load Limit** of ten full loads over its entire lifetime, counting the initial Host Load and up to nine Subscriber Loads.
+- Consuming Exposures or removing a Participant never frees a contributed Camera load slot or resets the Camera Load Limit; a removed Participant's contributed Exposures remain in the Group Exposure Pool.
+- The Member Limit and Camera Load Limit are independent: an available membership slot does not guarantee an available Camera load slot.
+- Neither the Host nor a Participant may reload the same Group Film after contributing their one Camera load.
+- A Subscriber Load contains the full Exposure Limit of the Group Film's selected Camera.
+- Every Subscriber Load is added entirely to the **Group Exposure Pool**; no contributed Exposures are reserved personally.
+- Subscriber Loads and Group Exposure Pools apply only to **Photo Group Films** in v1.
+- A Subscriber Load belongs to one Photo Group Film, does not carry between events, and expires unused when that Group Film closes.
+- A **Movie Group Film** begins with one **Group Duration Pool** equal to the selected Camera's Duration Limit, shared by all Participants with no individual duration allowances.
+- Subscriber participation does not add recording time to Movie Group Films in v1.
+- Only recorded footage consumes the Group Duration Pool; paused time consumes nothing.
+- A Movie Group Film permits exactly one active **Recording Turn** at a time; other Participants see who is recording and may take a turn after that recording stops and its consumed duration is confirmed.
+- Starting a Recording Turn requires connectivity to obtain exclusive recording access and confirm the remaining Group Duration Pool.
+- If connectivity drops during a Recording Turn, the active Recorded Clip may finish and save locally; upload and duration confirmation retry when connectivity returns.
+- No other Participant may begin a Recording Turn while the previous turn's consumed duration remains unresolved.
+- An exhausted Group Duration Pool pauses further recording without automatically closing or developing the Movie Group Film; further recording requires a new Group Film.
+- Group Exposure Pool Exposures are consumed first-come, first-served, all Participants can see the remaining count, and one Participant may consume the entire pool.
+- A Photo Group Film requires connectivity to reserve one pooled Exposure before capture; simultaneous Participants cannot reserve the same Exposure.
+- After reservation, a captured Exposure is saved locally and can be uploaded through retries if connectivity is interrupted.
+- A reserved Exposure is consumed only when the capture is safely saved locally; a failure before successful local saving returns the reservation to the Group Exposure Pool.
+- A safely saved capture consumes its Exposure even when upload is delayed; upload retries do not consume additional Exposures.
+- An empty Group Exposure Pool places the Photo Group Film into **Capacity Pause** without closing it.
+- Adding a Subscriber Load during Capacity Pause resumes capture; otherwise the Host may close the Group Film.
+- If the pool is empty and no further Subscriber Load can be added, including when the Camera Load Limit has been reached, continued capture requires a separate Group Film with its own title, Camera Lock, membership, and Join Code.
+- Participants do not carry into a new Group Film automatically; each person must explicitly rejoin through that Group Film's new Join Code.
+- A Group Film combines all Participant captures chronologically under its selected Camera treatment.
+- Each Group Film capture includes **Contributor Attribution** in metadata only; attribution is never burned into the media.
+- A **Group Film** has no automatic closing deadline and normally remains open until the Host performs **Close Group Film**; Host Account deletion separately disables joining and capture without triggering Development or Release.
+- Closing a Group Film makes it a Completed Film even when Group Film capacity remains unused.
+- Closing a Group Film blocks new captures and permanently wastes unused Group Exposure Pool Exposures or Group Duration Pool recording time, except for the authorized time budget of an already-started Recording Turn.
+- Closure stops new reservations but preserves captures safely saved under valid reservations before closure, including captures whose uploads are pending.
+- A Recording Turn started before Movie Group Film closure may finish within its previously authorized remaining time budget and save locally after closure; its Recorded Clip remains eligible for Development.
+- Closing a Movie Group Film never permits a new Recording Turn; any authorized recording time left unused when the active turn ends is permanently wasted.
+- Movie Group Film Development waits for an already-started Recording Turn to finish and its upload and consumed duration to resolve, subject to the explicit missing-capture override.
+- A closed Group Film cannot begin Development until pending capture uploads have resolved; closure must not silently omit those captures.
+- After 48 hours from closure, the Host may choose **Develop Without Missing Captures**, with a warning identifying missing contributions and confirming their permanent exclusion.
+- Unresolved uploads are never excluded automatically; captures excluded through the override cannot later be inserted into the developed Film.
+- Close Group Film is irreversible.
+- If any Group Film capacity remains, the Host must confirm a **Closure Warning** before the Group Film closes.
+- No Group Film capture becomes visible merely because the pool reaches zero; visibility still requires Host-initiated Development, Private Review, and Release.
+- Only the **Host** may initiate Development of a completed Group Film.
+- Closing a Group Film never triggers Development automatically.
+- Developing a Group Film places it into **Private Review** visible only to the Host.
+- Participants cannot view developed Group Film captures until the Host performs **Release**.
+- V1 offers an optional **Release Notification** to Participants with current Group Film access when the Host performs Release, not when capacity runs out, the Film closes, or Development enters Private Review.
+- A Release Notification contains the **Film Title** and "Your Film is ready" as text only, with no photo or video thumbnails or media attachments.
+- Opening a Release Notification checks current Group Film viewing permissions before displaying media; receiving an earlier notification never preserves access that has since been revoked.
+- Choosing not to receive Release Notifications does not prevent joining, capturing, or viewing a released Film under the existing access rules.
+- V1 sends no shot-by-shot activity alerts or capture reminders; a Release Notification does not Develop a Film, grant access, or bypass its existing online viewing and withdrawal checks.
+- Viewing a released Group Film in v1 requires connectivity and a current access and withdrawal check before displaying its media.
+- V1 does not offer offline in-app viewing or playback of released Group Films, including cached Group Film media.
+- After Release, the Host and any Participant with current Group Film access may create a Developed Export of any visible Group Exposure or the complete Developed Movie, regardless of who captured it.
+- Group Developed Exports require a current access and withdrawal check and exclude Discarded or Withdrawn content.
+- A clear notice before Group Developed Export explains that exported copies cannot be recalled after Discard or Withdraw.
+- Developed Export permission does not grant access to another contributor's originals; Save Originals to Photos remains limited to the user's own captures.
+- Copies exported outside the app remain independent of online Group Film access checks and cannot be recalled after Discard or Withdraw.
+- During Private Review and after Release, the **Host** may **Discard** inappropriate or unsafe captures.
+- After Release, a Participant with current Group Film access may **Report Capture** for any visible Group Exposure or Recorded Clip, including another contributor's work.
+- Report Capture requests a Host moderation decision; the report itself does not automatically remove or alter the capture.
+- A Host Discard after Release permanently removes the app-controlled capture, retains its numbered Discarded Frame placeholder, and restores no Exposures or recording time; existing external exports cannot be recalled.
+- The Host cannot edit, reorder, or otherwise alter a Participant's developed capture; choosing a silent Group Movie's composition-level Soundtrack during Private Review does not change its Developed Clips or their visual treatment.
+- A **Participant** cannot access the Host's other Films, developed media, Darkroom, or protected settings.
+- Resuming Group Film Development remains Host-only and leads to **Private Review** on completion, never automatic Release or Participant preview.
+- After Group Film Release, the Host and Participants with current access may use the Darkroom only on Group Exposures they captured themselves.
+- Group Film Basic Edits belong to a **Private Print**, visible only to its contributor and available for Developed Export; each Private Print derives from exactly one Group Exposure.
+- The shared Group Film always displays the original developed results, never a contributor's Private Print or Darkroom edits.
+- A Private Print does not bypass Group Film access, online viewing, Discard, or Withdraw rules; exported copies remain outside the app's control.
 
 ## V1 Camera catalog
 
@@ -877,8 +1079,8 @@ No Camera's name carries a decade; the Disposable's, the Instant's and the Super
 > **Dev:** "If the user changes contrast in the **Darkroom**, is the developed photo overwritten?"
 > **Domain expert:** "No. **Basic Edits** are reversible, and the original developed result is always preserved."
 >
-> **Dev:** "Does **Delete Account** leave behind captures made before the Participant claimed their **Guest Identity**?"
-> **Domain expert:** "No. It removes their Group Film contributions from both identities without revealing sealed captures or deleting anyone else's media."
+> **Dev:** "Does **Delete Account** leave behind pictures a **Guest** took before claiming their **Guest Identity**?"
+> **Domain expert:** "No. It removes their Group Film pictures from both identities, sealed or revealed, without deleting anyone else's."
 
 ## Flagged ambiguities
 
@@ -933,3 +1135,11 @@ No Camera's name carries a decade; the Disposable's, the Instant's and the Super
 - Device backup could be mistaken for app-managed sync or for restoring the Trial — resolved: Films are included in iOS device backups and return on a restored phone, the app offers no sync of its own, and the Trial record stays bound to the device and does not come back through a restore.
 - "Add My Camera" could imply selecting a different Camera or moving a personal Film — resolved: **Add Shared Exposures** is an optional, explicit contribution of one full Subscriber Load to the existing Group Exposure Pool, with the exact Exposure count shown in its button label.
 - The no-deletion-before-reveal rule could leave a Participant's content permanently dependent on an inactive Host — resolved: **Withdraw Unreleased Captures** allows bulk removal of that Participant's own saved contributions before Release without preview, selective deletion, capacity refund, or Host approval.
+- "Group Film" was read two ways when the captain answered "group photo only. no group films" on 2026-11-21 - resolved (2026-11-22): shared video is out of v2 entirely, and **Group Film** names the shared photo roll.
+- "Event" could name a container above a Film or the Film itself - resolved (2026-11-22): **Event** is the everyday word for a **Group Film**, and there is no container above it.
+- "Roll" could mean a personal **Roll Film** or one guest's set of exposures in a Group Film - resolved (2026-11-22): a **Roll** is one **Guest**'s set of exposures and the unit a Host pays for; a **Roll Film** is a personal Film whose Exposures stay hidden until Development.
+- "Participant" and "guest" named the same person - resolved (2026-11-22): **Guest** is the term, matching the plan and Once's usage; **Participant** is the parked name.
+- "Release" and "reveal" could both name when a Group Film's pictures appear - resolved (2026-11-22): there is no Release by hand; the **Reveal** is automatic at the **End Time** plus the **Reveal Delay**, or at once on **End Early**.
+- "Album link" was to be avoided as a name for the **Join Code**, yet the **Web Album** is reached by the event's link - resolved (2026-11-22): the Web Album lives on the **Join Page** that the Join Code's link opens, so there is still one link and no separate album link.
+- **Leave Film** and **Remove Guest** both end a Guest's shooting, and in the parked design both kept the Guest's pictures - resolved (2026-11-22, ADR 0034): a Guest who leaves keeps their pictures, the Event Album and the right to rejoin while the Group Film is open, while a removed Guest loses all three.
+- "The event opens" could mean **Load Film** or the time guests can start - resolved (2026-11-22, ADR 0034): the Join Code exists from Load Film, and the Group Film opens for joining and shooting at Load Film or at the **Start Time** the Host set.

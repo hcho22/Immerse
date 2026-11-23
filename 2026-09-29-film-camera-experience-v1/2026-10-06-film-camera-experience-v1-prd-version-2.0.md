@@ -686,6 +686,9 @@ Present the original-export choice at personal Development. If a personal user c
 >
 > Version 1.2 (2026-09-30) also moves the Account-only material here (section 8.13), because v1 has no Account, sign-in, server or Account deletion (ADR 0012).
 > In the preserved text below, statements such as "v1 keeps ..." describe version 1.1; version 1.2 defers the remaining Account parts too.
+>
+> **Overtaken on 2026-11-22.** The [v2 PRD](2026-11-22-film-camera-experience-v2-prd.md), now at version 1.1, states v2's Group Film and Account requirements, from the plan the captain settled on 2026-11-21 and 2026-11-22 (ADRs 0025 to 0034).
+> This section stays unchanged as the parked design it started from; where the two differ, the v2 PRD applies.
 
 Contents: 8.1 roles, vocabulary and permissions; 8.2 user stories; 8.3 FR-09 to FR-15; 8.4 FR-16 Group parts; 8.5 FR-17; 8.6 Group parts of FR-18 to FR-21; 8.7 state model; 8.8 engineering approach; 8.9 verification; 8.10 delivery milestones; 8.11 open decisions; 8.12 other Group clauses removed from v1 sections; 8.13 Account-only material moved from v1 in version 1.2.
 
@@ -1019,6 +1022,7 @@ Group clauses removed from DEC rows kept in v1: DEC-03 "storage/.../push vendors
 
 Captain decision, 2026-09-30 (ADR 0012): the per-iPhone Trial follows FR-21, and v1 has no server, Account, sign-in or Account deletion flow.
 Accounts return in v2 when Groups need them (hosting, subscriber load contribution), so this material is kept for v2 and is not v1 scope.
+On 2026-11-22 the [v2 PRD](2026-11-22-film-camera-experience-v2-prd.md) overtook it: only Hosts sign in, with Apple, Google or email through Clerk, and the Trial stays one personal Film per iPhone (ADR 0028), so the Account-scoped Trial below does not return; this text stays as history.
 The text below is the version 1.1 wording of what version 1.2 removed or rewrote in v1 sections. Whole requirements are quoted verbatim; for table rows and single sentences the cells or sentences are listed as quoted text, or as label: text where a row is summarized.
 The Account-only tasks are in the tracker's Deferred to v2 section (IDN-01, IDN-04, IDD-01, IDD-05, IDD-10 to IDD-12, TRI-05 to TRI-08, TRI-10, DEC-07, QA-10), with earlier Account-dependent task wording preserved there.
 
