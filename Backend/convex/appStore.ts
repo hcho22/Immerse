@@ -9,9 +9,10 @@
 //   Apple for the subscription's status and, only while Apple says it is active, links it to the Account and credits
 //   the subscriber's free Rolls, once ever.
 // - `receiveNotification`: Apple's App Store Server Notifications (version 2), posted to `/apple/notifications`
-//   (http.ts). A purchase, a refund and a refund's reversal each carry the transaction as Apple signed it, which is
-//   applied as the app's report is, so a purchase whose app never reports it, such as an Ask to Buy approved later, is
-//   still credited, and a refund removes its Rolls without the app.
+//   (http.ts). A purchase, a refund and a refund's reversal each name a transaction; once the notification's signature
+//   is Apple's, the server asks Apple for that transaction as it stands now and applies Apple's answer as it applies
+//   the app's report. So a purchase whose app never reports it, such as an Ask to Buy approved later, is still
+//   credited, a refund removes its Rolls without the app, and no balance changes on a signature alone.
 import { v } from "convex/values";
 import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
@@ -198,13 +199,14 @@ export type NotificationReply = { status: number; handled: string };
 
 // One App Store Server Notification. The HTTP status it returns tells Apple whether to send it again: 200 when it is
 // applied or needs nothing, 401 when it is not Apple's, 400 when it is not for this app, and 503 while the deployment
-// cannot apply it, so Apple retries.
+// cannot apply it, such as while Apple's API cannot be asked, so Apple retries.
 export const receiveNotification = internalAction({
   args: { signedPayload: v.string() },
   handler: async (ctx, { signedPayload }): Promise<NotificationReply> => {
     const settings = appStoreSettings();
-    if (!settings.ok) {
-      console.error(`An App Store notification arrived, but ${settings.problem}`);
+    const credentials = appStoreApiCredentials();
+    if (!settings.ok || !credentials.ok) {
+      console.error(`An App Store notification arrived, but ${!settings.ok ? settings.problem : (credentials as { problem: string }).problem}`);
       return { status: 503, handled: "notConfigured" };
     }
     let notification: Record<string, unknown>;
@@ -239,9 +241,28 @@ export const receiveNotification = internalAction({
     // A subscription's refund or charge needs nothing: subscriber Rolls are credited once, at the link, and stay
     // (V2-FR-63).
     if (transaction.type !== CONSUMABLE) return { status: 200, handled: "notARollPurchase" };
+    // Apple's answer now, not the notification's copy, is what is applied.
+    let answer: Awaited<ReturnType<typeof currentTransaction>>;
+    try {
+      answer = await currentTransaction(credentials.value, settings.value.bundleId, environment, transaction.transactionId);
+    } catch (error) {
+      if (!(error instanceof AppStoreUnavailable) && !(error instanceof SignedDataRefused)) throw error;
+      console.warn(`An App Store notification waits for Apple's API: ${error.message}`);
+      return { status: 503, handled: "retry" };
+    }
+    if (!answer.found) return { status: 503, handled: "retry" };
+    const current = answer.value;
+    if (
+      current.transactionId !== transaction.transactionId ||
+      current.bundleId !== settings.value.bundleId ||
+      current.environment !== environment ||
+      current.type !== CONSUMABLE
+    ) {
+      return { status: 400, handled: "otherApp" };
+    }
     // A failure here throws, and the route answers 500, so Apple sends the notification again.
     const outcome: PurchaseOutcome = await ctx.runMutation(internal.purchases.applyTransaction, {
-      transaction: forApplying(transaction, environment),
+      transaction: forApplying(current, environment),
     });
     return { status: 200, handled: outcome.state };
   },

@@ -338,11 +338,12 @@ describe("Apple's server notifications", () => {
     expect(await notify(t, refund)).toMatchObject({ status: 200 });
     expect(await balance(host)).toBe(-25);
     // Apple reverses the refund: the Rolls come back.
+    await apple.update(id, { revocationDate: undefined });
     const reversedAt = refundedAt + 1_000;
     const reversal = await apple.notification("REFUND_REVERSED", { ...fields, signedDate: reversedAt });
     expect(await notify(t, reversal)).toEqual({ status: 200, body: { handled: "credited" } });
     expect(await balance(host)).toBe(0);
-    // The refund, retried late by Apple, is older than the reversal and changes nothing.
+    // The refund, retried late by Apple, changes nothing: Apple says the purchase stands.
     expect(await notify(t, refund)).toMatchObject({ status: 200 });
     expect(await balance(host)).toBe(0);
     expect((await ledgerFor(t, id)).map((row) => [row.kind, row.rolls])).toEqual([
@@ -411,6 +412,27 @@ describe("Apple's server notifications", () => {
       status: 200,
       body: { handled: "notARollPurchase" },
     });
+  });
+
+  test("a notification changes nothing Apple's API does not confirm, and waits while the API cannot be asked", async () => {
+    const t = newBackend();
+    const { host, token } = await hostWithToken(t);
+    const before = await balance(host);
+    // Signed with Apple's chain, but Apple's API does not know the transaction: Apple is asked to send it again.
+    const unknown = { transactionId: transactionId(), productId: PACK_LARGE, appAccountToken: token };
+    expect(await notify(t, await apple.notification("ONE_TIME_CHARGE", unknown))).toEqual({ status: 503, body: { handled: "retry" } });
+    // A reversal of a refund Apple's API still shows as refunded adds nothing back.
+    const fields = { transactionId: transactionId(), productId: PACK_SMALL, appAccountToken: token };
+    await apple.purchase({ ...fields, revocationDate: Date.now() });
+    expect(await notify(t, await apple.notification("REFUND_REVERSED", fields))).toEqual({ status: 200, body: { handled: "refunded" } });
+    // While the API is down, Apple is asked to send it again.
+    await apple.update(fields.transactionId, { revocationDate: undefined });
+    apple.unavailable = true;
+    expect(await notify(t, await apple.notification("ONE_TIME_CHARGE", fields))).toEqual({ status: 503, body: { handled: "retry" } });
+    expect(await balance(host)).toBe(before);
+    apple.unavailable = false;
+    expect(await notify(t, await apple.notification("ONE_TIME_CHARGE", fields))).toEqual({ status: 200, body: { handled: "credited" } });
+    expect(await balance(host)).toBe(before + 5);
   });
 
   test("an unconfigured deployment asks Apple to send notifications again later", async () => {

@@ -82,6 +82,7 @@ describe("buying Rolls on Convex's local backend", () => {
     expect((await notify(await apple.notification("REFUND", { ...fields, revocationDate: refundedAt, signedDate: refundedAt }))).status).toBe(200);
     expect(await balance(person)).toBe(start);
     expect((await notify(await apple.notification("REFUND", fields, { chain: apple.forger }))).status).toBe(401);
+    await apple.update(fields.transactionId, { revocationDate: undefined });
     expect((await notify(await apple.notification("REFUND_REVERSED", { ...fields, signedDate: refundedAt + 1_000 }))).status).toBe(200);
     expect(await balance(person)).toBe(start + 25);
 

@@ -1,10 +1,12 @@
-# Setting up the real services for v2 Stages 1 to 3
+# Setting up the real services for v2 Stages 1 to 4
 
-This is the list of what the captain creates, in the order to create it, before Stages 1 to 3 can be proved on iPhones and the real services ([the v2 PRD](../2026-09-29-film-camera-experience-v1/2026-11-22-film-camera-experience-v2-prd.md), section 12).
+This is the list of what the captain creates, in the order to create it, before Stages 1 to 4 can be proved on iPhones and the real services ([the v2 PRD](../2026-09-29-film-camera-experience-v1/2026-11-22-film-camera-experience-v2-prd.md), section 12).
 Nothing in it has been created: no account, project, deployment, bucket, application, key or certificate exists for Immerse's server yet.
 Every value below goes into the Convex deployment's environment or the untracked `App/Immerse/Config/Server.local.xcconfig`, never into the repository.
 `Backend/.env.example`, `App/Immerse/Config/Server.local.xcconfig.example` and `Backend/worker/wrangler.example.jsonc` hold placeholders only.
 Stage 3 adds steps 1a (the App Clip's identifiers), 4a (the join page's Worker), the Worker's secret in step 5, the mini-app's lines in step 7 and step 9 (the App Clip experience); Stages 1 and 2 can be proved without them.
+Stage 4 adds step 10 (App Store Connect: the Roll packs, the In-App Purchase key and the server notifications) and its values in step 5.
+**Step 10 cannot start until the pricing decision (open check OC-5, with the v1 subscription's price, DEC-02) sets the packs, their sizes and prices, and the free amounts**: no number of it is in the repository, the app or the example configuration, which holds only placeholders that sell nothing.
 
 Each step names the values it produces and where they go.
 Where a vendor's dashboard has moved since 2026-11-22, the vendor's own page linked in the step is the authority.
@@ -18,7 +20,10 @@ Where a vendor's dashboard has moved since 2026-11-22, the vendor's own page lin
    The lifetime is a setting of the Clerk instance, not of the app or the server: the app never assumes it, and Clerk's SDK keeps refreshing the session while the app is in use.
    Moving to Clerk Pro later ($25 a month, or $20 billed yearly, as read on 2026-11-22), which sets a native session lifetime from 5 minutes to 10 years, is a change in Clerk's dashboard alone, with no code change; a lifetime of 30 days would cover every event.
    Manual check V03 shows the free plan's behavior at eight days.
-2. **The App ID's capabilities.**
+2. **The pricing decision comes before Stage 4 (OC-5).**
+   It sets how many Roll packs there are, how many Rolls each adds, the price of each, everyone's free Rolls (the server's default is the PRD's "about 3") and a subscriber's larger free amount.
+   Until it is made, nothing is created in step 10, the server sells nothing (`purchases:catalog` lists no pack, and the app says Rolls are not on sale yet) and gives no subscriber's free Rolls, and Stage 4's sandbox and App Review proofs (section B of `Evidence/NativeApp/manual-validation.md`) cannot run.
+3. **The App ID's capabilities.**
    The v2 build adds four capabilities to the existing App ID `com.immerse.FilmJournal`: Sign in with Apple, Push Notifications, Declared Age Range and Associated Domains.
    A build without the local configuration file signs with none of them, so v1 builds are unaffected until the configuration file is added on a Mac.
 
@@ -148,10 +153,32 @@ Stage 3 adds the secret the join page's Worker proves itself with (step 4a); wit
 npx convex env set WEB_GATEWAY_SECRET "$(openssl rand -base64 48)"
 ```
 
+Stage 4 adds what the server needs to sell Rolls and confirm the subscription (step 10).
+The packs and the subscriber's free Rolls are the pricing decision's (OC-5); never set them from the placeholders in `.env.example`, which the server refuses:
+
+```sh
+npx convex env set APPLE_BUNDLE_ID com.immerse.FilmJournal
+npx convex env set APPLE_APP_APPLE_ID <the app's Apple ID, digits only>
+npx convex env set APPLE_ENVIRONMENTS Sandbox              # the development deployment
+npx convex env set APPLE_ENVIRONMENTS Production,Sandbox   # the production deployment, where App Review buys in the sandbox
+npx convex env set APP_STORE_KEY_ID <the In-App Purchase key's id>
+npx convex env set APP_STORE_ISSUER_ID <the issuer id>
+npx convex env set -- APP_STORE_PRIVATE_KEY "$(cat <path to the In-App Purchase key's .p8 file>)"
+npx convex env set ROLL_PACKS "<product id>:<Rolls>,<product id>:<Rolls>"   # one entry per pack, from OC-5
+npx convex env set SUBSCRIPTION_PRODUCT_IDS "<monthly product id>,<yearly product id>"   # the v1 subscription (DEC-02)
+npx convex env set FREE_ROLLS_SUBSCRIBER <a subscriber's free Rolls, from OC-5>
+npx convex env set FREE_ROLLS_EVERYONE <everyone's free Rolls, from OC-5>
+```
+
+Until all of `APPLE_BUNDLE_ID`, `APPLE_ENVIRONMENTS`, the three `APP_STORE_*` values and `ROLL_PACKS` are set and well formed, the server sells nothing; until `SUBSCRIPTION_PRODUCT_IDS` and a `FREE_ROLLS_SUBSCRIBER` of 1 or more are set too, it links no subscription, so no subscriber's once-ever free Rolls are spent on a deployment that cannot give them.
+`APPLE_APP_APPLE_ID` is needed before `APPLE_ENVIRONMENTS` names Production: a production notification must carry it.
+`APPLE_ROOT_CA_PEM` and `APP_STORE_API_ORIGIN` stay unset: only the tests set them, to a certificate chain and an App Store Server API stand-in of their own; the server pins Apple Root CA - G3 itself (`convex/lib/appleSigned.ts`).
+A pack's Rolls are fixed in each purchase's record when the server first sees it, so changing `ROLL_PACKS` later never changes what an earlier purchase credited or what its refund removes; a product taken out of `ROLL_PACKS` is no longer sold, and a purchase of it that the server has not yet seen waits, unfinished on the iPhone, until the product is named again.
+
 `JOIN_CODE_SECRET` derives every event's Join Code (`convex/lib/joinCode.ts`); the database keeps only each code's verifier.
 **Never change it once events exist**: every printed code and link would stop working.
 
-`CLERK_API_URL`, `APNS_ORIGIN` and `APNS_CA_PEM` stay unset: only the tests set them, to point at stand-ins.
+`CLERK_API_URL`, `APNS_ORIGIN`, `APNS_CA_PEM`, `APPLE_ROOT_CA_PEM` and `APP_STORE_API_ORIGIN` stay unset: only the tests set them, to point at stand-ins.
 
 ## 5a. The support relay for reports (OQ-12)
 
@@ -224,6 +251,33 @@ An App Clip opens from a link or a QR code only once a version of the app that h
 6. In the review notes, say that the App Clip joins a photo event by its link with a name only, that everything it does the full app does, and that it has no purchase, no sign-in and no advertising (guideline 2.5.16).
 7. App Clips are not offered to an Apple Account of a child under 13 or with Ask to Buy on; those guests install the full app, which the join page tells them.
 
+## 10. App Store Connect: the Roll packs, the In-App Purchase key and the server notifications (Stage 4)
+
+Rolls are consumable in-app purchases bought in the full app into the Host's balance on the server (V2-FR-60, V2-FR-61).
+The app holds no product, size, price or free amount: it asks the server what is on sale (`purchases:catalog`) and the App Store for each pack's price (V2-FR-64).
+**Start this step only after the pricing decision (OC-5).**
+
+1. **The Roll packs.** Under the app's In-App Purchases, create one **Consumable** for each pack the pricing decision names: a product identifier such as `com.immerse.FilmJournal.rolls.<pack name>`, a reference name, the price the decision chose, and a display name and description that say how many Rolls it adds (for example "<n> Rolls", one Roll for each guest).
+   Add the review screenshot App Store Connect asks for, from the Rolls sheet of a Debug build.
+   Set the same identifiers and Roll counts on the deployment as `ROLL_PACKS` (step 5); the server sells only what both name, and a pack's display name must agree with its count there.
+2. **The subscriber's free Rolls.** Set `FREE_ROLLS_SUBSCRIBER` from the pricing decision and `SUBSCRIPTION_PRODUCT_IDS` to the v1 subscription's monthly and yearly product identifiers (DEC-02).
+   The app sends the subscription only where its own build knows those identifiers, as v1's subscription screens do (`SubscriptionController.bundleConfiguration`, the Info.plist keys `ImmerseMonthlyProductID` and `ImmerseYearlyProductID`), so a build without them sends nothing.
+   The server confirms the subscription with Apple's App Store Server API before it credits anything, and a subscription's free Rolls go to one Account, once ever; moving them to another Account is support's (V2-FR-63): after checking with the person, support moves the row of `subscriptionLinks` from the dashboard, which no app or public function can do.
+3. **The In-App Purchase key.** Under Users and Access, Integrations, In-App Purchase, generate a key and download its `.p8` file once.
+   It produces `APP_STORE_KEY_ID`, `APP_STORE_PRIVATE_KEY` (the file's text) and, from the same page, `APP_STORE_ISSUER_ID`.
+   The server signs a five-minute token with it for each question it asks Apple: Get Transaction Info before crediting a purchase, and Get All Subscription Statuses before giving a subscriber's free Rolls.
+   Keep the `.p8` file out of the repository and every shared folder.
+4. **The app's Apple ID.** Under App Information, copy the Apple ID (digits only); it is `APPLE_APP_APPLE_ID`.
+5. **App Store Server Notifications.** Under App Information, App Store Server Notifications, set **Version 2** and the URLs:
+   - Production Server URL: `https://<the production deployment>.convex.site/apple/notifications`
+   - Sandbox Server URL: `https://<the development deployment>.convex.site/apple/notifications` while Stage 4 is proved there, or the production deployment's while App Review buys against it
+   Apple posts a signed payload there for each Roll purchase (`ONE_TIME_CHARGE`, which credits an Ask to Buy approved later or a purchase whose app never reported it), each refund (`REFUND`) and each reversal (`REFUND_REVERSED`) (V2-FR-65); the server applies only what Apple signed, and answers anything else with an error, which changes nothing.
+   Use App Store Connect's or the App Store Server API's request for a test notification once the URL is set: the deployment's logs show it answered 200 (`handled: "test"`).
+6. **Sandbox testers.** Under Users and Access, Sandbox, create the sandbox Apple Accounts section B of the manual plan needs.
+   A purchase in the sandbox credits real Rolls on whichever deployment accepts `Sandbox`; on the production deployment that is what lets App Review and TestFlight buy, at no charge to them.
+7. **App Review notes**, with the build: Group Films need an Account only to host; Rolls are consumables held on the server against the Account and restored by signing in, not by StoreKit's restore (guideline 3.1.1), and they never expire; every Account gets a small number of free Rolls once, and an Account linked to the v1 subscription a larger number once, after the server confirms the subscription with Apple; hosting needs no subscription; the App Clip sells nothing (guideline 2.5.16); Delete Account is in Settings, two taps from the Journal (guideline 5.1.1(v)); and the user-generated content answers of PRD section 11.4.
+   Give App Review a sandbox account and the steps to reach the Rolls sheet (Settings, Rolls) and to buy a pack.
+
 ## What each value is
 
 | Value | Where it goes | Secret | Comes from |
@@ -240,7 +294,12 @@ An App Clip opens from a link or a QR code only once a version of the app that h
 | `JOIN_CODE_SECRET` | Convex environment | Yes | Generated, step 5 |
 | `SUPPORT_REPORT_WEBHOOK_URL` | Convex environment | No | The relay, step 5a |
 | `SUPPORT_REPORT_WEBHOOK_SECRET` | Convex environment and the relay | Yes | Generated, step 5 |
-| `FREE_ROLLS_EVERYONE`, `FREE_ROLLS_SUBSCRIBER` | Convex environment (optional) | No | The pricing decision (OC-5) |
+| `FREE_ROLLS_EVERYONE`, `FREE_ROLLS_SUBSCRIBER` | Convex environment (`FREE_ROLLS_SUBSCRIBER` needed for the subscriber's free Rolls) | No | The pricing decision (OC-5) |
+| `ROLL_PACKS` | Convex environment | No | The pricing decision (OC-5) and the products of step 10 |
+| `SUBSCRIPTION_PRODUCT_IDS` | Convex environment | No | The v1 subscription's products (DEC-02), step 10 |
+| `APPLE_BUNDLE_ID`, `APPLE_APP_APPLE_ID`, `APPLE_ENVIRONMENTS` | Convex environment | No | App Store Connect, step 10 |
+| `APP_STORE_KEY_ID`, `APP_STORE_ISSUER_ID` | Convex environment | No | App Store Connect's In-App Purchase key, step 10 |
+| `APP_STORE_PRIVATE_KEY` | Convex environment | Yes | App Store Connect's In-App Purchase key, step 10 |
 | `CONVEX_DEPLOY_KEY` | The Mac's environment | Yes | Convex, step 2 |
 | `CLERK_JWT_ISSUER_DOMAIN` | Convex environment | No | Clerk, step 3 |
 | `CLERK_SECRET_KEY` | Convex environment | Yes | Clerk, step 3 |
