@@ -172,6 +172,8 @@ npx convex env set FREE_ROLLS_EVERYONE <everyone's free Rolls, from OC-5>
 
 Until all of `APPLE_BUNDLE_ID`, `APPLE_ENVIRONMENTS`, the three `APP_STORE_*` values and `ROLL_PACKS` are set and well formed, the server sells nothing; until `SUBSCRIPTION_PRODUCT_IDS` and a `FREE_ROLLS_SUBSCRIBER` of 1 or more are set too, it links no subscription, so no subscriber's once-ever free Rolls are spent on a deployment that cannot give them.
 `APPLE_APP_APPLE_ID` is needed before `APPLE_ENVIRONMENTS` names Production: a production notification must carry it.
+**Warning:** while the production deployment accepts Sandbox, any TestFlight tester can get real Rolls without paying.
+Restrict sandbox crediting before any public TestFlight link or public launch.
 `APPLE_ROOT_CA_PEM` and `APP_STORE_API_ORIGIN` stay unset: only the tests set them, to a certificate chain and an App Store Server API stand-in of their own; the server pins Apple Root CA - G3 itself (`convex/lib/appleSigned.ts`).
 A pack's Rolls are fixed in each purchase's record when the server first sees it, so changing `ROLL_PACKS` later never changes what an earlier purchase credited or what its refund removes; a product taken out of `ROLL_PACKS` is no longer sold, and a purchase of it that the server has not yet seen waits, unfinished on the iPhone, until the product is named again.
 

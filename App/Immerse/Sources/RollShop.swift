@@ -136,17 +136,35 @@ final class RollShop {
         let text: String
     }
 
+    /// What the shop read and said for one signed-in Account; another Account, or nobody, starts from nothing.
+    private struct AccountRolls {
+        var balance: Int?
+        var history: [BalanceEntry] = []
+        var subscriberRolls: Int?
+        var subscriberOffered = false
+        var awaitingApproval = false
+        var notice: Notice?
+    }
+
     private(set) var shelf: Shelf = .loading
-    private(set) var balance: Int?
-    private(set) var history: [BalanceEntry] = []
-    /// The subscriber Rolls this Account has had, once ever (V2-FR-62).
-    private(set) var subscriberRolls: Int?
-    private(set) var subscriberOffered = false
     /// A purchase is under way: the App Store's sheet, or its report to the server.
     private(set) var buying = false
+    private var held = AccountRolls()
+    /// The `HostingSession.accountSession` that `held` belongs to.
+    private var heldSession = 0
+    private var current: AccountRolls { heldSession == hosting.accountSession ? held : AccountRolls() }
+
+    var balance: Int? { current.balance }
+    var history: [BalanceEntry] { current.history }
+    /// The subscriber Rolls this Account has had, once ever (V2-FR-62).
+    var subscriberRolls: Int? { current.subscriberRolls }
+    var subscriberOffered: Bool { current.subscriberOffered }
     /// A purchase waits for Ask to Buy approval (V2-FR-65).
-    private(set) var awaitingApproval = false
-    var notice: Notice?
+    var awaitingApproval: Bool { current.awaitingApproval }
+    var notice: Notice? {
+        get { current.notice }
+        set { hold(hosting.accountSession) { $0.notice = newValue } }
+    }
 
     let hosting: HostingSession
     private let server: RollServer
@@ -178,15 +196,29 @@ final class RollShop {
 
     deinit { listener?.cancel() }
 
+    /// Changes what is held for the Account of `session`, read when a call began; an answer that arrives after that
+    /// Account left changes nothing.
+    private func hold(_ session: Int, _ change: (inout AccountRolls) -> Void) {
+        guard session == hosting.accountSession else { return }
+        if heldSession != session {
+            held = AccountRolls()
+            heldSession = session
+        }
+        change(&held)
+    }
+
     /// Reads what is on sale, the balance and its history, reports any purchase still waiting for the server, and sends
     /// an active subscription to the server once, for its free Rolls.
     func refresh() async {
         guard hosting.isSignedIn else { return }
+        let session = hosting.accountSession
         await reportUnfinished()
         do {
             let catalog = try await server.catalog()
-            subscriberOffered = catalog.subscriberOffered
-            subscriberRolls = catalog.subscriberRollsCredited
+            hold(session) {
+                $0.subscriberOffered = catalog.subscriberOffered
+                $0.subscriberRolls = catalog.subscriberRollsCredited
+            }
             if catalog.packs.isEmpty {
                 shelf = .notOnSale
             } else {
@@ -200,12 +232,12 @@ final class RollShop {
             if shelf == .loading { shelf = .couldNotLoad }
         }
         await linkSubscriptionIfNeeded()
-        await readBalance()
+        await readBalance(session)
     }
 
-    private func readBalance() async {
-        if let balance = try? await EventServer(functions: hosting.functions).balance() { self.balance = balance }
-        if let history = try? await server.history() { self.history = history }
+    private func readBalance(_ session: Int) async {
+        if let balance = try? await EventServer(functions: hosting.functions).balance() { hold(session) { $0.balance = balance } }
+        if let history = try? await server.history() { hold(session) { $0.history = history } }
         await balanceChanged?()
     }
 
@@ -216,6 +248,7 @@ final class RollShop {
             notice = Notice(kind: .info, text: "Sign in to buy Rolls.")
             return
         }
+        let session = hosting.accountSession
         buying = true
         notice = nil
         defer { buying = false }
@@ -223,22 +256,24 @@ final class RollShop {
         do {
             token = try await server.shoppingToken()
         } catch {
-            notice = Notice(kind: .problem, text: GroupFilmsCopy.words(for: error))
+            hold(session) { $0.notice = Notice(kind: .problem, text: GroupFilmsCopy.words(for: error)) }
             return
         }
         do {
             switch try await store.purchase(productID: sale.pack.productId, appAccountToken: token) {
             case .purchased(let transaction):
-                awaitingApproval = false
+                hold(session) { $0.awaitingApproval = false }
                 await report(transaction, fromPurchase: true)
             case .pending:
-                awaitingApproval = true
-                notice = Notice(kind: .info, text: RollShopCopy.pending)
+                hold(session) {
+                    $0.awaitingApproval = true
+                    $0.notice = Notice(kind: .info, text: RollShopCopy.pending)
+                }
             case .cancelled:
                 break
             }
         } catch {
-            notice = Notice(kind: .problem, text: RollShopCopy.didNotFinish)
+            hold(session) { $0.notice = Notice(kind: .problem, text: RollShopCopy.didNotFinish) }
         }
     }
 
@@ -250,51 +285,59 @@ final class RollShop {
     private func report(_ transaction: RollTransaction, fromPurchase: Bool) async {
         guard reporting.insert(transaction.id).inserted else { return }
         defer { reporting.remove(transaction.id) }
+        let session = hosting.accountSession
         do {
             let answer = try await server.creditPurchase(signedTransaction: transaction.signedTransaction)
             if answer.credit.settled { await transaction.finish() }
-            if let balance = answer.balance { self.balance = balance }
+            if let balance = answer.balance { hold(session) { $0.balance = balance } }
             switch answer.credit {
             case .credited(let rolls, let toThisAccount):
-                awaitingApproval = false
-                if fromPurchase || toThisAccount {
-                    notice = Notice(kind: toThisAccount ? .done : .info,
-                                    text: toThisAccount ? RollShopCopy.added(rolls) : RollShopCopy.otherAccount)
+                hold(session) {
+                    $0.awaitingApproval = false
+                    if fromPurchase || toThisAccount {
+                        $0.notice = Notice(kind: toThisAccount ? .done : .info,
+                                           text: toThisAccount ? RollShopCopy.added(rolls) : RollShopCopy.otherAccount)
+                    }
                 }
             case .refunded:
-                if fromPurchase { notice = Notice(kind: .info, text: RollShopCopy.refunded) }
+                if fromPurchase { hold(session) { $0.notice = Notice(kind: .info, text: RollShopCopy.refunded) } }
             case .unassigned:
-                if fromPurchase { notice = Notice(kind: .info, text: RollShopCopy.signInToAdd) }
+                if fromPurchase { hold(session) { $0.notice = Notice(kind: .info, text: RollShopCopy.signInToAdd) } }
             case .notOnSale:
-                if fromPurchase { notice = Notice(kind: .info, text: RollShopCopy.safeWithApple) }
+                if fromPurchase { hold(session) { $0.notice = Notice(kind: .info, text: RollShopCopy.safeWithApple) } }
             }
-            await readBalance()
+            await readBalance(session)
         } catch .refused(.purchaseRefused) {
             // Kept unfinished: the purchase stays with Apple, and support can look into it.
-            if fromPurchase { notice = Notice(kind: .problem, text: RollShopCopy.notConfirmed(support: supportAddress)) }
+            if fromPurchase {
+                hold(session) { $0.notice = Notice(kind: .problem, text: RollShopCopy.notConfirmed(support: supportAddress)) }
+            }
         } catch {
             // Unreachable, or Apple could not confirm it yet: kept unfinished and reported again later.
-            if fromPurchase { notice = Notice(kind: .info, text: RollShopCopy.safeWithApple) }
+            if fromPurchase { hold(session) { $0.notice = Notice(kind: .info, text: RollShopCopy.safeWithApple) } }
         }
     }
 
     /// Sends the v1 subscription to the server once, so it confirms it with Apple and credits the subscriber's free Rolls
     /// (V2-FR-63). Only while signed in, only where the server offers them and this Account has not had them.
     func linkSubscriptionIfNeeded() async {
+        let session = hosting.accountSession
         guard hosting.isSignedIn, subscriberOffered, subscriberRolls == nil, !subscriptionProductIDs.isEmpty,
               let signed = await store.subscriptionTransaction(productIDs: subscriptionProductIDs) else { return }
         guard let answer = try? await server.linkSubscription(signedTransaction: signed) else { return }
-        balance = answer.balance
-        switch answer.link {
-        case .credited(let rolls):
-            subscriberRolls = rolls
-            notice = Notice(kind: .done, text: RollShopCopy.subscriberCredited(rolls))
-        case .alreadyCredited(let rolls):
-            subscriberRolls = rolls
-        case .linkedElsewhere:
-            notice = Notice(kind: .info, text: RollShopCopy.linkedElsewhere(support: supportAddress))
-        case .accountAlreadyCredited, .notActive:
-            break
+        hold(session) {
+            $0.balance = answer.balance
+            switch answer.link {
+            case .credited(let rolls):
+                $0.subscriberRolls = rolls
+                $0.notice = Notice(kind: .done, text: RollShopCopy.subscriberCredited(rolls))
+            case .alreadyCredited(let rolls):
+                $0.subscriberRolls = rolls
+            case .linkedElsewhere:
+                $0.notice = Notice(kind: .info, text: RollShopCopy.linkedElsewhere(support: supportAddress))
+            case .accountAlreadyCredited, .notActive:
+                break
+            }
         }
     }
 }

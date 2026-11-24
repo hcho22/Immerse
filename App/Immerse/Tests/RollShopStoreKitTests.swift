@@ -225,6 +225,41 @@ final class RollShopTests: XCTestCase {
         await shop.refresh()
         XCTAssertEqual(server.links, 1, "Not sent again once its Rolls are credited")
     }
+
+    func testAnotherAccountSignedInOfflineSeesNothingOfTheFirstAccountsRolls() async {
+        let server = RollStandInServer()
+        server.subscriberOffered = true
+        let store = ScriptedRollStore(result: .cancelled)
+        store.subscription = "subscription.jws.sig"
+        let defaults = UserDefaults(suiteName: "RollShopTests-\(UUID().uuidString)")!
+        defaults.set("Maya", forKey: "ImmerseHostDisplayName")
+        let signIn = RollShopSignIn(session: true)
+        let hosting = HostingSession(signIn: signIn, functions: server, defaults: defaults)
+        let shop = RollShop(hosting: hosting, functions: server, store: store, subscriptionProductIDs: ["test.immerse.monthly"],
+                            supportAddress: "support@immerse.test")
+        await shop.refresh()
+        XCTAssertEqual(shop.balance, 23)
+        XCTAssertEqual(shop.subscriberRolls, 20)
+        XCTAssertNotNil(shop.notice)
+
+        await hosting.signOut()
+        XCTAssertNil(shop.balance, "Nobody is signed in")
+        XCTAssertNil(shop.subscriberRolls)
+        XCTAssertFalse(shop.subscriberOffered)
+        XCTAssertNil(shop.notice)
+
+        // Another Account, with the same display name, signs in while Immerse's server cannot be reached for Rolls.
+        signIn.hasSession = true
+        server.offline = true
+        await hosting.refresh()
+        XCTAssertEqual(hosting.phase, .signedIn(displayName: "Maya"))
+        await shop.refresh()
+        XCTAssertNil(shop.balance)
+        XCTAssertEqual(shop.history, [])
+        XCTAssertNil(shop.subscriberRolls)
+        XCTAssertNil(shop.notice)
+        XCTAssertEqual(server.links, 1, "The subscription is not sent for the new Account before its catalog is read")
+    }
 }
 
 private final class FinishRecord: @unchecked Sendable {
@@ -271,7 +306,7 @@ final class RollStandInServer: ServerFunctions, @unchecked Sendable {
     static let token = UUID(uuidString: "0F1E2D3C-4B5A-4987-A654-3210FEDCBA98")!
     private let lock = NSLock()
     private var state = (balance: 3, credited: [String: Int](), reported: [String](), tokens: [String](), links: 0,
-                         unreachable: false, refuseAll: false, subscriberOffered: false, subscriberRolls: Int?.none)
+                         unreachable: false, offline: false, refuseAll: false, subscriberOffered: false, subscriberRolls: Int?.none)
 
     var balance: Int { lock.withLock { state.balance } }
     var credited: [String: Int] { lock.withLock { state.credited } }
@@ -281,6 +316,11 @@ final class RollStandInServer: ServerFunctions, @unchecked Sendable {
     var unreachable: Bool {
         get { lock.withLock { state.unreachable } }
         set { lock.withLock { state.unreachable = newValue } }
+    }
+    /// Only the Account answers; every Roll function is unreachable.
+    var offline: Bool {
+        get { lock.withLock { state.offline } }
+        set { lock.withLock { state.offline = newValue } }
     }
     var refuseAll: Bool {
         get { lock.withLock { state.refuseAll } }
@@ -300,6 +340,10 @@ final class RollStandInServer: ServerFunctions, @unchecked Sendable {
 
     /// Answers one call; the lock is held.
     private func answer(_ path: String, _ args: [String: JSONValue]) throws(ServerError) -> JSONValue {
+        if path == "accounts:me" {
+            return ["state": "signedIn", "account": ["displayName": "Maya", "ageConfirmedAt": 1, "createdAt": 1]]
+        }
+        if state.offline { throw .unreachable }
         switch path {
         case "purchases:catalog":
             return ["packs": [["productId": "test.immerse.rolls.small", "rolls": 5], ["productId": "test.immerse.rolls.large", "rolls": 25]],
