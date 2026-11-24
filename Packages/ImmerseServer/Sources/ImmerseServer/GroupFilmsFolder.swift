@@ -44,7 +44,7 @@ public struct GroupFilmsFolder: Equatable, Sendable {
     /// A build that gains the App Group moves what it kept in its own folder into the shared one, once, and only when the
     /// shared one holds nothing yet. The move is one rename on the same volume: it happens whole or not at all.
     func adopt(local: URL, fileManager: FileManager = .default) throws {
-        guard fileManager.fileExists(atPath: local.path), !fileManager.fileExists(atPath: url.path) else { return }
+        guard fileManager.mayHoldItem(at: local), !fileManager.mayHoldItem(at: url) else { return }
         try fileManager.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
         try fileManager.moveItem(at: local, to: url)
     }
@@ -53,7 +53,7 @@ public struct GroupFilmsFolder: Equatable, Sendable {
 
     /// Whether the full app has run here. The mini-app reads it and hands over rather than write beside the full app.
     public var fullAppTookOver: Bool {
-        FileManager.default.fileExists(atPath: takeOverMark.path)
+        FileManager.default.mayHoldItem(at: takeOverMark)
     }
 
     /// The full app marks the folder as its own each time it starts. Marking it again changes nothing.
@@ -61,5 +61,16 @@ public struct GroupFilmsFolder: Equatable, Sendable {
         guard !fullAppTookOver else { return }
         try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
         try Data().write(to: takeOverMark, options: .atomic)
+    }
+}
+
+extension FileManager {
+    /// Whether an item may be at `url`: only a path confirmed missing reads as absent. `fileExists(atPath:)` also reads
+    /// an existing item it cannot inspect as absent, which could move guests' places onto one that is there or let the
+    /// mini-app write beside the full app.
+    func mayHoldItem(at url: URL) -> Bool {
+        do { return try url.checkResourceIsReachable() }
+        catch CocoaError.fileReadNoSuchFile { return false }
+        catch { return true }
     }
 }

@@ -253,9 +253,9 @@ function album(code: string, entries: AlbumEntry[], parts: AlbumPart[]): string 
 <ol class="album">
 ${items}
 </ol>
-<h2>${parts.length === 1 ? "Save them all" : "Save them all, in parts"}</h2>
+${parts.length === 0 ? "" : `<h2>${parts.length === 1 ? "Save them all" : "Save them all, in parts"}</h2>
 ${downloads}
-<p class="small">A saved picture is your own copy. Removing it from the album later cannot recall it.</p>`;
+`}<p class="small">A saved picture is your own copy. Removing it from the album later cannot recall it.</p>`;
 }
 
 export function joinPage(options: {

@@ -355,6 +355,28 @@ describe("the view-only web album (V2-FR-47)", () => {
     expect((await page.get(`/j/${joinCode}/album.zip?part=x`)).status).toBe(404);
   });
 
+  test("a picture stored with no checksum is shown but never promised in a download, and none offers no download", async () => {
+    const { t, page, joinCode, ids, third } = await revealedAlbum();
+    await t.run(async (ctx) => ctx.db.patch(ids[0] as Id<"pictures">, { crc32: undefined }));
+    const one = await page.get(`/j/${joinCode}`);
+    const html = await one.clone().text();
+    expect(await words(one)).toContain("2 pictures, in the order they were taken.");
+    expect(html).toContain(`href="/j/${joinCode}/album.zip"`);
+    const entries = unzip(new Uint8Array(await (await page.get(`/j/${joinCode}/album.zip`)).arrayBuffer()));
+    expect(entries.map((entry) => entry.name)).toEqual(["003.jpg"]);
+    expect(entries[0]!.bytes).toEqual(third.file.bytes);
+
+    await t.run(async (ctx) => ctx.db.patch(ids[2] as Id<"pictures">, { crc32: undefined }));
+    const none = await page.get(`/j/${joinCode}`);
+    const noneHtml = await none.clone().text();
+    const text = await words(none);
+    expect(text).toContain("2 pictures, in the order they were taken.");
+    expect(text).not.toContain("Save them all");
+    expect(text).not.toContain("Download the album");
+    expect(noneHtml).not.toContain("album.zip");
+    expect((await page.get(`/j/${joinCode}/album.zip`)).status).toBe(404);
+  });
+
   test("switched off while someone is viewing, their next picture load fails and the page says the pictures are no longer shared", async () => {
     const { host, eventId, page, joinCode, ids } = await revealedAlbum();
     expect((await page.get(`/j/${joinCode}/p/${ids[0]}/view`)).status).toBe(200);

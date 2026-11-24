@@ -80,6 +80,48 @@ final class GroupFilmsFolderTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: shared.url.appending(path: "places.json")), Data("places".utf8))
         XCTAssertEqual(try Data(contentsOf: local.appending(path: "places.json")), Data("later".utf8))
     }
+
+    /// A folder whose items exist but cannot be inspected: `fileExists` reads them as absent.
+    private func locked(_ name: String) throws -> URL {
+        let folder = root.appending(path: name)
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        addTeardownBlock { try? FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: folder.path) }
+        return folder
+    }
+
+    private func lock(_ folder: URL) throws {
+        try FileManager.default.setAttributes([.posixPermissions: 0o000], ofItemAtPath: folder.path)
+    }
+
+    func testASharedFolderThatCannotBeInspectedIsKeptAndNothingIsMovedOntoIt() throws {
+        let local = root.appending(path: "Local/GroupFilms")
+        try FileManager.default.createDirectory(at: local, withIntermediateDirectories: true)
+        try Data("places".utf8).write(to: local.appending(path: "places.json"))
+        let container = try locked("Shared")
+        try FileManager.default.createDirectory(at: container.appending(path: "GroupFilms"), withIntermediateDirectories: true)
+        try lock(container)
+        let shared = GroupFilmsFolder(url: container.appending(path: "GroupFilms"), isShared: true)
+        XCTAssertNoThrow(try shared.adopt(local: local))
+        XCTAssertEqual(try Data(contentsOf: local.appending(path: "places.json")), Data("places".utf8))
+    }
+
+    func testALocalFolderThatCannotBeInspectedIsNotSkippedSilently() throws {
+        let parent = try locked("Local")
+        let local = parent.appending(path: "GroupFilms")
+        try FileManager.default.createDirectory(at: local, withIntermediateDirectories: true)
+        try lock(parent)
+        let shared = GroupFilmsFolder(url: root.appending(path: "Shared/GroupFilms"), isShared: true)
+        XCTAssertThrowsError(try shared.adopt(local: local))
+    }
+
+    func testAMarkThatCannotBeInspectedReadsAsTheFullAppHavingTakenOver() throws {
+        let container = try locked("Shared")
+        let shared = GroupFilmsFolder(url: container.appending(path: "GroupFilms"), isShared: true)
+        try shared.markTakenOverByFullApp()
+        try lock(container)
+        XCTAssertTrue(shared.fullAppTookOver)
+        XCTAssertNoThrow(try shared.markTakenOverByFullApp())
+    }
 }
 
 final class WebAlbumSwitchTests: XCTestCase {
