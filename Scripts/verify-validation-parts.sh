@@ -49,10 +49,10 @@ for name in $mac_probes $built_probes; do
 done
 
 for target in $(test_targets App/Immerse/project.yml); do
-    listed "$target" "$app_unit_test_target $app_screen_test_target" \
+    listed "$target" "$app_unit_test_target $app_screen_test_target $mini_app_screen_test_target" \
         || fail "the app's test target $target belongs to no part"
 done
-for target in $app_unit_test_target $app_screen_test_target; do
+for target in $app_unit_test_target $app_screen_test_target $mini_app_screen_test_target; do
     listed "$target" "$(test_targets App/Immerse/project.yml | tr '\n' ' ')" \
         || fail "validation selects the app's test target $target, which App/Immerse/project.yml does not define"
 done
@@ -74,7 +74,10 @@ for suite in $text_size_suites $dark_suites; do
 done
 [ -n "$flow_suites" ] || fail "every suite of $app_screen_test_target is a text-size suite, so ui-flows would run nothing"
 
+mini_app_suites=$(suites "$mini_app_screen_tests" 2> /dev/null | tr '\n' ' ' | sed 's/ $//')
+[ -n "$mini_app_suites" ] || fail "$mini_app_screen_tests holds no suite, so the mini-app part would run no screen test"
+
 [ -f "$backend/package.json" ] || fail "backend names $backend, which has no package.json"
 
 [ "$failed" = 0 ] || exit 1
-echo "Validation parts: packages runs $(echo "$mac_packages" | wc -w | tr -d ' ') packages, $(echo "$mac_probes" | wc -w | tr -d ' ') probes and $app_unit_test_target; harness runs $harness_test_targets; ui-text runs $text_size_suites; ui-flows runs$flow_suites and, in dark, $dark_suites."
+echo "Validation parts: packages runs $(echo "$mac_packages" | wc -w | tr -d ' ') packages, $(echo "$mac_probes" | wc -w | tr -d ' ') probes and $app_unit_test_target; harness runs $harness_test_targets; ui-text runs $text_size_suites; ui-flows runs$flow_suites and, in dark, $dark_suites; mini-app runs the App Clip's size check and $mini_app_suites."

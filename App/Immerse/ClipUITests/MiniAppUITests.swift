@@ -8,7 +8,7 @@ import XCTest
 ///
 /// What no simulator shows: the App Clip card and a scanned QR code opening the mini-app (they need a released build and
 /// the associated domain), the time from scan to shooting screen (measure M-2), the camera itself, and what the share
-/// sheet may save to Photos on an iPhone (open check OC-6). Those are section M of Evidence/NativeApp/manual-validation.md.
+/// sheet may save to Photos on an iPhone (open check OC-6). Those are section J of Evidence/NativeApp/manual-validation.md.
 @MainActor
 final class MiniAppUITests: ScreenTestCase {
     private static let link = "https://join.immerse.test/j/OpenEventCodeForTests0"

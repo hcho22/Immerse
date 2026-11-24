@@ -1,8 +1,8 @@
 #!/bin/sh
 set -eu
 cd "$(dirname "$0")/.."
-# Validation runs whole when IMMERSE_VALIDATE_PART is unset, as on a Mac here. CI runs it as four parts side by
-# side, one per job (.github/workflows/native.yml): packages, harness, ui-text and ui-flows.
+# Validation runs whole when IMMERSE_VALIDATE_PART is unset, as on a Mac here. CI runs it as five parts side by
+# side, one per job (.github/workflows/native.yml): packages, harness, ui-text, ui-flows and mini-app.
 # Scripts/validation-parts.sh says what each part holds. A named part needs its simulators; run whole, a phase
 # whose simulator is not given is skipped.
 part=${IMMERSE_VALIDATE_PART:-all}
@@ -11,8 +11,8 @@ case "$part" in
     packages) : "${IMMERSE_SIMULATOR_UDID:?the packages part needs IMMERSE_SIMULATOR_UDID}" \
                 "${IMMERSE_STOREKIT_SIMULATOR_UDID:?the packages part needs IMMERSE_STOREKIT_SIMULATOR_UDID}" ;;
     harness) : "${IMMERSE_WORKFLOW_SIMULATOR_UDID:?the harness part needs IMMERSE_WORKFLOW_SIMULATOR_UDID}" ;;
-    ui-text|ui-flows) : "${IMMERSE_SIMULATOR_UDID:?the $part part needs IMMERSE_SIMULATOR_UDID}" ;;
-    *) echo "validate-local: unknown IMMERSE_VALIDATE_PART \"$part\" (packages, harness, ui-text or ui-flows)" >&2; exit 2 ;;
+    ui-text|ui-flows|mini-app) : "${IMMERSE_SIMULATOR_UDID:?the $part part needs IMMERSE_SIMULATOR_UDID}" ;;
+    *) echo "validate-local: unknown IMMERSE_VALIDATE_PART \"$part\" (packages, harness, ui-text, ui-flows or mini-app)" >&2; exit 2 ;;
 esac
 . Scripts/validation-parts.sh
 runs() { [ "$part" = all ] || [ "$part" = "$1" ]; }
@@ -142,6 +142,18 @@ if runs ui-flows && [ -n "${IMMERSE_SIMULATOR_UDID:-}" ]; then
         "$(suites -only-testing $dark_suites)" \
         -project App/Immerse/Immerse.xcodeproj -scheme Immerse -derivedDataPath DerivedData/ValidationSimulator
     xcrun simctl ui "$IMMERSE_SIMULATOR_UDID" appearance light
+fi
+if runs mini-app; then
+    # The mini-app (v2 Stage 3): the App Clip inside the app, archived for devices in Release, thinned as the App Store
+    # thins it and held under Apple's 15 MB cap for a QR-opened App Clip, with nothing Debug-only in it.
+    sh Scripts/verify-app-clip-size.sh
+fi
+if runs mini-app && [ -n "${IMMERSE_SIMULATOR_UDID:-}" ]; then
+    # Run whole, the render tests or the app's screen tests have pinned this simulator.
+    [ "$part" = all ] || pin_simulator "$IMMERSE_SIMULATOR_UDID"
+    # The App Clip's own screen tests, which open it by an event's link against the Debug stand-in server.
+    sh Scripts/screen-tests.sh "$IMMERSE_SIMULATOR_UDID" MiniApp test "-only-testing:$mini_app_screen_test_target" \
+        -project App/Immerse/Immerse.xcodeproj -scheme "$mini_app_scheme" -derivedDataPath DerivedData/MiniAppSimulator
 fi
 if runs packages && [ -n "${IMMERSE_STOREKIT_SIMULATOR_UDID:-}" ]; then
     xcodebuild -quiet -project App/Immerse/Immerse.xcodeproj -scheme Immerse \

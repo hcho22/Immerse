@@ -197,7 +197,7 @@ describe("the join page and the web album in Cloudflare's runtime, on Convex's l
   }, 120_000);
 
   test("a mini-app guest's place and waiting pictures go on from the full app, and the server holds each picture once", async () => {
-    // The hand-off on the phone's own Swift client and upload queue (Packages/ImmerseServer, HandOffLocalBackendTests),
+    // The hand-off on the phone's own Swift client and upload queue (Packages/ImmerseServer, HandOffServerTests),
     // against this backend: an event of its own, with the one Roll the Host's free Rolls still hold.
     const created = await maya().mutation("hosting:create", {
       requestId: randomBytes(16).toString("base64url"), title: "Hand-off", camera: "disposable", rolls: 1,
@@ -210,7 +210,7 @@ describe("the join page and the web album in Cloudflare's runtime, on Convex's l
       output = (
         await promisify(execFile)(
           "swift",
-          ["test", "--package-path", resolve(import.meta.dirname, "../../Packages/ImmerseServer"), "--filter", "HandOffLocalBackendTests"],
+          ["test", "--package-path", resolve(import.meta.dirname, "../../Packages/ImmerseServer"), "--filter", "HandOffServerTests"],
           {
             env: { ...process.env, IMMERSE_LOCAL_CONVEX_URL: backend.url, IMMERSE_LOCAL_HANDOFF_CODE: handOff.joinCode },
             encoding: "utf8",
@@ -222,7 +222,7 @@ describe("the join page and the web album in Cloudflare's runtime, on Convex's l
       const failed = error as { stdout?: string; stderr?: string };
       throw new Error(`The Swift hand-off test failed:\n${failed.stdout ?? ""}\n${failed.stderr ?? ""}`.slice(-6000));
     }
-    expect(output).toMatch(/HandOffLocalBackendTests.*passed/);
+    expect(output).toMatch(/HandOffServerTests.*passed/);
     expect(output).not.toMatch(/skipped/);
     // The server's own record: three pictures in the event, no more.
     expect(await maya().mutation("hosting:endEarly", { eventId: handOff.eventId })).toMatchObject({ ok: true });

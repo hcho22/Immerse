@@ -16,7 +16,7 @@ import XCTest
 /// once, and nothing the server already holds is sent again.
 ///
 /// What only an iPhone can show stays unproved here: the real App Group container, the full app reading the App Clip's
-/// Keychain item, and iOS handing the link to the full app (Evidence/NativeApp/manual-validation.md, section M).
+/// Keychain item, and iOS handing the link to the full app (Evidence/NativeApp/manual-validation.md, section J).
 @MainActor
 final class MiniAppHandOffTests: XCTestCase {
     /// The stand-in server, recording each call, with a switch that takes the network away.

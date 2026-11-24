@@ -3302,3 +3302,195 @@ The measured counts per picture match 085's model (2 Class A and 2 Class B a pic
 
 **It fails if.**
 An operation the model does not count appears at scale, or the real cost of a 200-Roll event is far above section 10's estimate; either goes to the captain with the price plans (OC-5).
+
+## v2 Stage 3: the Mini-app, the Join Page and the Web Album on Real iPhones and the Real Services
+
+These are the proofs the v2 PRD's Stage 3 ends with (section 12): a guest with no app installed scans a printed QR code and is shooting within the time of success measure M-2, with only a name and one tap; a mini-app guest's place, pictures and uploads survive installing the full app; an Android phone and a computer see the right message, and the web album when it is on, and nothing when it is off; and what the mini-app can save to Photos (open check OC-6).
+They are v2's, not v1's: the v1 candidate above needs none of them.
+The software and what it showed against local stand-ins and in the simulator are in [086](v2-stage3-miniapp-086.md); compile-only or simulator evidence is not a pass, so **Stage 3 is not proved until J01 to J11 pass**.
+Each scenario reads **UNTESTED: no iPhone, domain, App Clip identifier or real service provisioned**.
+
+An App Clip opens from a real link only once Apple holds an approved build and the join host is associated with it.
+Until then a QR code opens the mini-app on a test iPhone only through a local experience (iOS Settings, Developer, Local Experiences), which shows the App Clip card for a build signed for Development, Ad Hoc or TestFlight.
+J01 to J04 and J08 can run that way before App Review; J09 needs the released build.
+
+**Before you start.**
+
+1. Provision the services in the order of [Backend/SETUP.md](../../Backend/SETUP.md), Stage 3's steps included: the App Clip's App ID and the App Group (step 1a), the join page's Worker on the join host with its secret (step 4a), `WEB_GATEWAY_SECRET` on the deployment (step 5), and the App Clip experience in App Store Connect (step 9).
+2. Fill in `App/Immerse/Config/Server.local.xcconfig` with the App Group and the two entitlements files (step 7), and build the **ImmerseWithClip** scheme of a commit that holds this change, signed for Development, so that the app and the App Clip inside it are both on hand.
+3. Have ready: the Host's iPhone with the full app (HC_iPhone13); two guest iPhones on iOS 26 with Immerse **not** installed (G1, G2), each with Developer Mode on; an iPhone on an iOS before 26 if one can be had; an Android phone; a computer with current Safari, Chrome and Firefox.
+4. On G1 and G2, run the **ImmerseClip** scheme once from Xcode so the App Clip is cached, then register a local experience for `https://<join host>/j/` with the App Clip's bundle identifier, as Apple's "Testing the launch experience of your App Clip" describes.
+5. Write down, for each scenario, the date, the build's commit, each device's model and system version, the event's id, and what the Convex dashboard and Cloudflare's Worker logs showed.
+
+### J01 - A printed QR code to the shooting screen, with a name and one tap (M-2)
+
+**Steps.**
+
+1. On HC_iPhone13 load a Disposable Group Film of 4 Rolls, open now, and print its QR code on paper.
+2. On G1, with Immerse not installed and on a normal mobile connection (Wi-Fi off), scan the printed code with the iPhone's Camera app and start a stopwatch as the Camera recognizes it.
+3. Tap **Open** on the App Clip card, type a name, tap **Take a Roll**, and stop the stopwatch when the shooting screen shows its viewfinder.
+4. Repeat three times with a fresh guest identity (delete the App Clip's data in iOS Settings, App Clips, between runs), and once on G2.
+5. Subtract the seconds spent typing the name, as M-2 does.
+
+**Expect.**
+The App Clip card shows the event's experience; the mini-app opens at the Join Confirmation with the title, "Hosted by" the Host's name, the Camera and its exposures, when shooting ends, when the album reveals and the sharing rule; nobody is asked to sign in, for an email, or to install anything; one tap on Take a Roll opens the shooting screen (iOS asks for the camera the first time, which is the system's question); the time from scan to shooting screen, without the typing, is under 10 seconds on an iPhone 12 or later in every run.
+
+**It fails if.**
+The scan opens Safari or the App Store instead of the mini-app, joining takes more than the name and one tap, any sign-in shows, or the time is 10 seconds or more.
+
+### J02 - Shooting offline in the mini-app, and the queue that sends only while it is open
+
+**Steps.**
+
+1. On G1, after J01, turn on Airplane Mode and shoot 10 pictures; close the shooting screen.
+2. Read the event's page, then turn Airplane Mode off with the mini-app open and watch the counts.
+3. On G2, join, shoot 5 pictures offline, leave the mini-app (swipe home), turn the connection on, wait five minutes, and look at the Host's count of pictures arrived; then scan the code again on G2.
+4. Repeat step 3 on an Instant Group Film with 2 prints.
+
+**Expect.**
+Every picture is kept offline and none is shown (an Instant shooter sees their own prints at once); the page says how many are waiting and sent, asks the guest to keep the mini-app open or come back through the same link, and never says all are sent while one waits; with a connection and the mini-app open, "waiting" falls to zero by itself; nothing arrives from G2 while its mini-app is closed, and everything arrives after the link is opened again, each picture once.
+
+**It fails if.**
+A picture taken offline is lost, the mini-app says all are sent while one waits, or a picture is stored twice.
+
+### J03 - Installing the full app keeps the place, the Roll, the pictures and what still waits
+
+**Steps.**
+
+1. On G1, in the mini-app, join an event and shoot 8 pictures with Airplane Mode on after the third has been sent, so that 3 are sent and 5 wait; note the exposures left.
+2. Still offline, install the full app on G1 from Xcode (the ImmerseWithClip scheme), then turn the connection on and open Immerse.
+3. Read the Journal's Group Films, open the event, and watch the counts; in the Convex dashboard, count the guest's `pictures` rows and `memberships` rows for the event.
+4. Scan the printed code again on G1.
+5. Shoot one more picture in the full app.
+6. Repeat steps 1 and 2 with the mini-app left open in the App Switcher, and switch back to it after the full app has run.
+
+**Expect.**
+The full app shows the same event with the same guest name and the same exposures left; the 5 waiting pictures are sent from the full app, each once; the dashboard holds 8 pictures for one membership, none twice, and no second membership or guest identity for the phone; the scan now opens the full app at the event, as a member, not at a new Join Confirmation; the next picture takes the next exposure of the same Roll; the mini-app, reopened after the full app has run, shows "Continue in Immerse" and sends nothing.
+
+**It fails if.**
+The place, the Roll, a sent picture or a waiting picture is missing in the full app, a picture is stored twice, or the full app joins the guest as someone new.
+The full app reading the App Clip's Keychain item, and the App Group container outliving the App Clip, are what only this scenario shows.
+
+### J04 - With the full app installed, the same code opens the full app
+
+**Steps.**
+
+1. On G2, install the full app first, then scan the printed code and tap the link in Messages.
+2. Delete the full app from G2 and scan again.
+
+**Expect.**
+With the full app installed, the scan and the link open Immerse at the Join Confirmation; with it deleted, they open the mini-app again.
+
+**It fails if.**
+The mini-app opens while the full app is installed, or neither opens.
+
+### J05 - An Android phone and a computer see the right message
+
+**Steps.**
+
+1. On the Android phone (Chrome) and the computer (Safari, Chrome and Firefox), open the link of: an open event; an event with a Start Time tomorrow; an event with joining paused; an event with every Roll taken; an event after its End Time and before its reveal; a revealed event with the web album off; a deleted event; and the old link of an event whose code the Host replaced.
+2. On each page, look for anything that opens a camera, takes a file, or asks for a sign-in.
+3. Open one link fast, more than 60 times in a minute, from one connection.
+
+**Expect.**
+Each page shows its case in plain words and nothing else: shooting needs an iPhone on iOS 26 and the pictures will be on this page after the reveal if the Host shares them; the opening time in the device's own time zone; joining is paused; every Roll has been taken; shooting has ended, with the reveal time; the event's title and that its pictures are not shared on the web; this event is no longer available; this link no longer works, ask the Host for the new one.
+No page is empty, spins without end, or shows an error code; none offers a camera, an upload or a file picker; the support address shows on each; after too many openings the page asks to wait a minute.
+
+**It fails if.**
+A case shows another case's words, a deleted or replaced link names the event, or any page offers a way to shoot or upload.
+
+### J06 - An iPhone that cannot use the mini-app is told what to do
+
+**Steps.**
+
+1. On an iPhone on an iOS before 26, open an open event's link in Safari.
+2. On G2 (iOS 26), open the link in a private Safari tab, and inside another app's browser (a link tapped in a social app).
+3. On an iPhone signed in to a child's Apple Account, or one with Ask to Buy on, scan the printed code and open the link.
+
+**Expect.**
+The older iPhone is told shooting needs iOS 26 or later and to update; on iOS 26 without the App Clip card, the page says how to join, that the card does not show in a private tab, in another app's browser or for an Apple Account that cannot use App Clips, and offers Immerse on the App Store; with the full app installed from there, the same link opens the event.
+
+**It fails if.**
+An iPhone that cannot open the mini-app is left with no way to join, or the page claims the mini-app will open where it cannot.
+
+### J07 - The web album: nothing when it is off, the pictures when it is on
+
+**Steps.**
+
+1. Run an event of three guests to its reveal with at least 12 pictures; let one guest withdraw before the reveal and the Host remove one picture after it.
+2. Before the reveal, and after it with the switch off, open the link on the Android phone and the computer.
+3. On HC_iPhone13 switch **Share the album on the web** on, and read what the switch says.
+4. Open the link in current Safari, Chrome and Firefox on an iPhone, the Android phone and the computer; open a picture, save it, and download the album.
+5. With a picture open on the computer, copy the picture's address from the browser; switch the album off on HC_iPhone13; within a minute, reload the page, the picture, the copied address and the download.
+6. Switch it on again, remove a guest on HC_iPhone13, and reload.
+7. Delete the event and reload.
+
+**Expect.**
+Before the reveal and with the switch off, the page shows the event's title and no picture, and says the pictures are not shared on the web; the switch says anyone with the link can see and save the pictures while it is on; switched on, the page shows every picture in the order taken with numbered gaps for the withdrawn and removed ones, each picture's details give its Guest Name, when it was taken and the Camera, a saved picture is the file as uploaded with no name in its pixels or its metadata, and the downloaded album unzips to every picture; switched off, the page, every picture, the copied address and the download give nothing within a minute; a removed guest's pictures become gaps; a deleted event says it is no longer available.
+
+**It fails if.**
+A picture loads before the reveal or with the switch off, from the page or from any address, or a withdrawn or removed picture shows.
+
+### J08 - The revealed album in the mini-app, and what it can save to Photos (OC-6)
+
+**Steps.**
+
+1. On G2, which joined in the mini-app and has not installed the full app, scan the code after the reveal.
+2. Read the album and the invitation; open a picture, tap **Save**, and in the share sheet choose **Save Image**; look in Photos.
+3. Save three more pictures the same way, and try **Save to Files** and AirDrop for one.
+4. Follow the invitation, install the full app, and save the whole album there.
+5. With the web album on, open the link in Safari on G2 and save from the page.
+
+**Expect.**
+The link opens the album in the mini-app with the invitation to install the full app; the note about saved copies shows once; write down exactly what the share sheet offers in the App Clip and whether Save Image puts the picture in Photos, asks for anything, or is missing; the mini-app itself never asks for Photos access and offers no whole-album save; the full app saves the whole album; the web album saves from Safari.
+Apple's documentation says PhotoKit gives no functionality in an App Clip and that an App Clip cannot read Photos; whether the system's own Save Image works from an App Clip's share sheet on an iPhone is what this scenario establishes.
+
+**It fails if.**
+A mini-app guest is left with no way to save a picture: neither the share sheet, nor the full app, nor the web album.
+If Save Image is missing or fails in the App Clip, record it; the mini-app's words then point to the full app and the web album alone, which is a wording change for the captain, not a failure of the stage.
+
+### J09 - The link in Messages, the App Clip card and Apple's files, on the released build
+
+**Steps.**
+
+1. With a build that holds the App Clip approved by App Review and the App Clip experience of SETUP's step 9 live, remove every local experience from G1.
+2. Send an event's link to G1 in Messages from a contact, and read its preview; tap it.
+3. Scan the printed code on G1, with and without the full app installed.
+4. On G1 open iOS Settings, Developer, App Clips Testing, Diagnostics, and enter the join host's address.
+5. Fetch `https://<join host>/.well-known/apple-app-site-association` from the computer, and read App Store Connect's domain status for the App Clip.
+
+**Expect.**
+The link's preview shows the event's title and no picture; the scan shows the App Clip card and opens the mini-app at the event, or the full app where it is installed; Diagnostics reports the App Clip published, the experience registered and the domain associated; the association file is served as JSON with no redirect and names the app and the App Clip; App Store Connect shows the domain valid.
+The page carries no preview image, because V2-FR-15 allows the title only, so a link tapped in Messages opens the join page in the browser, where the card shows; write down what Messages shows.
+
+**It fails if.**
+The preview shows a picture, the scan opens nothing, or Apple reports the domain not associated.
+
+### J10 - The App Clip's size from Xcode's own report (OC-1)
+
+**Steps.**
+
+1. Archive the ImmerseWithClip scheme with the App Clip's provisioning profile, and export the App Clip for Ad Hoc or Development distribution with App Thinning set to all compatible device variants.
+2. Read `App Thinning Size Report.txt` for the App Clip's uncompressed size in every variant.
+
+**Expect.**
+Every variant is under 15 MB uncompressed, near the figure `Scripts/verify-app-clip-size.sh` prints for the unsigned archive (about 4.5 MB when Stage 3 was built) plus the signature and the profile (under 0.1 MB).
+
+**It fails if.**
+Any variant is over 15 MB, or far from the script's figure, which would mean the script no longer measures what Apple does.
+
+### J11 - How long iOS keeps the mini-app's data (OC-10)
+
+**Steps.**
+
+1. On G2, join in the mini-app, shoot 5 pictures offline and leave them waiting; do not open the mini-app or install the full app.
+2. Each day for at least 14 days, without opening the mini-app, check in iOS Settings, App Clips, whether Immerse's App Clip and its data are still listed.
+3. When iOS has removed it, or after the 14 days, scan the code again with a connection.
+4. Repeat with an event that has revealed meanwhile.
+
+**Expect.**
+Write down the day iOS removed the App Clip, if it did, and whether the waiting pictures were still there on return; where the data was kept, they are sent; where iOS cleared it, they are lost (the PRD's section 7 accepts this and the mini-app's words warn of it), and the scan shows whether the guest is still known: the guest identity is in the Keychain, so the mini-app may find the guest still a member and show the revealed album.
+Apple's documentation says only that the system removes an App Clip "after a period of inactivity" and names no number of days, so the mini-app's words name none.
+
+**It fails if.**
+The mini-app's words promise more than this shows: bring the days observed to the captain if they are fewer than an event lasts.

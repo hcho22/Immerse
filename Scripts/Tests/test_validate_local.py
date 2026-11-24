@@ -1,4 +1,4 @@
-"""Scripts/validate-local.sh: what each part runs, and that the four parts together run what the whole does."""
+"""Scripts/validate-local.sh: what each part runs, and that the five parts together run what the whole does."""
 import os
 import re
 import sys
@@ -79,13 +79,22 @@ BILLING = [
     " -only-testing:ImmerseTests -test-timeouts-enabled YES -maximum-test-execution-time-allowance 120"
     " CODE_SIGNING_ALLOWED=NO test",
 ]
+# The mini-app: the App Clip's size check, which needs no simulator, then its own screen tests.
+CLIP_SIZE = ["verify-app-clip-size.sh"]
+CLIP_SCREEN = [
+    "xcodebuild -quiet -project App/Immerse/Immerse.xcodeproj -scheme ImmerseClip"
+    " -derivedDataPath DerivedData/MiniAppSimulator -destination platform=iOS Simulator,id=APP-SIM"
+    " -resultBundlePath DerivedData/MiniApp-<time>.xcresult -only-testing:ImmerseClipUITests " + ALLOWANCE + " test",
+]
 VERSIONS = ["xcodebuild -version", "swift --version"]
-WHOLE = VERSIONS + BOOT_BILLING + MAC + HARNESS + PIN_APP + RENDER + light(EVERY_SCREEN_SUITE) + DARK + BILLING
+WHOLE = (VERSIONS + BOOT_BILLING + MAC + HARNESS + PIN_APP + RENDER + light(EVERY_SCREEN_SUITE) + DARK + CLIP_SIZE
+         + CLIP_SCREEN + BILLING)
 PARTS = {
     "packages": VERSIONS + BOOT_BILLING + MAC + PIN_APP + RENDER + BILLING,
     "harness": VERSIONS + HARNESS,
     "ui-text": VERSIONS + PIN_APP + light(TEXT_SIZES),
     "ui-flows": VERSIONS + PIN_APP + light(OTHER_SUITES) + DARK,
+    "mini-app": VERSIONS + CLIP_SIZE + PIN_APP + CLIP_SCREEN,
 }
 
 
@@ -93,7 +102,8 @@ class ValidateLocalTests(unittest.TestCase):
     def validate(self, part=None, simulators=SIMULATORS, xcodebuild_exits="0", failures="harness-film-card-tap"):
         sandbox = Sandbox(self)
         sandbox.record_instead("verify-validation-parts.sh", "verify-requirement-map.sh", "verify-document-package.sh",
-                               "verify-release-excludes-testing-unlock.sh", "quiet-simulator.sh")
+                               "verify-release-excludes-testing-unlock.sh", "verify-app-clip-size.sh",
+                               "quiet-simulator.sh")
         # The scripts' own tests are only recorded; the rerun check still runs for real.
         sandbox.install(os.path.join(sandbox.tools, "python3"), "#!/bin/sh\ncase \"$*\" in\n"
                         "    *unittest*) echo \"python3 $*\" >> \"$STUB_STATE/commands\" ;;\n"
@@ -118,7 +128,8 @@ class ValidateLocalTests(unittest.TestCase):
         result, commands = self.validate(simulators=shared)
         self.assertEqual(result.returncode, 0, result.stderr)
         harness = [command.replace("HARNESS-SIM", "APP-SIM") for command in HARNESS]
-        self.assertEqual(commands, VERSIONS + BOOT_BILLING + MAC + harness + PIN_APP + RENDER + light(EVERY_SCREEN_SUITE) + DARK + BILLING)
+        self.assertEqual(commands, VERSIONS + BOOT_BILLING + MAC + harness + PIN_APP + RENDER + light(EVERY_SCREEN_SUITE) + DARK
+                         + CLIP_SIZE + CLIP_SCREEN + BILLING)
 
     def test_each_part_runs_its_own_share(self):
         for part, expected in PARTS.items():
@@ -127,7 +138,7 @@ class ValidateLocalTests(unittest.TestCase):
                 self.assertEqual(result.returncode, 0, result.stderr)
                 self.assertEqual(commands, expected)
 
-    def test_the_four_parts_together_run_what_the_whole_runs(self):
+    def test_the_five_parts_together_run_what_the_whole_runs(self):
         setup = set(VERSIONS + PIN_APP)
         whole = [command for command in WHOLE if command not in setup]
         parts = [command for expected in PARTS.values() for command in expected if command not in setup]
@@ -139,7 +150,7 @@ class ValidateLocalTests(unittest.TestCase):
     def test_run_whole_without_simulators_it_runs_the_mac_share_alone(self):
         result, commands = self.validate(simulators={})
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(commands, VERSIONS + MAC)
+        self.assertEqual(commands, VERSIONS + MAC + CLIP_SIZE)
 
     def test_the_part_and_simulators_of_the_job_running_these_tests_do_not_reach_them(self):
         # The packages part runs these tests with its own part and simulators in the environment.
@@ -148,11 +159,12 @@ class ValidateLocalTests(unittest.TestCase):
         with mock.patch.dict(os.environ, job):
             result, commands = self.validate(simulators={})
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(commands, VERSIONS + MAC)
+        self.assertEqual(commands, VERSIONS + MAC + CLIP_SIZE)
 
     def test_a_named_part_refuses_to_run_without_its_simulator(self):
         for part, missing in (("packages", "IMMERSE_STOREKIT_SIMULATOR_UDID"), ("harness", "IMMERSE_WORKFLOW_SIMULATOR_UDID"),
-                              ("ui-text", "IMMERSE_SIMULATOR_UDID"), ("ui-flows", "IMMERSE_SIMULATOR_UDID")):
+                              ("ui-text", "IMMERSE_SIMULATOR_UDID"), ("ui-flows", "IMMERSE_SIMULATOR_UDID"),
+                              ("mini-app", "IMMERSE_SIMULATOR_UDID")):
             with self.subTest(part):
                 simulators = {name: udid for name, udid in SIMULATORS.items() if name != missing}
                 result, commands = self.validate(part, simulators=simulators)

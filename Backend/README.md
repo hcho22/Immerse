@@ -1,13 +1,13 @@
 # Immerse's server (v2)
 
 This folder is the backend of v2's Group Films, as the [v2 PRD](../2026-09-29-film-camera-experience-v1/2026-11-22-film-camera-experience-v2-prd.md) section 9 proposes it: Convex for the data and the server logic, Cloudflare R2 for the pictures, Clerk for the Hosts' sign-in, and Apple's push notification service for the one alert.
-It holds what Stage 1, "The backend and sign-in", and Stage 2, "Events in the full app, with free Rolls only", build (PRD section 12).
+It holds what Stage 1, "The backend and sign-in", Stage 2, "Events in the full app, with free Rolls only", and the server side of Stage 3, "The no-install mini-app and the join page", build (PRD section 12).
 v1 has no server, and nothing here is reached by personal Films, the Trial or the subscription.
 
 Nothing here is provisioned.
 Every test runs against local stand-ins, and no account, deployment, bucket or key exists for it yet.
-[SETUP.md](SETUP.md) lists what the captain creates, in order, before Stages 1 and 2 can be proved on iPhones and the real services.
-Stage 1 is not proved until the checks in section V of [the manual validation plan](../Evidence/NativeApp/manual-validation.md) pass, and **Stage 2 is not proved until its section S passes**.
+[SETUP.md](SETUP.md) lists what the captain creates, in order, before Stages 1 to 3 can be proved on iPhones and the real services.
+Stage 1 is not proved until the checks in section V of [the manual validation plan](../Evidence/NativeApp/manual-validation.md) pass, Stage 2 until its section S passes, and **Stage 3 is not proved until its section J passes**.
 
 ## What is here
 
@@ -32,9 +32,11 @@ Stage 1 is not proved until the checks in section V of [the manual validation pl
 | `convex/reports.ts`, `convex/support.ts`, `convex/crons.ts` | Reports to the Host and through the signed support relay, support's own functions, and the expiry of resolved reports. |
 | `convex/alerts.ts` | "Your Film is ready" at the reveal, once per event, to every member with the full app. |
 | `convex/measures.ts` | The server's own counts for success measures M-1, M-3 and M-8 and open check OC-2. |
+| `convex/web.ts`, the `/web/` routes of `convex/http.ts` | What the join page and the web album may show (Stage 3): a link's state in V2-FR-18's cases, and the album's pictures and a one-minute read address for one of them only while the event is revealed, its web album is on and the link's code is current. Only the Worker may ask, with `WEB_GATEWAY_SECRET`. |
+| `worker/` | The join page and the view-only web album as a Cloudflare Worker (Stage 3): the page for each case, the route into the mini-app or the full app, Apple's association file from configuration, the album, one picture and its details, and the album as a ZIP in parts. It holds no storage credential; `wrangler.example.jsonc` is its configuration with placeholders. |
 | `convex/proofs.ts` | Internal fixtures for the proofs and tests (a proof event, a guest, a removal, ending and revealing now), callable only with the deployment's key. |
 | `tests/` | The functions' tests on `convex-test`, an in-memory Convex, with MinIO standing in for R2 and local doubles for Clerk's Backend API and Apple's push service. |
-| `local-backend/` | The same functions end to end on Convex's own open-source backend, through the HTTP API the app uses, including the app's Swift client (`Packages/ImmerseServer`). |
+| `local-backend/` | The same functions end to end on Convex's own open-source backend, through the HTTP API the app uses, including the app's Swift client (`Packages/ImmerseServer`); Stage 3's run also serves the Worker locally in Cloudflare's own runtime (workerd, through Miniflare). |
 
 The iPhone's side is `Packages/ImmerseServer` (Convex's HTTP API behind `ServerFunctions`, Accounts, push tokens, the uploader and the age rule) and the app's hosting screens in `App/Immerse/Sources` (`HostingSession.swift`, `ClerkHostSignIn.swift`, `GroupFilmGate.swift`, `AccountSettings.swift`).
 A build without a server configuration (`App/Immerse/Config/Server.xcconfig`) shows none of it and never starts Clerk.
@@ -72,7 +74,9 @@ Each is a proposed engineering approach of PRD section 9, which can change witho
 - **Every rule reads the event's state from its times (Stage 2).** The scheduled steps only do what comes with a change (returning Rolls, the alert, the purge), so a step that runs late, as when the server was unreachable, never lets anyone join after the End Time or holds the reveal back.
 - **The phone uploads a viewing copy beside each picture (Stage 2, section 9.4),** a JPEG of at most 1,600 pixels on its longest side with no metadata, so browsing the album downloads far less than every full picture; saving downloads the full one.
 - **Reports reach the support address through a signed relay the operator runs (Stage 2, OQ-12).** The server has no mail service of its own; it posts each report, signed, until the relay accepts it, and support works from `support:openReports`.
-- **Per-address rate limits on the Join Code are left to Stage 3's Worker.** The app calls Convex directly, whose functions do not see a caller's address; the code's 128 bits make guessing infeasible meanwhile.
+- **Per-address rate limits on the Join Code are the Worker's (Stage 3).** The app calls Convex directly, whose functions do not see a caller's address, and the code's 128 bits make guessing infeasible there; the Worker limits how often one address opens links.
+- **The join page's Worker holds no credential for the bucket (Stage 3).** Section 9.4 proposes a Worker reading R2 through its binding; this one asks Convex for every page and picture, and Convex signs a one-minute read address only while the album is shared. The rule lives in one place on the server, a fault in the Worker cannot read a sealed picture, and the address never reaches a browser, so switching the album off stops the next picture.
+- **Each picture's CRC-32 is kept when its upload is confirmed (Stage 3),** so the web album's download writes each ZIP entry whole and passes the picture's bytes through untouched.
 
 ## What the stand-ins cannot show
 
@@ -81,4 +85,5 @@ Each is a proposed engineering approach of PRD section 9, which can change witho
 - **Apple's push service.** The stand-in is an HTTP/2-only server over TLS that checks the provider token's ES256 signature. Whether Convex's hosted Node runtime reaches Apple's service over HTTP/2 is checked only on a real deployment (V05).
 - **Convex's hosted deployment.** The open-source backend runs the same functions, scheduler and Node actions; limits, cold starts and the hosted Node runtime's network are checked only on Convex's cloud.
 - **Convex's own meters and Cloudflare's.** The Stage 2 end-to-end run counts the calls the clients make and the storage operations a proxy sees; Convex's billed function calls, database bandwidth and Cloudflare's billed operations are read only from their dashboards (`Evidence/NativeApp/v2-stage2-events-085.md`).
+- **Cloudflare itself (Stage 3).** The Worker runs here in workerd, Cloudflare's open-source runtime, with a local rate limiter. The real Worker on the join host, its limits on requests of its own, the rate limiting binding, real browsers, and Apple fetching the association file from it are section J of the manual plan.
 - **A scheduled step months ahead.** The tests check the album's end is scheduled 12 months after the reveal and that the step does what it should when run; that Convex's cloud runs a step a year later is not something a test can wait for.

@@ -8,7 +8,7 @@ import XCTest
 /// same folder, and the guest identity the mini-app made. It sends what waits, and the server holds every picture once,
 /// under the same place. The backend's end-to-end run (`Backend/local-backend/stage3.test.ts`) starts the stand-ins and
 /// runs this with their addresses; on its own, with none given, it is skipped.
-final class HandOffLocalBackendTests: XCTestCase {
+final class HandOffServerTests: XCTestCase {
     /// Sends queued pictures as a guest, and loses the connection after `limit` of them.
     private actor Sender: QueuedPictureSending {
         private let server: EventServer

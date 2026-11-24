@@ -57,7 +57,22 @@ Copy `Config/Server.local.xcconfig.example` and fill it in from `Backend/SETUP.m
 With it, Start a Film offers **Host a Group Film**, the Journal lists the Group Films this iPhone takes part in, a Group Film's link opens the app at its Join Confirmation, Settings shows the Account with **Sign Out** and **Delete Account** once signed in, and a Debug build's Settings shows **Server checks** for Stage 1's iPhone proofs (`Evidence/NativeApp/manual-validation.md`, section V).
 Without it, the app is the v1 app: no Group Film, no Clerk, no request to any server.
 Screen tests open the hosting screens with a stand-in server and sign-in, a Debug build launched with `-ImmerseDebugHosting signedOut` or `signedIn` (`Sources/DebugHosting.swift`), and Group Films with a stand-in for the event functions, `-ImmerseDebugGroupFilm open` or `revealed`, opening a link with `-ImmerseDebugJoinLink <url>` (`Sources/DebugGroupFilms.swift`); the Release check holds them and Server checks out of Release.
-An event Roll is a Film in the Group Films' own store under `Application Support/GroupFilms`, apart from personal Films, whose Trial store refuses every use, so a Roll never touches the Trial.
+An event Roll is a Film in the Group Films' own store, apart from personal Films, whose Trial store refuses every use, so a Roll never touches the Trial.
+The store is under `Application Support/GroupFilms`, or in the App Group's container where the build names an App Group (`IMMERSE_APP_GROUP`), which is the folder the mini-app shares.
+
+## The Mini-app (v2 Stage 3)
+
+Stage 3 adds the mini-app, an App Clip (`ImmerseClip` in `project.yml`; `Evidence/NativeApp/v2-stage3-miniapp-086.md`).
+It builds the full app's own Group Film sources with the `APPCLIP` compilation condition and its own three files under `Clip/`; it links no sign-in SDK and leaves out the Journal, the catalog, Settings, the subscription and hosting.
+A guest's Group Films are kept in the App Group folder both apps open (`GroupFilmsFolder` in `Packages/ImmerseServer`), and the mini-app's guest identity in its own Keychain item that the full app reads, so installing the full app finds the same place, Roll, pictures and upload queue.
+Three schemes build it:
+
+- `Immerse` is the app alone, as before; every existing test and every v1 build uses it, and it never builds, signs or carries the App Clip.
+- `ImmerseClip` is the App Clip by itself, with its screen tests (`ClipUITests`), which open it by an event's link against the Debug stand-in server; run from Xcode, set its `_XCAppClipURL` to a link.
+- `ImmerseWithClip` is the app with the App Clip inside it, which is what is archived once Stage 3 is proved; it needs the App Clip's App ID, the App Group and the two entitlements files of `Backend/SETUP.md`, step 1a.
+
+`sh Scripts/verify-app-clip-size.sh` archives `ImmerseWithClip` unsigned, thins it as the App Store does and fails when the App Clip is over its budget under Apple's 15 MB cap; validation's `mini-app` part runs it and the App Clip's screen tests.
+The Host's switch for the view-only web album is on the event's page after the reveal; the join page and the web album themselves are `Backend/worker`.
 
 ## Product Configuration
 
