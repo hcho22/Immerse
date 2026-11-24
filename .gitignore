@@ -13,3 +13,7 @@ __pycache__/
 
 # The server configuration a Mac builds v2 against (App/Immerse/Config/Server.xcconfig, Backend/SETUP.md)
 App/Immerse/Config/Server.local.xcconfig
+
+# The join page Worker's deployment configuration (Backend/worker/wrangler.example.jsonc, Backend/SETUP.md)
+Backend/worker/wrangler.jsonc
+Backend/worker/.wrangler/

@@ -1,0 +1,29 @@
+// The join page's Worker (Backend/worker/src), as Cloudflare hosts it. Copy this file to wrangler.jsonc (ignored by
+// git), fill it in from Backend/SETUP.md, step 4a, and deploy with `npx wrangler deploy` from this folder. Every value
+// here is a placeholder: no domain, identifier or address of the operator's belongs in the repository.
+{
+  "name": "immerse-join",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-07-01",
+  // The join host, the domain a Group Film's link names (IMMERSE_JOIN_HOST in the app's configuration).
+  "routes": [{ "pattern": "join.example.com", "custom_domain": true }],
+  "workers_dev": false,
+  "vars": {
+    // The Convex deployment's HTTP actions address. Its secret is set apart: `npx wrangler secret put
+    // WEB_GATEWAY_SECRET`, with the same value as the deployment's WEB_GATEWAY_SECRET.
+    "CONVEX_SITE_URL": "https://your-deployment.convex.site",
+    // Apple's identifiers, for /.well-known/apple-app-site-association and the App Clip card.
+    "APPLE_TEAM_ID": "REPLACE_ME",
+    "APP_BUNDLE_ID": "com.immerse.FilmJournal",
+    "APP_CLIP_BUNDLE_ID": "com.immerse.FilmJournal.Clip",
+    // The app's App Store id, digits only; empty until the app has one, and the page then names no store.
+    "APP_STORE_ID": "",
+    // The support address shown on every page (V2-FR-54).
+    "SUPPORT_ADDRESS": "support@example.com",
+    // Pictures in one part of the album's download: 20 on Cloudflare's free plan, up to 400 on a paid one, since the
+    // Worker makes two requests of its own for each picture.
+    "ALBUM_PART_PICTURES": "20"
+  },
+  // At most 60 link openings a minute from one address (V2-FR-15, risk RK-V2-10).
+  "ratelimits": [{ "name": "JOIN_LIMITER", "namespace_id": "1001", "simple": { "limit": 60, "period": 60 } }]
+}

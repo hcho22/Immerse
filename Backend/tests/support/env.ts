@@ -10,3 +10,5 @@ process.env.R2_SECRET_ACCESS_KEY = storage.secretAccessKey;
 process.env.R2_REGION = storage.region;
 // Join Codes are derived under a deployment secret (convex/lib/joinCode.ts); the tests use a fresh one per run.
 process.env.JOIN_CODE_SECRET = `test-${crypto.randomUUID()}-${crypto.randomUUID()}`;
+// The join page's Worker proves itself to the deployment with a shared secret (convex/http.ts); a fresh one per run.
+process.env.WEB_GATEWAY_SECRET = `gateway-${crypto.randomUUID()}-${crypto.randomUUID()}`;

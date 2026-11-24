@@ -120,7 +120,8 @@ function signJwt(key: KeyObject, kid: string, claims: Record<string, unknown>, l
   return `${header}.${body}.${sign("RSA-SHA256", Buffer.from(`${header}.${body}`), key).toString("base64url")}`;
 }
 
-export type LocalBackend = { url: string; adminKey: string; stop: () => void };
+// `siteUrl` is where the deployment serves its HTTP routes (convex/http.ts), as https://<name>.convex.site does.
+export type LocalBackend = { url: string; siteUrl: string; adminKey: string; stop: () => void };
 
 export async function startConvexBackend(): Promise<LocalBackend & { process: ChildProcess }> {
   const binary = await convexBackendBinary();
@@ -150,6 +151,7 @@ export async function startConvexBackend(): Promise<LocalBackend & { process: Ch
   }
   return {
     url,
+    siteUrl: `http://127.0.0.1:${sitePort}`,
     adminKey,
     process: child,
     stop: () => {

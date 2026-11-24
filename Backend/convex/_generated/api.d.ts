@@ -21,6 +21,7 @@ import type * as joining from "../joining.js";
 import type * as lib_apns from "../lib/apns.js";
 import type * as lib_callers from "../lib/callers.js";
 import type * as lib_config from "../lib/config.js";
+import type * as lib_crc32 from "../lib/crc32.js";
 import type * as lib_crypto from "../lib/crypto.js";
 import type * as lib_errors from "../lib/errors.js";
 import type * as lib_events from "../lib/events.js";
@@ -39,6 +40,7 @@ import type * as rolls from "../rolls.js";
 import type * as schedule from "../schedule.js";
 import type * as storageQueue from "../storageQueue.js";
 import type * as support from "../support.js";
+import type * as web from "../web.js";
 
 import type {
   ApiFromModules,
@@ -60,6 +62,7 @@ declare const fullApi: ApiFromModules<{
   "lib/apns": typeof lib_apns;
   "lib/callers": typeof lib_callers;
   "lib/config": typeof lib_config;
+  "lib/crc32": typeof lib_crc32;
   "lib/crypto": typeof lib_crypto;
   "lib/errors": typeof lib_errors;
   "lib/events": typeof lib_events;
@@ -78,6 +81,7 @@ declare const fullApi: ApiFromModules<{
   schedule: typeof schedule;
   storageQueue: typeof storageQueue;
   support: typeof support;
+  web: typeof web;
 }>;
 
 /**

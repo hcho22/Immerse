@@ -1,3 +1,5 @@
+// The server's HTTP routes: Clerk's webhook, and what the join page's Worker asks before it shows anything (web.ts).
+//
 // Clerk's webhook (section 9.8): a Clerk user deleted anywhere, in Clerk's dashboard included, has their server
 // records removed as Delete Account removes them. Clerk sends webhooks through Svix; a request whose signature does
 // not verify against the endpoint's signing secret, or whose timestamp is more than five minutes off, is refused.
@@ -5,6 +7,8 @@ import { httpRouter } from "convex/server";
 import { internal } from "./_generated/api";
 import { httpAction } from "./_generated/server";
 import { bytesToBase64, constantTimeEqual } from "./lib/crypto";
+import { presignRead, READ_ADDRESS_SECONDS, storageConfig } from "./lib/storage";
+import type { PictureGrant, WebPage } from "./web";
 
 const TOLERANCE_SECONDS = 5 * 60;
 
@@ -61,6 +65,73 @@ http.route({
     }
     // Other events need nothing; answering 200 stops Clerk retrying them.
     return new Response(null, { status: 200 });
+  }),
+});
+
+// The join page's Worker proves itself with the secret it shares with this deployment. Without the secret set, every
+// request is refused: the web surfaces stay closed until the operator configures them (Backend/SETUP.md).
+function fromTheWorker(request: Request): boolean {
+  const secret = process.env.WEB_GATEWAY_SECRET;
+  if (secret === undefined || secret.length < 32) return false;
+  const sent = request.headers.get("authorization") ?? "";
+  return constantTimeEqual(sent, `Bearer ${secret}`);
+}
+
+function json(body: unknown, status = 200): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "content-type": "application/json", "cache-control": "no-store" },
+  });
+}
+
+async function fields(request: Request): Promise<Record<string, unknown> | null> {
+  try {
+    const body: unknown = await request.json();
+    return typeof body === "object" && body !== null ? (body as Record<string, unknown>) : null;
+  } catch {
+    return null;
+  }
+}
+
+// What a Join Code's link shows in a browser (V2-FR-18), with the album while the Host shares it on the web (V2-FR-47).
+http.route({
+  path: "/web/page",
+  method: "POST",
+  handler: httpAction(async (ctx, request) => {
+    if (!fromTheWorker(request)) return json({ error: "refused" }, 401);
+    const body = await fields(request);
+    if (body === null || typeof body.code !== "string") return json({ error: "malformed" }, 400);
+    const page: WebPage = await ctx.runQuery(internal.web.page, { code: body.code });
+    return json(page);
+  }),
+});
+
+// A one-minute read address for one picture of a shared web album, for the Worker to fetch and pass on. This and
+// reads.ts are the only places a read address is made, and neither makes one before the reveal.
+http.route({
+  path: "/web/picture",
+  method: "POST",
+  handler: httpAction(async (ctx, request) => {
+    if (!fromTheWorker(request)) return json({ error: "refused" }, 401);
+    const body = await fields(request);
+    if (body === null || typeof body.code !== "string" || typeof body.pictureId !== "string") {
+      return json({ error: "malformed" }, 400);
+    }
+    const copy = body.copy === "full" ? "full" : "view";
+    const grant: PictureGrant = await ctx.runQuery(internal.web.pictureGrant, {
+      code: body.code,
+      pictureId: body.pictureId,
+      copy,
+    });
+    if (!grant.granted) return json({ granted: false }, 404);
+    const address = await presignRead(storageConfig(), grant.storageKey);
+    return json({
+      granted: true,
+      url: address.url,
+      contentType: grant.contentType,
+      size: grant.size,
+      expiresInSeconds: READ_ADDRESS_SECONDS,
+    });
   }),
 });
 
