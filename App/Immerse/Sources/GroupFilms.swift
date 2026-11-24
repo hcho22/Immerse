@@ -104,6 +104,9 @@ final class GroupFilms {
     var notice: String?
     private(set) var busy = false
     private var developing: Task<Void, Never>?
+    /// The Rolls' launch recovery, run once when Group Films start, as the personal Journal's is when it opens: until it
+    /// ends every Roll reads as finishing a save, and a save cut off mid-way is carried on.
+    private var recovering: Task<Void, Never>?
     private var uploading: Task<Void, Never>?
     private var developmentFailures: [String: Int] = [:]
     private var pathMonitor: NWPathMonitor?
@@ -134,6 +137,7 @@ final class GroupFilms {
         self.uploader = PictureUploader(functions: functions)
         places = (try? JSONDecoder().decode([LocalPlace].self, from: Data(contentsOf: placesURL))) ?? []
         hosting.accountDeleted = { [weak self] in self?.accountDeleted() }
+        recovering = Task { [rolls] in await rolls.recoverAtLaunch() }
     }
 
     // MARK: Places
@@ -519,6 +523,7 @@ final class GroupFilms {
     /// Learns what changed while the phone was away, for every place: a moved End Time, the reveal, a removal or a
     /// deleted event (V2-FR-31, V2-FR-53, V2-FR-55), and sends what it owes the server.
     func refresh() async {
+        await recovering?.value
         for place in places {
             guard place.asGuest || hosting.isSignedIn else { continue }
             await sync(place.eventID)

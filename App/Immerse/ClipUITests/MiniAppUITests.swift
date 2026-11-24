@@ -56,6 +56,10 @@ final class MiniAppUITests: ScreenTestCase {
         // The shooting screen of the event's Camera is up; the simulator has no camera to show in it.
         XCTAssertTrue(app.buttons["capture-shutter"].exists(within: 20), "Taking a Roll opens the shooting screen")
         XCTAssertTrue(app.buttons["Done"].exists)
+        // The Roll's launch recovery has ended, so the header counts the exposures left rather than finishing a save.
+        let status = app.descendants(matching: .any)["capture-header-status"]
+        XCTAssertTrue(status.exists(within: 10))
+        XCTAssertTrue(status.label.contains("27"), "The header shows the exposures left, not \"\(status.label)\"")
         XCTAssertFalse(app.staticTexts["group-event-title"].isHittable, "The camera is over the event's page")
         keep(app, "MiniApp-shooting-screen")
 
