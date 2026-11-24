@@ -124,6 +124,11 @@ public struct EventServer: Sendable {
         _ = try await functions.call(.mutation, "hosting:rename", ["eventId": .string(eventID), "title": .string(title)])
     }
 
+    /// Switches the view-only web album on, after the reveal, or off (V2-FR-47).
+    public func setWebAlbum(eventID: String, on: Bool) async throws(ServerError) {
+        _ = try await functions.call(.mutation, "hosting:setWebAlbum", ["eventId": .string(eventID), "on": .bool(on)])
+    }
+
     public func deleteEvent(eventID: String) async throws(ServerError) {
         _ = try await functions.call(.mutation, "hosting:deleteEvent", ["eventId": .string(eventID)])
     }

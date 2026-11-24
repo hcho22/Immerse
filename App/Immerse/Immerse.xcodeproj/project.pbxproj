@@ -7,58 +7,112 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		02B5CC02EBCC33F0C8A3B94D /* CaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C4F11F94E6BAC2977A36307 /* CaptureView.swift */; };
 		02FD7E75DF77B0109CA571BB /* EntitlementCore in Frameworks */ = {isa = PBXBuildFile; productRef = B549794A50EBE804BFE73FEC /* EntitlementCore */; };
 		042D827298B936DDC2D0A77C /* CameraCatalogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6710A4D1DAF397E831CBBED0 /* CameraCatalogView.swift */; };
 		065EF6F200F43137260FF11B /* CaptureColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9768749433340EB2381411D5 /* CaptureColumn.swift */; };
 		07108D5AC507FB24C5A305B1 /* Manrope-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01CC841DB2880BA660E16444 /* Manrope-ExtraBold.ttf */; };
+		07194B3A2B5994997575C29D /* PrintZoom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6F8364C91FE1B3F143294A /* PrintZoom.swift */; };
 		089D740CA7BB59E701592D6D /* ImmerseServer in Frameworks */ = {isa = PBXBuildFile; productRef = 4BD8D171F1AA072D4894B1D4 /* ImmerseServer */; };
 		091CEBCEF1E80EA6D42859EB /* TestingUnlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB69DC46BA17DE67B5919AC5 /* TestingUnlock.swift */; };
 		0B464E4B5CD4781EF1704AA2 /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 72E8381AE8A36D191F7862D3 /* OFL.txt */; };
+		0B58E358A66704564A449F07 /* GroupFilmGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425FD45A6821449EFE64B832 /* GroupFilmGate.swift */; };
+		0D9E9B0BBAD9EA76B12E9815 /* DebugHosting.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC7D0305C5351349916C9C5C /* DebugHosting.swift */; };
 		0EC09DDE31374BF9AC18CE52 /* EventShooting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBE79502B2335FA649CEA1 /* EventShooting.swift */; };
+		0F8C6801F96D99DED777A836 /* PhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E429B6BF1BE76F69D9AEFF5B /* PhotoView.swift */; };
 		10C4B1B16355009745DCD236 /* ServerChecksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D2AEFB9AEB632F4111B1646 /* ServerChecksView.swift */; };
+		113AD64932C7353DA9F89577 /* DebugGroupFilms.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918E0574B894167210428005 /* DebugGroupFilms.swift */; };
 		13C47324AE9C9A58788D94B8 /* ClerkHostSignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786BAD63FDFFD0F4AEF0F120 /* ClerkHostSignIn.swift */; };
+		1857E50C819646A9D8BB0EEC /* DevelopedPreviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD257CF714E02F32F2A8D899 /* DevelopedPreviews.swift */; };
 		187704F23BFAA9F76987B38D /* DevelopmentStopTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EDD52BA615FAC4807C862E /* DevelopmentStopTests.swift */; };
 		191D4DB282262239144D8478 /* CaptureSidewaysUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139074367BE9ABD0540B02C9 /* CaptureSidewaysUITests.swift */; };
 		193461A3C75767A46D5FDCD0 /* GroupFilmUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984B49A958F2877570FC2D54 /* GroupFilmUITests.swift */; };
 		1A16A0976D5522DFDD99BD87 /* InterfaceOrientationLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FCF98A44F73CBA014ED943B /* InterfaceOrientationLock.swift */; };
+		1BA89EBC0F57F08E437A0C86 /* TestingUnlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB69DC46BA17DE67B5919AC5 /* TestingUnlock.swift */; };
 		1D341FC9C73EC0EE3163C5C2 /* JournalIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46F756E9B14472FF168A3A2C /* JournalIntegrationTests.swift */; };
 		1DE5E002D8F1FDE79C30F6A3 /* DevelopedPreviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD257CF714E02F32F2A8D899 /* DevelopedPreviews.swift */; };
+		1E5F3C061CFBB135ABB749B8 /* FilmDomain in Frameworks */ = {isa = PBXBuildFile; productRef = 7D27DB662F7F4B67EB7138F0 /* FilmDomain */; };
 		206CF5C66CAB828FD7DA7545 /* GroupFilms.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEB0003CDA890B668EF5273D /* GroupFilms.swift */; };
 		20CE6E0FEF38CFB3A1C0A813 /* GroupFilmsSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2397F643ED3D515AC5E4FF5B /* GroupFilmsSetup.swift */; };
+		225DEABB27A58C28DDC35536 /* CameraCatalogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6710A4D1DAF397E831CBBED0 /* CameraCatalogView.swift */; };
+		23B1194EE0754CBFE9C736ED /* ImmerseClip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 299BB262F4430DD3B384A820 /* ImmerseClip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		24C0FCA2BE064A11B92D67FE /* JoinConfirmation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCEB353A6324BC030D4838A /* JoinConfirmation.swift */; };
+		260B7B589F6DFDCF23CE8F42 /* Orbit.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B1403466E0EB27B7BF3200 /* Orbit.swift */; };
 		279F9A68D0943C4A060B5F54 /* CaptureControllerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E169BC5D2C79D13E86476FFB /* CaptureControllerIntegrationTests.swift */; };
+		28147DB9B76FC1E6A3C2FF73 /* SubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F711E5845DCF0D3F6B2A0D1D /* SubscriptionView.swift */; };
+		29DA3E25EE086FB877FB1484 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 81E438933AE741A255389C89 /* PrivacyInfo.xcprivacy */; };
+		2CA7DA001400E8536B62A258 /* GroupFilmsCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09407685FCFBAFD4980DC576 /* GroupFilmsCopy.swift */; };
 		2D537F511927597D7C0F0E7F /* TestingUnlockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B7E3349D70F4C59655183C /* TestingUnlockTests.swift */; };
 		2E67A8B62F3CA31DDDB0D064 /* FilmDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4B514E50E76AB900E711C1 /* FilmDetailView.swift */; };
 		2F80AE8469A8CD0DD00717BD /* ClerkKit in Frameworks */ = {isa = PBXBuildFile; productRef = 01BBA2211B2C47FD11CC9AD1 /* ClerkKit */; };
 		316FF96403716A98E59EE888 /* Manrope-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9B1DF3136917517051AB1E23 /* Manrope-Medium.ttf */; };
+		3179C664BEA43349489BB14A /* FilmRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = 748BE85144010FE683376604 /* FilmRuntime */; };
+		32D288837F0CF423BA95DF85 /* AuditExceptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EF473280C9E7D9FAB46A092 /* AuditExceptions.swift */; };
 		346AA68DA8A06153C82EBBA0 /* HostWindowScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCCF5370D54887CF2F93D995 /* HostWindowScene.swift */; };
+		3655BA501F757078270711E1 /* HeldTurn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6C25591A89E94359ED8185 /* HeldTurn.swift */; };
 		3C294C2B3AD9C03C3FDC3E6D /* GroupFilmEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5236FE23D13472CAB05DD1 /* GroupFilmEvent.swift */; };
+		3E6D10CF4E1AF685B630A7A6 /* EventShooting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBE79502B2335FA649CEA1 /* EventShooting.swift */; };
+		3EF31E9ABAD90046384EE856 /* EntitlementCore in Frameworks */ = {isa = PBXBuildFile; productRef = EE84D2B8E0359DBF2F2081BE /* EntitlementCore */; };
+		40E4B9726A82DDA34709B589 /* ServerChecksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D2AEFB9AEB632F4111B1646 /* ServerChecksView.swift */; };
 		412BCB81A39B8A8CE607A70E /* LowStorageUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B5593013152E5DC836A135 /* LowStorageUITests.swift */; };
+		41BD4688C5A376FA487415B6 /* ImmerseServer in Frameworks */ = {isa = PBXBuildFile; productRef = F601DDE563A7B6FDCD5EB5E0 /* ImmerseServer */; };
 		42BEB643FE82D676C7ED51B8 /* DevelopedPreviewsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61CF5DC6AEE016FF7D8253DD /* DevelopedPreviewsTests.swift */; };
 		447BA416FD2D827F9B770AF2 /* RenderCore in Frameworks */ = {isa = PBXBuildFile; productRef = B7AE777EF9385D731C173E89 /* RenderCore */; };
 		45097BC08691DFDDD74D842B /* TestingUnlockUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B0CC430495062A502C3A2E1 /* TestingUnlockUITests.swift */; };
+		47BE751DF550E3666C6A8B08 /* MiniApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AC5667526E0394A54171B43 /* MiniApp.swift */; };
+		49BE75C852E573F67BB3409D /* CameraSamplesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D26AE1823FA15B59D835D16 /* CameraSamplesView.swift */; };
 		4ACCCBF3569E3B29752DE1C9 /* ImmerseApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD585D6F2151663DA3927D1E /* ImmerseApp.swift */; };
 		4AF581856EA78677AAD8EB65 /* CaptureSidewaysTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99F2EDC4F51181E67A3A1D6 /* CaptureSidewaysTests.swift */; };
 		4B42A778BCB80DCBE67D2B67 /* PrintZoom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6F8364C91FE1B3F143294A /* PrintZoom.swift */; };
+		4DB378350F170BA5FFAF2E39 /* SubscriptionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEC1FD423337428B512E00A /* SubscriptionController.swift */; };
 		4DD14408EB5093E7CF2A15EE /* ContentSizeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7787955A98AAA8C3A558DBD /* ContentSizeTests.swift */; };
+		4F0B4643DD2918CF5B1C8718 /* DevelopedPreviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD257CF714E02F32F2A8D899 /* DevelopedPreviews.swift */; };
 		4F93FB2FC030AC783C0F3F8B /* FilmPersistence in Frameworks */ = {isa = PBXBuildFile; productRef = 86BEEF17ACACB448446A4635 /* FilmPersistence */; };
+		50DF30C7E5FEC2ADF99085A6 /* HostingSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB93A6AEBEDAEB3AF2B9419 /* HostingSession.swift */; };
 		50EC2E9F4FF8AB025A5B7FCC /* CaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C4F11F94E6BAC2977A36307 /* CaptureView.swift */; };
 		52667AD8D24E9D2933366D5A /* AccountSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA7AC75CE4A11A4847D9716 /* AccountSettings.swift */; };
+		52E7E16BB59F7CEA5EEB2D52 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6C7B00AA020EF955ACC8304F /* Assets.xcassets */; };
 		52F4C6288009DEE6C5290AC5 /* SoundtrackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B35F73957B082722839855E0 /* SoundtrackView.swift */; };
+		56577AE4E2F9C41FC07C5701 /* RenderCore in Frameworks */ = {isa = PBXBuildFile; productRef = C4DBA27930599BFA411F88D9 /* RenderCore */; };
+		5674AD7BE82EDC7A126BDAC1 /* Manrope-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9B1DF3136917517051AB1E23 /* Manrope-Medium.ttf */; };
 		568526BB475E3526C02D4A4D /* MediaCatalog.json in Resources */ = {isa = PBXBuildFile; fileRef = CF45FD08FBFA8E0087ADE588 /* MediaCatalog.json */; };
+		574248555331B04FF4238A1B /* NativeAdapters in Frameworks */ = {isa = PBXBuildFile; productRef = 80329A7FA0F797CACC51B3D3 /* NativeAdapters */; };
+		59D79C25C03BE35B3ECC2168 /* CaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C4F11F94E6BAC2977A36307 /* CaptureView.swift */; };
 		5A3AD56FA9A64CCFC80BC581 /* DebugHosting.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC7D0305C5351349916C9C5C /* DebugHosting.swift */; };
+		5AE99969EBED9FC8BAF7866A /* GroupFilms.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEB0003CDA890B668EF5273D /* GroupFilms.swift */; };
+		5B43620E1A370700FD845CEE /* FilmPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6AB6EE6DDA39C779868B566 /* FilmPresentation.swift */; };
+		5C1FEF9060B6F047FA93DC47 /* Manrope-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5577A209ACCFF1D54B07280E /* Manrope-Regular.ttf */; };
 		5C8D41DBA54CB27A7630E775 /* PhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E429B6BF1BE76F69D9AEFF5B /* PhotoView.swift */; };
+		5D3EFD6FD9C7DCA411C591E0 /* CaptureColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9768749433340EB2381411D5 /* CaptureColumn.swift */; };
+		5ED1BF572DB6B85CDCD224A9 /* Manrope-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9ECC2B5F31B13CAF946C5EE4 /* Manrope-Bold.ttf */; };
 		5EDC062601445A003E468074 /* SubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F711E5845DCF0D3F6B2A0D1D /* SubscriptionView.swift */; };
 		60B087F646E8BE29EBD52DFE /* OrbitSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4B6929D46B1E145AD3348B /* OrbitSheets.swift */; };
 		61B5F2C967E9E47FC269A320 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 81E438933AE741A255389C89 /* PrivacyInfo.xcprivacy */; };
+		64DDE6F08CB8B5711A4CB07F /* FilmRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = BF01345E770CBA125593C6B0 /* FilmRuntime */; };
+		6582B259FA7F37F1381CCC44 /* FilmDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4B514E50E76AB900E711C1 /* FilmDetailView.swift */; };
+		672BAFF41B9683FFAC20DD11 /* HostingSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97CE32DDCB226696E081B44 /* HostingSetup.swift */; };
+		6AE475FF0505EBB504A654C8 /* LowStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 994227E06031C5A45265BE44 /* LowStorage.swift */; };
 		718C112B3F713C391C80BB45 /* EntitlementCore in Frameworks */ = {isa = PBXBuildFile; productRef = 23E745B0CA05FA19BE899251 /* EntitlementCore */; };
+		71A8415AD7AA1D42B0CBBC5E /* TestingUnlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB69DC46BA17DE67B5919AC5 /* TestingUnlock.swift */; };
+		763B4FC4DED06E6F332DF619 /* LowStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 994227E06031C5A45265BE44 /* LowStorage.swift */; };
+		779ADA782C542F667AEDC909 /* MiniAppRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13348F1123F7C83D4A58689A /* MiniAppRoot.swift */; };
 		794D2B906DD37A94A88B5E83 /* JournalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B299AC9D190C1CBF43EE00 /* JournalView.swift */; };
 		794E3ACF96A45D8B9AB462E8 /* MovieCapacityUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3568BB0435FFA16C201C1D53 /* MovieCapacityUITests.swift */; };
 		7A1F3ED8838FF78DCAB255B3 /* StoreKitSubscriptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2D116491CF28241569A6D3 /* StoreKitSubscriptionTests.swift */; };
+		7B2EF41628BF2293F0342BA9 /* PhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E429B6BF1BE76F69D9AEFF5B /* PhotoView.swift */; };
+		7BD8A2E3E7E98328523ADB2B /* CaptureController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D476A9C5406EC78CE4973A4 /* CaptureController.swift */; };
+		7C3B06C07320942FEEBEE8BF /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 72E8381AE8A36D191F7862D3 /* OFL.txt */; };
 		7DFC119301C58F762012BED9 /* HeldTurn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6C25591A89E94359ED8185 /* HeldTurn.swift */; };
+		7F110E57565200AD20BF5EA3 /* JoinConfirmation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCEB353A6324BC030D4838A /* JoinConfirmation.swift */; };
 		81A7482545288611703DC267 /* Manrope-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3AB53491831A152C441D8A22 /* Manrope-SemiBold.ttf */; };
+		820F5333F6D701C5681349D1 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5345D75982C156D9821482BB /* SettingsView.swift */; };
 		84E122EDEBB63717AFC86A0E /* ImmerseServer in Frameworks */ = {isa = PBXBuildFile; productRef = C0FF9E35F716BA4898B3597B /* ImmerseServer */; };
+		8606B030FF381958F82A5F9D /* GroupFilmsSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2397F643ED3D515AC5E4FF5B /* GroupFilmsSetup.swift */; };
 		865894FD2C75EFF6AEED9DEC /* JournalFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EA91C41E4667CEDD36A692 /* JournalFlowTests.swift */; };
+		87012A794F16E22D2B9C086B /* JoinConfirmation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCEB353A6324BC030D4838A /* JoinConfirmation.swift */; };
 		8772F96028EB6799B35D32C6 /* FilmDomain in Frameworks */ = {isa = PBXBuildFile; productRef = F57CEE519E8D1B8CE63C90E5 /* FilmDomain */; };
+		8AD1C0B06049B2E1DE1F03EE /* InterfaceOrientationLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FCF98A44F73CBA014ED943B /* InterfaceOrientationLock.swift */; };
+		8B35288D4E7313E9B000C76C /* FilmDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4B514E50E76AB900E711C1 /* FilmDetailView.swift */; };
 		8C6E32618BC59EE34A1D814C /* GroupFilmLoad.swift in Sources */ = {isa = PBXBuildFile; fileRef = F12EDA1E20AF664308F3CEE2 /* GroupFilmLoad.swift */; };
 		8CF96CE9CE3EF39590D32E48 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5345D75982C156D9821482BB /* SettingsView.swift */; };
 		8D36474A665D40FF4FEB2CF3 /* HostingSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97CE32DDCB226696E081B44 /* HostingSetup.swift */; };
@@ -67,32 +121,90 @@
 		9269012BBD3C11F2ADE457CC /* FilmRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = ECB5677E8658852E42741E9E /* FilmRuntime */; };
 		92DA5FF4E2265BEE5629B1CF /* JournalModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5312A6BA646DD3E819A2E3D2 /* JournalModel.swift */; };
 		9394253F3D5130352B73610C /* MediaCatalog in Frameworks */ = {isa = PBXBuildFile; productRef = 15E6FEB6B2A025E914F0F602 /* MediaCatalog */; };
+		94DC442A581D7F4109E0C0A4 /* Orbit.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B1403466E0EB27B7BF3200 /* Orbit.swift */; };
 		9652515411BF45FF595BE59F /* FilmStockUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6999265B7FB892C983479167 /* FilmStockUITests.swift */; };
 		97EDC540558F6430442A6076 /* FilmDomain in Frameworks */ = {isa = PBXBuildFile; productRef = B003DCAC6B4E5C9D271D55C2 /* FilmDomain */; };
+		98041795348D9201F499CC81 /* OrbitSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4B6929D46B1E145AD3348B /* OrbitSheets.swift */; };
+		9BE078B123126B5BD23F40DE /* ImmerseServer in Frameworks */ = {isa = PBXBuildFile; productRef = 3E1096564C6EB6986D99ED3B /* ImmerseServer */; };
+		9D5C7E263FCBB7410092507D /* GroupFilmLoad.swift in Sources */ = {isa = PBXBuildFile; fileRef = F12EDA1E20AF664308F3CEE2 /* GroupFilmLoad.swift */; };
 		9DE2B536340800491746E4C8 /* CaptureController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D476A9C5406EC78CE4973A4 /* CaptureController.swift */; };
+		A1D2EFBB3FAEA440E04BA22C /* JournalModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5312A6BA646DD3E819A2E3D2 /* JournalModel.swift */; };
+		A333A8E19DEFC1CC576C6F67 /* EventShooting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBE79502B2335FA649CEA1 /* EventShooting.swift */; };
 		A457FF06726DBAE0B71AC426 /* HostingSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB93A6AEBEDAEB3AF2B9419 /* HostingSession.swift */; };
+		A5A355AAEF15DF40CD29BC8A /* GroupFilmsSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2397F643ED3D515AC5E4FF5B /* GroupFilmsSetup.swift */; };
+		A61226839D1B53288284A79E /* MiniAppHandOffTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D26EF31AD4959CB92A08BE /* MiniAppHandOffTests.swift */; };
+		A69E32DD3D88630585F18958 /* ClerkHostSignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786BAD63FDFFD0F4AEF0F120 /* ClerkHostSignIn.swift */; };
+		A73AF544DD9E314E8F8C154F /* GroupAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6186A7AAA9130E2EDB14FBA5 /* GroupAlbum.swift */; };
 		A7BA1630F4445FEDB4BF144C /* NativeAdapters in Frameworks */ = {isa = PBXBuildFile; productRef = 54847413BC0280518CA9021C /* NativeAdapters */; };
+		A7E83B7592E8DB609D56D8DE /* PrintZoom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A6F8364C91FE1B3F143294A /* PrintZoom.swift */; };
 		A80AE03603DFB4EE9DA83CA7 /* LowStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 586BF93AB2DBEC62EF49CD45 /* LowStorageTests.swift */; };
+		A87FF0355774DD0EA3A25839 /* FilmPersistence in Frameworks */ = {isa = PBXBuildFile; productRef = FA56CBA088BE9A352EF04442 /* FilmPersistence */; };
 		A8A49B1F711AAC7A695BF1CA /* PrintZoomTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EEEE9F94D7BD27905B71C28 /* PrintZoomTests.swift */; };
+		A9B2B528AB75D83A25CFF0E1 /* Manrope-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9B1DF3136917517051AB1E23 /* Manrope-Medium.ttf */; };
+		A9BF4256F67517FD585B5DE6 /* MediaCatalog in Frameworks */ = {isa = PBXBuildFile; productRef = B2EBF1035D6909EFEF023223 /* MediaCatalog */; };
+		AC5875DA7C20FFD575EA6508 /* MediaCatalog in Frameworks */ = {isa = PBXBuildFile; productRef = C329A17755A6C6DAC94DECEE /* MediaCatalog */; };
+		AD185C7E55B888882FC19534 /* CropEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E453D065CE0118F02C90E8C /* CropEditor.swift */; };
+		ADCAC59EFFB86CAF05F46260 /* SoundtrackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B35F73957B082722839855E0 /* SoundtrackView.swift */; };
 		B18ADCB2236DD2A8140DB998 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 3B89AA2B651AFE7F3D95FAF4 /* README.md */; };
 		B18E6BAE9E67CDB2DAAE35A3 /* Orbit.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B1403466E0EB27B7BF3200 /* Orbit.swift */; };
+		B19D7EC3CF18DAC9CBBAE0FD /* Manrope-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9ECC2B5F31B13CAF946C5EE4 /* Manrope-Bold.ttf */; };
+		B1D7B2A65164F0D4754E9109 /* ClerkKit in Frameworks */ = {isa = PBXBuildFile; productRef = CEA8D05DC275A6EC8E2EB53A /* ClerkKit */; };
+		B327D03E998BB3F9AF7D6EEC /* GroupFilmEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5236FE23D13472CAB05DD1 /* GroupFilmEvent.swift */; };
 		B49ACBF29C3E6BCFFF158F8A /* DebugGroupFilms.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918E0574B894167210428005 /* DebugGroupFilms.swift */; };
+		B5D5C6D6BDCA0CA1B99B9F59 /* JournalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B299AC9D190C1CBF43EE00 /* JournalView.swift */; };
 		B79E3FD0070E23CBC9D3BE61 /* AuditExceptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EF473280C9E7D9FAB46A092 /* AuditExceptions.swift */; };
 		B7CFA1CE79413CC994D9B6A0 /* SubscriptionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEC1FD423337428B512E00A /* SubscriptionController.swift */; };
+		B94D1D62B3521D9D9CBE61C3 /* SoundtrackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B35F73957B082722839855E0 /* SoundtrackView.swift */; };
+		BE5FEFD41E7943B241EA219C /* FilmDomain in Frameworks */ = {isa = PBXBuildFile; productRef = E78D6126C7D8BB3F78BDC67F /* FilmDomain */; };
 		BEA165172CF0B04C95B55F0D /* LocalSubscriptions.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 30073B98740522EE1997D947 /* LocalSubscriptions.storekit */; };
+		BF5533EABC07755C3577A8AA /* HeldTurn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6C25591A89E94359ED8185 /* HeldTurn.swift */; };
+		C109A6E317F1E93993C9FDBF /* HostingSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB93A6AEBEDAEB3AF2B9419 /* HostingSession.swift */; };
+		C2F697B246185B01EEFCAD58 /* EntitlementCore in Frameworks */ = {isa = PBXBuildFile; productRef = 880EE370F7616B795DE96ECB /* EntitlementCore */; };
+		C6DF1200632E10036ECC9AE8 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 81E438933AE741A255389C89 /* PrivacyInfo.xcprivacy */; };
+		C7069189000C87C62E995202 /* MediaCatalog.json in Resources */ = {isa = PBXBuildFile; fileRef = CF45FD08FBFA8E0087ADE588 /* MediaCatalog.json */; };
+		C76D56463125CBC174326A19 /* FilmPersistence in Frameworks */ = {isa = PBXBuildFile; productRef = D42357CA1211CBC008695B71 /* FilmPersistence */; };
+		CF3606D0E1556EEA0AF39C2E /* GroupFilmEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5236FE23D13472CAB05DD1 /* GroupFilmEvent.swift */; };
+		CF4D4078E6FCADC004C0ADB2 /* UITestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A01C3DFAC35F00739111171 /* UITestSupport.swift */; };
+		D0E5F3EE3A28D2880709A7FB /* MediaCatalog.json in Resources */ = {isa = PBXBuildFile; fileRef = CF45FD08FBFA8E0087ADE588 /* MediaCatalog.json */; };
+		D0E8EA38065D0D314B4A1C79 /* InterfaceOrientationLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FCF98A44F73CBA014ED943B /* InterfaceOrientationLock.swift */; };
+		D38DAFCE153109820B2B3269 /* AccountSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA7AC75CE4A11A4847D9716 /* AccountSettings.swift */; };
 		D60F0DC6E37EE9398B4DB677 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6C7B00AA020EF955ACC8304F /* Assets.xcassets */; };
+		D6900EC492F026D07F7732C5 /* Manrope-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01CC841DB2880BA660E16444 /* Manrope-ExtraBold.ttf */; };
 		D994442EC58F9DA48BD1EEE0 /* UITestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A01C3DFAC35F00739111171 /* UITestSupport.swift */; };
+		DB3F5B6951931FB686AAE0D1 /* CaptureColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9768749433340EB2381411D5 /* CaptureColumn.swift */; };
 		DC5D4B6A96D2FD22815B97BE /* GroupFilmGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425FD45A6821449EFE64B832 /* GroupFilmGate.swift */; };
 		DD3A79269EC8A9051A6D3EEE /* GroupFilmsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B05BC095FF098512F8377F11 /* GroupFilmsTests.swift */; };
+		DDE85A94AE882D7883E3DE2A /* CropEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E453D065CE0118F02C90E8C /* CropEditor.swift */; };
+		E23ECF97B283616E3A05C3EA /* RenderCore in Frameworks */ = {isa = PBXBuildFile; productRef = C5CE10833C45BDDA7A198048 /* RenderCore */; };
 		E479AB99C1F016AAD1708553 /* Manrope-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5577A209ACCFF1D54B07280E /* Manrope-Regular.ttf */; };
+		E4A1311CA200E2FFD6033B20 /* Manrope-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01CC841DB2880BA660E16444 /* Manrope-ExtraBold.ttf */; };
+		E596BF1FA94D746BBBCD5EFB /* ImmerseApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD585D6F2151663DA3927D1E /* ImmerseApp.swift */; };
+		E6FBCBDC62AEB67F33DBC1BA /* OrbitSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4B6929D46B1E145AD3348B /* OrbitSheets.swift */; };
+		E782C5FA641586559DD693E7 /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 72E8381AE8A36D191F7862D3 /* OFL.txt */; };
 		E7D669A857C34B0700EA9E83 /* GroupFilmsCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09407685FCFBAFD4980DC576 /* GroupFilmsCopy.swift */; };
 		E98D68BF2F172BDDC5E8D910 /* CameraSamplesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D26AE1823FA15B59D835D16 /* CameraSamplesView.swift */; };
 		EA3732D95F0130D4C61FFCC3 /* HostingSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE4C27C4B7B6A468C0A567B0 /* HostingSessionTests.swift */; };
 		EAC7D4195485520E4133782C /* GroupAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6186A7AAA9130E2EDB14FBA5 /* GroupAlbum.swift */; };
+		ED994871C748F523698B9B20 /* SubscriptionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBEC1FD423337428B512E00A /* SubscriptionController.swift */; };
+		EDCF1A479573EE048084382F /* Manrope-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3AB53491831A152C441D8A22 /* Manrope-SemiBold.ttf */; };
 		EE23278CE7B6A0F0D5323537 /* LowStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 994227E06031C5A45265BE44 /* LowStorage.swift */; };
+		F0F1171E6A95AF3C5127FF0E /* GroupFilms.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEB0003CDA890B668EF5273D /* GroupFilms.swift */; };
+		F1C38A8A49609364A3DAD68C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6C7B00AA020EF955ACC8304F /* Assets.xcassets */; };
+		F1E9486721179071E843BF6C /* DebugGroupFilms.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918E0574B894167210428005 /* DebugGroupFilms.swift */; };
+		F21BE82104A03E1A2043B2E6 /* Manrope-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5577A209ACCFF1D54B07280E /* Manrope-Regular.ttf */; };
+		F4AD6885190F24B48A463CF4 /* GroupFilmsCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09407685FCFBAFD4980DC576 /* GroupFilmsCopy.swift */; };
+		F65F4667BB85D6414F8F283F /* Manrope-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3AB53491831A152C441D8A22 /* Manrope-SemiBold.ttf */; };
 		F7D60ACCF520AC0605E08749 /* Manrope-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9ECC2B5F31B13CAF946C5EE4 /* Manrope-Bold.ttf */; };
+		F8AC9D66C6D63331C0009A07 /* NativeAdapters in Frameworks */ = {isa = PBXBuildFile; productRef = 52C8CA51B3687FB0A1BE03E5 /* NativeAdapters */; };
+		F8CAFCB1FD5AA4D0F408A80B /* MiniAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21A9FCBB22D2D6565CE3947 /* MiniAppUITests.swift */; };
+		F9F925D9D1E30E44DAC5088F /* DebugHosting.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC7D0305C5351349916C9C5C /* DebugHosting.swift */; };
+		FB4CCA52FFB6AAE57DC6855F /* CaptureController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D476A9C5406EC78CE4973A4 /* CaptureController.swift */; };
 		FC66DDA09C5D0ABEF86E8F0C /* FilmPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6AB6EE6DDA39C779868B566 /* FilmPresentation.swift */; };
+		FE0F6268001BFA409A0406F1 /* JournalModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5312A6BA646DD3E819A2E3D2 /* JournalModel.swift */; };
 		FE858CB19C6CB36CC0B4B35F /* CropEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E453D065CE0118F02C90E8C /* CropEditor.swift */; };
+		FF20DF2C7876F59278F48E90 /* GroupAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6186A7AAA9130E2EDB14FBA5 /* GroupAlbum.swift */; };
+		FF69404FCC33B1B2AF295BAA /* FilmPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6AB6EE6DDA39C779868B566 /* FilmPresentation.swift */; };
+		FFB7E137F82D57F93D8A864A /* ImmerseClipApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DE4A74488230B29AF32DE3 /* ImmerseClipApp.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -103,6 +215,20 @@
 			remoteGlobalIDString = FF0469481DB495A7FC25D880;
 			remoteInfo = Immerse;
 		};
+		55FEE4A44FB4828D1A6DCF64 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BF5E9BF9C46D2E3744A43B98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9020F887EFCC47F85D2F1BEE;
+			remoteInfo = ImmerseClip;
+		};
+		8AF4E901FAD0E5C45C14CA34 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BF5E9BF9C46D2E3744A43B98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9020F887EFCC47F85D2F1BEE;
+			remoteInfo = ImmerseClip;
+		};
 		B9BD5F1F1182BACE61FBA081 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BF5E9BF9C46D2E3744A43B98 /* Project object */;
@@ -112,14 +238,32 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		6591C0D7F9DD1AAF06FD2C6D /* Embed App Clips */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/AppClips";
+			dstSubfolderSpec = 16;
+			files = (
+				23B1194EE0754CBFE9C736ED /* ImmerseClip.app in Embed App Clips */,
+			);
+			name = "Embed App Clips";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		01CC841DB2880BA660E16444 /* Manrope-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Manrope-ExtraBold.ttf"; sourceTree = "<group>"; };
 		09407685FCFBAFD4980DC576 /* GroupFilmsCopy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupFilmsCopy.swift; sourceTree = "<group>"; };
 		0AB3F25C02325EB748DF09A0 /* MediaCatalog */ = {isa = PBXFileReference; lastKnownFileType = folder; name = MediaCatalog; path = ../../Packages/MediaCatalog; sourceTree = SOURCE_ROOT; };
+		10D26EF31AD4959CB92A08BE /* MiniAppHandOffTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniAppHandOffTests.swift; sourceTree = "<group>"; };
 		10EDD52BA615FAC4807C862E /* DevelopmentStopTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopmentStopTests.swift; sourceTree = "<group>"; };
+		13348F1123F7C83D4A58689A /* MiniAppRoot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniAppRoot.swift; sourceTree = "<group>"; };
 		139074367BE9ABD0540B02C9 /* CaptureSidewaysUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureSidewaysUITests.swift; sourceTree = "<group>"; };
 		17FC23B6591CF4D04A22FD93 /* Immerse.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Immerse.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2397F643ED3D515AC5E4FF5B /* GroupFilmsSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupFilmsSetup.swift; sourceTree = "<group>"; };
+		299BB262F4430DD3B384A820 /* ImmerseClip.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ImmerseClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		29DE4A74488230B29AF32DE3 /* ImmerseClipApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImmerseClipApp.swift; sourceTree = "<group>"; };
 		2ADBE79502B2335FA649CEA1 /* EventShooting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventShooting.swift; sourceTree = "<group>"; };
 		2DB93A6AEBEDAEB3AF2B9419 /* HostingSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostingSession.swift; sourceTree = "<group>"; };
 		30073B98740522EE1997D947 /* LocalSubscriptions.storekit */ = {isa = PBXFileReference; path = LocalSubscriptions.storekit; sourceTree = "<group>"; };
@@ -140,6 +284,7 @@
 		5577A209ACCFF1D54B07280E /* Manrope-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Manrope-Regular.ttf"; sourceTree = "<group>"; };
 		586BF93AB2DBEC62EF49CD45 /* LowStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LowStorageTests.swift; sourceTree = "<group>"; };
 		58B299AC9D190C1CBF43EE00 /* JournalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalView.swift; sourceTree = "<group>"; };
+		5BCEB353A6324BC030D4838A /* JoinConfirmation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinConfirmation.swift; sourceTree = "<group>"; };
 		5C8C748E68ECB2151FA32C84 /* DevelopedPreviewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopedPreviewUITests.swift; sourceTree = "<group>"; };
 		5FCF98A44F73CBA014ED943B /* InterfaceOrientationLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceOrientationLock.swift; sourceTree = "<group>"; };
 		6186A7AAA9130E2EDB14FBA5 /* GroupAlbum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupAlbum.swift; sourceTree = "<group>"; };
@@ -153,7 +298,9 @@
 		6D2AEFB9AEB632F4111B1646 /* ServerChecksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerChecksView.swift; sourceTree = "<group>"; };
 		72E8381AE8A36D191F7862D3 /* OFL.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = OFL.txt; sourceTree = "<group>"; };
 		766A569971585250535D6ED0 /* FilmDomain */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FilmDomain; path = ../../Packages/FilmDomain; sourceTree = SOURCE_ROOT; };
+		76D8C8D864A63C87ACBB4BC4 /* ImmerseClipUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ImmerseClipUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		786BAD63FDFFD0F4AEF0F120 /* ClerkHostSignIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClerkHostSignIn.swift; sourceTree = "<group>"; };
+		7AC5667526E0394A54171B43 /* MiniApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniApp.swift; sourceTree = "<group>"; };
 		7E453D065CE0118F02C90E8C /* CropEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CropEditor.swift; sourceTree = "<group>"; };
 		7EF473280C9E7D9FAB46A092 /* AuditExceptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuditExceptions.swift; sourceTree = "<group>"; };
 		81E438933AE741A255389C89 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
@@ -167,6 +314,7 @@
 		99FB020C2F24374F9C8ECCFE /* ImmerseTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ImmerseTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A4B514E50E76AB900E711C1 /* FilmDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmDetailView.swift; sourceTree = "<group>"; };
 		9B1DF3136917517051AB1E23 /* Manrope-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Manrope-Medium.ttf"; sourceTree = "<group>"; };
+		9D856AB36B8983B584CE5893 /* ImmerseWithClip.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ImmerseWithClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E6C25591A89E94359ED8185 /* HeldTurn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeldTurn.swift; sourceTree = "<group>"; };
 		9EA7AC75CE4A11A4847D9716 /* AccountSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSettings.swift; sourceTree = "<group>"; };
 		9ECC2B5F31B13CAF946C5EE4 /* Manrope-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Manrope-Bold.ttf"; sourceTree = "<group>"; };
@@ -178,6 +326,7 @@
 		AEB0003CDA890B668EF5273D /* GroupFilms.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupFilms.swift; sourceTree = "<group>"; };
 		B05BC095FF098512F8377F11 /* GroupFilmsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupFilmsTests.swift; sourceTree = "<group>"; };
 		B08B7044BE2F5A212F57FA06 /* EntitlementCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = EntitlementCore; path = ../../Packages/EntitlementCore; sourceTree = SOURCE_ROOT; };
+		B21A9FCBB22D2D6565CE3947 /* MiniAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniAppUITests.swift; sourceTree = "<group>"; };
 		B35F73957B082722839855E0 /* SoundtrackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundtrackView.swift; sourceTree = "<group>"; };
 		BC7D0305C5351349916C9C5C /* DebugHosting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugHosting.swift; sourceTree = "<group>"; };
 		BE4C27C4B7B6A468C0A567B0 /* HostingSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostingSessionTests.swift; sourceTree = "<group>"; };
@@ -202,6 +351,37 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		57D867B9C637423DA0B341D0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E5F3C061CFBB135ABB749B8 /* FilmDomain in Frameworks */,
+				A87FF0355774DD0EA3A25839 /* FilmPersistence in Frameworks */,
+				64DDE6F08CB8B5711A4CB07F /* FilmRuntime in Frameworks */,
+				E23ECF97B283616E3A05C3EA /* RenderCore in Frameworks */,
+				F8AC9D66C6D63331C0009A07 /* NativeAdapters in Frameworks */,
+				3EF31E9ABAD90046384EE856 /* EntitlementCore in Frameworks */,
+				A9BF4256F67517FD585B5DE6 /* MediaCatalog in Frameworks */,
+				9BE078B123126B5BD23F40DE /* ImmerseServer in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A4AC7DAD201B7BF103212D41 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BE5FEFD41E7943B241EA219C /* FilmDomain in Frameworks */,
+				C76D56463125CBC174326A19 /* FilmPersistence in Frameworks */,
+				3179C664BEA43349489BB14A /* FilmRuntime in Frameworks */,
+				56577AE4E2F9C41FC07C5701 /* RenderCore in Frameworks */,
+				574248555331B04FF4238A1B /* NativeAdapters in Frameworks */,
+				C2F697B246185B01EEFCAD58 /* EntitlementCore in Frameworks */,
+				AC5875DA7C20FFD575EA6508 /* MediaCatalog in Frameworks */,
+				41BD4688C5A376FA487415B6 /* ImmerseServer in Frameworks */,
+				B1D7B2A65164F0D4754E9109 /* ClerkKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B35AFF25AB9ED77BAD9FEAC2 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -267,6 +447,16 @@
 			path = Config;
 			sourceTree = "<group>";
 		};
+		3C7C3177B398724AC8DB0322 /* Clip */ = {
+			isa = PBXGroup;
+			children = (
+				29DE4A74488230B29AF32DE3 /* ImmerseClipApp.swift */,
+				7AC5667526E0394A54171B43 /* MiniApp.swift */,
+				13348F1123F7C83D4A58689A /* MiniAppRoot.swift */,
+			);
+			path = Clip;
+			sourceTree = "<group>";
+		};
 		4300318AB82A27CF30D69EB0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -279,6 +469,8 @@
 		52A97AF3440799C4DCA5BE15 = {
 			isa = PBXGroup;
 			children = (
+				3C7C3177B398724AC8DB0322 /* Clip */,
+				A58657120A3370C9242D02B8 /* ClipUITests */,
 				18DDF50A76C81686E0DA3434 /* Config */,
 				AA299EBD41AA8C0D112D9778 /* Packages */,
 				D203862C97AA7CC57CB735A6 /* Sources */,
@@ -299,6 +491,14 @@
 				72E8381AE8A36D191F7862D3 /* OFL.txt */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		A58657120A3370C9242D02B8 /* ClipUITests */ = {
+			isa = PBXGroup;
+			children = (
+				B21A9FCBB22D2D6565CE3947 /* MiniAppUITests.swift */,
+			);
+			path = ClipUITests;
 			sourceTree = "<group>";
 		};
 		AA299EBD41AA8C0D112D9778 /* Packages */ = {
@@ -346,6 +546,7 @@
 				C97CE32DDCB226696E081B44 /* HostingSetup.swift */,
 				CD585D6F2151663DA3927D1E /* ImmerseApp.swift */,
 				5FCF98A44F73CBA014ED943B /* InterfaceOrientationLock.swift */,
+				5BCEB353A6324BC030D4838A /* JoinConfirmation.swift */,
 				5312A6BA646DD3E819A2E3D2 /* JournalModel.swift */,
 				58B299AC9D190C1CBF43EE00 /* JournalView.swift */,
 				994227E06031C5A45265BE44 /* LowStorage.swift */,
@@ -377,6 +578,7 @@
 				CCCF5370D54887CF2F93D995 /* HostWindowScene.swift */,
 				46F756E9B14472FF168A3A2C /* JournalIntegrationTests.swift */,
 				586BF93AB2DBEC62EF49CD45 /* LowStorageTests.swift */,
+				10D26EF31AD4959CB92A08BE /* MiniAppHandOffTests.swift */,
 				4EEEE9F94D7BD27905B71C28 /* PrintZoomTests.swift */,
 				8B2D116491CF28241569A6D3 /* StoreKitSubscriptionTests.swift */,
 				A4B7E3349D70F4C59655183C /* TestingUnlockTests.swift */,
@@ -389,8 +591,11 @@
 			isa = PBXGroup;
 			children = (
 				17FC23B6591CF4D04A22FD93 /* Immerse.app */,
+				299BB262F4430DD3B384A820 /* ImmerseClip.app */,
+				76D8C8D864A63C87ACBB4BC4 /* ImmerseClipUITests.xctest */,
 				99FB020C2F24374F9C8ECCFE /* ImmerseTests.xctest */,
 				E5A88731178AD8FE56F4631C /* ImmerseUITests.xctest */,
+				9D856AB36B8983B584CE5893 /* ImmerseWithClip.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -416,6 +621,24 @@
 			productReference = E5A88731178AD8FE56F4631C /* ImmerseUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		83C182DE462ED6C5039087B9 /* ImmerseClipUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8B8B543FA4E10AECAE791E3E /* Build configuration list for PBXNativeTarget "ImmerseClipUITests" */;
+			buildPhases = (
+				AFF5807C1ECB6FC4C7CB3668 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				05987FCFD88B0B7789F79438 /* PBXTargetDependency */,
+			);
+			name = ImmerseClipUITests;
+			packageProductDependencies = (
+			);
+			productName = ImmerseClipUITests;
+			productReference = 76D8C8D864A63C87ACBB4BC4 /* ImmerseClipUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		8B5F01732F84EBF27E1B53AD /* ImmerseTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B47B02C167490D81FECB0514 /* Build configuration list for PBXNativeTarget "ImmerseTests" */;
@@ -438,6 +661,63 @@
 			productName = ImmerseTests;
 			productReference = 99FB020C2F24374F9C8ECCFE /* ImmerseTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		8B8CADC3C32B719C5607F8DF /* ImmerseWithClip */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 00C41A861A4FC0F754D6E5ED /* Build configuration list for PBXNativeTarget "ImmerseWithClip" */;
+			buildPhases = (
+				076B73B89371CC9E6AEC1B16 /* Sources */,
+				ABF3D09F18452C6C51FDE8BD /* Resources */,
+				A4AC7DAD201B7BF103212D41 /* Frameworks */,
+				6591C0D7F9DD1AAF06FD2C6D /* Embed App Clips */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4DE2A9FA0D38B691EF0EDD8F /* PBXTargetDependency */,
+			);
+			name = ImmerseWithClip;
+			packageProductDependencies = (
+				E78D6126C7D8BB3F78BDC67F /* FilmDomain */,
+				D42357CA1211CBC008695B71 /* FilmPersistence */,
+				748BE85144010FE683376604 /* FilmRuntime */,
+				C4DBA27930599BFA411F88D9 /* RenderCore */,
+				80329A7FA0F797CACC51B3D3 /* NativeAdapters */,
+				880EE370F7616B795DE96ECB /* EntitlementCore */,
+				C329A17755A6C6DAC94DECEE /* MediaCatalog */,
+				F601DDE563A7B6FDCD5EB5E0 /* ImmerseServer */,
+				CEA8D05DC275A6EC8E2EB53A /* ClerkKit */,
+			);
+			productName = ImmerseWithClip;
+			productReference = 9D856AB36B8983B584CE5893 /* ImmerseWithClip.app */;
+			productType = "com.apple.product-type.application";
+		};
+		9020F887EFCC47F85D2F1BEE /* ImmerseClip */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C366DF9F2BF8D09FEF7EFADA /* Build configuration list for PBXNativeTarget "ImmerseClip" */;
+			buildPhases = (
+				3F70807981B451D73560F468 /* Sources */,
+				3FF58AA9753651951D5AB6B5 /* Resources */,
+				57D867B9C637423DA0B341D0 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ImmerseClip;
+			packageProductDependencies = (
+				7D27DB662F7F4B67EB7138F0 /* FilmDomain */,
+				FA56CBA088BE9A352EF04442 /* FilmPersistence */,
+				BF01345E770CBA125593C6B0 /* FilmRuntime */,
+				C5CE10833C45BDDA7A198048 /* RenderCore */,
+				52C8CA51B3687FB0A1BE03E5 /* NativeAdapters */,
+				EE84D2B8E0359DBF2F2081BE /* EntitlementCore */,
+				B2EBF1035D6909EFEF023223 /* MediaCatalog */,
+				3E1096564C6EB6986D99ED3B /* ImmerseServer */,
+			);
+			productName = ImmerseClip;
+			productReference = 299BB262F4430DD3B384A820 /* ImmerseClip.app */;
+			productType = "com.apple.product-type.application.on-demand-install-capable";
 		};
 		FF0469481DB495A7FC25D880 /* Immerse */ = {
 			isa = PBXNativeTarget;
@@ -479,6 +759,15 @@
 					1069C31E8F44C6294DCA89D8 = {
 						TestTargetID = FF0469481DB495A7FC25D880;
 					};
+					83C182DE462ED6C5039087B9 = {
+						TestTargetID = 9020F887EFCC47F85D2F1BEE;
+					};
+					8B8CADC3C32B719C5607F8DF = {
+						DevelopmentTeam = QH9S83CX4Y;
+					};
+					9020F887EFCC47F85D2F1BEE = {
+						DevelopmentTeam = QH9S83CX4Y;
+					};
 					FF0469481DB495A7FC25D880 = {
 						DevelopmentTeam = QH9S83CX4Y;
 					};
@@ -510,8 +799,11 @@
 			projectRoot = "";
 			targets = (
 				FF0469481DB495A7FC25D880 /* Immerse */,
+				9020F887EFCC47F85D2F1BEE /* ImmerseClip */,
+				83C182DE462ED6C5039087B9 /* ImmerseClipUITests */,
 				8B5F01732F84EBF27E1B53AD /* ImmerseTests */,
 				1069C31E8F44C6294DCA89D8 /* ImmerseUITests */,
+				8B8CADC3C32B719C5607F8DF /* ImmerseWithClip */,
 			);
 		};
 /* End PBXProject section */
@@ -523,6 +815,22 @@
 			files = (
 				BEA165172CF0B04C95B55F0D /* LocalSubscriptions.storekit in Resources */,
 				B18ADCB2236DD2A8140DB998 /* README.md in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3FF58AA9753651951D5AB6B5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				52E7E16BB59F7CEA5EEB2D52 /* Assets.xcassets in Resources */,
+				B19D7EC3CF18DAC9CBBAE0FD /* Manrope-Bold.ttf in Resources */,
+				D6900EC492F026D07F7732C5 /* Manrope-ExtraBold.ttf in Resources */,
+				5674AD7BE82EDC7A126BDAC1 /* Manrope-Medium.ttf in Resources */,
+				F21BE82104A03E1A2043B2E6 /* Manrope-Regular.ttf in Resources */,
+				EDCF1A479573EE048084382F /* Manrope-SemiBold.ttf in Resources */,
+				C7069189000C87C62E995202 /* MediaCatalog.json in Resources */,
+				7C3B06C07320942FEEBEE8BF /* OFL.txt in Resources */,
+				29DA3E25EE086FB877FB1484 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -542,9 +850,110 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		ABF3D09F18452C6C51FDE8BD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F1C38A8A49609364A3DAD68C /* Assets.xcassets in Resources */,
+				5ED1BF572DB6B85CDCD224A9 /* Manrope-Bold.ttf in Resources */,
+				E4A1311CA200E2FFD6033B20 /* Manrope-ExtraBold.ttf in Resources */,
+				A9B2B528AB75D83A25CFF0E1 /* Manrope-Medium.ttf in Resources */,
+				5C1FEF9060B6F047FA93DC47 /* Manrope-Regular.ttf in Resources */,
+				F65F4667BB85D6414F8F283F /* Manrope-SemiBold.ttf in Resources */,
+				D0E5F3EE3A28D2880709A7FB /* MediaCatalog.json in Resources */,
+				E782C5FA641586559DD693E7 /* OFL.txt in Resources */,
+				C6DF1200632E10036ECC9AE8 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		076B73B89371CC9E6AEC1B16 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D38DAFCE153109820B2B3269 /* AccountSettings.swift in Sources */,
+				225DEABB27A58C28DDC35536 /* CameraCatalogView.swift in Sources */,
+				49BE75C852E573F67BB3409D /* CameraSamplesView.swift in Sources */,
+				5D3EFD6FD9C7DCA411C591E0 /* CaptureColumn.swift in Sources */,
+				7BD8A2E3E7E98328523ADB2B /* CaptureController.swift in Sources */,
+				02B5CC02EBCC33F0C8A3B94D /* CaptureView.swift in Sources */,
+				A69E32DD3D88630585F18958 /* ClerkHostSignIn.swift in Sources */,
+				AD185C7E55B888882FC19534 /* CropEditor.swift in Sources */,
+				F1E9486721179071E843BF6C /* DebugGroupFilms.swift in Sources */,
+				0D9E9B0BBAD9EA76B12E9815 /* DebugHosting.swift in Sources */,
+				4F0B4643DD2918CF5B1C8718 /* DevelopedPreviews.swift in Sources */,
+				A333A8E19DEFC1CC576C6F67 /* EventShooting.swift in Sources */,
+				6582B259FA7F37F1381CCC44 /* FilmDetailView.swift in Sources */,
+				FF69404FCC33B1B2AF295BAA /* FilmPresentation.swift in Sources */,
+				FF20DF2C7876F59278F48E90 /* GroupAlbum.swift in Sources */,
+				B327D03E998BB3F9AF7D6EEC /* GroupFilmEvent.swift in Sources */,
+				0B58E358A66704564A449F07 /* GroupFilmGate.swift in Sources */,
+				9D5C7E263FCBB7410092507D /* GroupFilmLoad.swift in Sources */,
+				F0F1171E6A95AF3C5127FF0E /* GroupFilms.swift in Sources */,
+				2CA7DA001400E8536B62A258 /* GroupFilmsCopy.swift in Sources */,
+				A5A355AAEF15DF40CD29BC8A /* GroupFilmsSetup.swift in Sources */,
+				BF5533EABC07755C3577A8AA /* HeldTurn.swift in Sources */,
+				C109A6E317F1E93993C9FDBF /* HostingSession.swift in Sources */,
+				672BAFF41B9683FFAC20DD11 /* HostingSetup.swift in Sources */,
+				E596BF1FA94D746BBBCD5EFB /* ImmerseApp.swift in Sources */,
+				D0E8EA38065D0D314B4A1C79 /* InterfaceOrientationLock.swift in Sources */,
+				7F110E57565200AD20BF5EA3 /* JoinConfirmation.swift in Sources */,
+				FE0F6268001BFA409A0406F1 /* JournalModel.swift in Sources */,
+				B5D5C6D6BDCA0CA1B99B9F59 /* JournalView.swift in Sources */,
+				6AE475FF0505EBB504A654C8 /* LowStorage.swift in Sources */,
+				94DC442A581D7F4109E0C0A4 /* Orbit.swift in Sources */,
+				98041795348D9201F499CC81 /* OrbitSheets.swift in Sources */,
+				0F8C6801F96D99DED777A836 /* PhotoView.swift in Sources */,
+				07194B3A2B5994997575C29D /* PrintZoom.swift in Sources */,
+				40E4B9726A82DDA34709B589 /* ServerChecksView.swift in Sources */,
+				820F5333F6D701C5681349D1 /* SettingsView.swift in Sources */,
+				B94D1D62B3521D9D9CBE61C3 /* SoundtrackView.swift in Sources */,
+				4DB378350F170BA5FFAF2E39 /* SubscriptionController.swift in Sources */,
+				28147DB9B76FC1E6A3C2FF73 /* SubscriptionView.swift in Sources */,
+				71A8415AD7AA1D42B0CBBC5E /* TestingUnlock.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3F70807981B451D73560F468 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DB3F5B6951931FB686AAE0D1 /* CaptureColumn.swift in Sources */,
+				FB4CCA52FFB6AAE57DC6855F /* CaptureController.swift in Sources */,
+				59D79C25C03BE35B3ECC2168 /* CaptureView.swift in Sources */,
+				DDE85A94AE882D7883E3DE2A /* CropEditor.swift in Sources */,
+				113AD64932C7353DA9F89577 /* DebugGroupFilms.swift in Sources */,
+				F9F925D9D1E30E44DAC5088F /* DebugHosting.swift in Sources */,
+				1857E50C819646A9D8BB0EEC /* DevelopedPreviews.swift in Sources */,
+				3E6D10CF4E1AF685B630A7A6 /* EventShooting.swift in Sources */,
+				8B35288D4E7313E9B000C76C /* FilmDetailView.swift in Sources */,
+				5B43620E1A370700FD845CEE /* FilmPresentation.swift in Sources */,
+				A73AF544DD9E314E8F8C154F /* GroupAlbum.swift in Sources */,
+				CF3606D0E1556EEA0AF39C2E /* GroupFilmEvent.swift in Sources */,
+				5AE99969EBED9FC8BAF7866A /* GroupFilms.swift in Sources */,
+				F4AD6885190F24B48A463CF4 /* GroupFilmsCopy.swift in Sources */,
+				8606B030FF381958F82A5F9D /* GroupFilmsSetup.swift in Sources */,
+				3655BA501F757078270711E1 /* HeldTurn.swift in Sources */,
+				50DF30C7E5FEC2ADF99085A6 /* HostingSession.swift in Sources */,
+				FFB7E137F82D57F93D8A864A /* ImmerseClipApp.swift in Sources */,
+				8AD1C0B06049B2E1DE1F03EE /* InterfaceOrientationLock.swift in Sources */,
+				24C0FCA2BE064A11B92D67FE /* JoinConfirmation.swift in Sources */,
+				A1D2EFBB3FAEA440E04BA22C /* JournalModel.swift in Sources */,
+				763B4FC4DED06E6F332DF619 /* LowStorage.swift in Sources */,
+				47BE751DF550E3666C6A8B08 /* MiniApp.swift in Sources */,
+				779ADA782C542F667AEDC909 /* MiniAppRoot.swift in Sources */,
+				260B7B589F6DFDCF23CE8F42 /* Orbit.swift in Sources */,
+				E6FBCBDC62AEB67F33DBC1BA /* OrbitSheets.swift in Sources */,
+				7B2EF41628BF2293F0342BA9 /* PhotoView.swift in Sources */,
+				A7E83B7592E8DB609D56D8DE /* PrintZoom.swift in Sources */,
+				ADCAC59EFFB86CAF05F46260 /* SoundtrackView.swift in Sources */,
+				ED994871C748F523698B9B20 /* SubscriptionController.swift in Sources */,
+				1BA89EBC0F57F08E437A0C86 /* TestingUnlock.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3FA5EC1312DEAB25FF051895 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -564,6 +973,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AFF5807C1ECB6FC4C7CB3668 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				32D288837F0CF423BA95DF85 /* AuditExceptions.swift in Sources */,
+				F8CAFCB1FD5AA4D0F408A80B /* MiniAppUITests.swift in Sources */,
+				CF4D4078E6FCADC004C0ADB2 /* UITestSupport.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B6C7A8E85C1B8533EA03FEB9 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -577,6 +996,7 @@
 				EA3732D95F0130D4C61FFCC3 /* HostingSessionTests.swift in Sources */,
 				1D341FC9C73EC0EE3163C5C2 /* JournalIntegrationTests.swift in Sources */,
 				A80AE03603DFB4EE9DA83CA7 /* LowStorageTests.swift in Sources */,
+				A61226839D1B53288284A79E /* MiniAppHandOffTests.swift in Sources */,
 				A8A49B1F711AAC7A695BF1CA /* PrintZoomTests.swift in Sources */,
 				7A1F3ED8838FF78DCAB255B3 /* StoreKitSubscriptionTests.swift in Sources */,
 				2D537F511927597D7C0F0E7F /* TestingUnlockTests.swift in Sources */,
@@ -613,6 +1033,7 @@
 				8D36474A665D40FF4FEB2CF3 /* HostingSetup.swift in Sources */,
 				4ACCCBF3569E3B29752DE1C9 /* ImmerseApp.swift in Sources */,
 				1A16A0976D5522DFDD99BD87 /* InterfaceOrientationLock.swift in Sources */,
+				87012A794F16E22D2B9C086B /* JoinConfirmation.swift in Sources */,
 				92DA5FF4E2265BEE5629B1CF /* JournalModel.swift in Sources */,
 				794D2B906DD37A94A88B5E83 /* JournalView.swift in Sources */,
 				EE23278CE7B6A0F0D5323537 /* LowStorage.swift in Sources */,
@@ -632,6 +1053,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		05987FCFD88B0B7789F79438 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9020F887EFCC47F85D2F1BEE /* ImmerseClip */;
+			targetProxy = 8AF4E901FAD0E5C45C14CA34 /* PBXContainerItemProxy */;
+		};
 		224E217B8BF4186AD537FCBE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = FF0469481DB495A7FC25D880 /* Immerse */;
@@ -642,9 +1068,43 @@
 			target = FF0469481DB495A7FC25D880 /* Immerse */;
 			targetProxy = B9BD5F1F1182BACE61FBA081 /* PBXContainerItemProxy */;
 		};
+		4DE2A9FA0D38B691EF0EDD8F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9020F887EFCC47F85D2F1BEE /* ImmerseClip */;
+			targetProxy = 55FEE4A44FB4828D1A6DCF64 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		05E5CD4069B6831F9BD11EEC /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A6CAE6F89EE422713433EEEC /* Server.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "$(IMMERSE_V2_WITH_CLIP_ENTITLEMENTS)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = QH9S83CX4Y;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Config/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Immerse;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Capture new photos and movie clips for your Films.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Record sound with your Super 8 and 16mm movie clips.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save only the revealed photos or movies you choose to your Photos library.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.immerse.FilmJournal;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 		05F6FDFEC132A411285633CF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -662,6 +1122,52 @@
 			};
 			name = Release;
 		};
+		1F45762D8717BABBCB661D80 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.immerse.FilmJournal.ClipUITests;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) APPCLIP";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = ImmerseClip;
+			};
+			name = Release;
+		};
+		22759D992B44E9E2BF19A565 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A6CAE6F89EE422713433EEEC /* Server.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "$(IMMERSE_CLIP_ENTITLEMENTS)";
+				DEVELOPMENT_TEAM = QH9S83CX4Y;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Config/ClipInfo.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Immerse;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Capture new photos for the Group Film you joined.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save only the revealed pictures you choose to your Photos library.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.immerse.FilmJournal.Clip;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) APPCLIP";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
 		46CA5786EC9471A1EF030010 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -678,6 +1184,24 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Immerse.app/Immerse";
 			};
 			name = Release;
+		};
+		670DA7F1014C59021372D13E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.immerse.FilmJournal.ClipUITests;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) APPCLIP";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = ImmerseClip;
+			};
+			name = Debug;
 		};
 		7698014A1A69237F2A8853D5 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -827,6 +1351,63 @@
 			};
 			name = Debug;
 		};
+		B5C97CD8EE17FE5B219082D0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A6CAE6F89EE422713433EEEC /* Server.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "$(IMMERSE_V2_WITH_CLIP_ENTITLEMENTS)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = QH9S83CX4Y;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Config/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Immerse;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Capture new photos and movie clips for your Films.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Record sound with your Super 8 and 16mm movie clips.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save only the revealed photos or movies you choose to your Photos library.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.immerse.FilmJournal;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		B61CD88DF2DBEF108F1C9415 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A6CAE6F89EE422713433EEEC /* Server.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "$(IMMERSE_CLIP_ENTITLEMENTS)";
+				DEVELOPMENT_TEAM = QH9S83CX4Y;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Config/ClipInfo.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Immerse;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Capture new photos for the Group Film you joined.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save only the revealed pictures you choose to your Photos library.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.immerse.FilmJournal.Clip;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) APPCLIP";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 		CC80630956864E3D78A0660D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A6CAE6F89EE422713433EEEC /* Server.xcconfig */;
@@ -893,6 +1474,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		00C41A861A4FC0F754D6E5ED /* Build configuration list for PBXNativeTarget "ImmerseWithClip" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B5C97CD8EE17FE5B219082D0 /* Debug */,
+				05E5CD4069B6831F9BD11EEC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		4301959B59B88D4AE0CA86C1 /* Build configuration list for PBXNativeTarget "ImmerseUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -920,11 +1510,29 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
+		8B8B543FA4E10AECAE791E3E /* Build configuration list for PBXNativeTarget "ImmerseClipUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				670DA7F1014C59021372D13E /* Debug */,
+				1F45762D8717BABBCB661D80 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		B47B02C167490D81FECB0514 /* Build configuration list for PBXNativeTarget "ImmerseTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F3183215F6C857E2B0D479BA /* Debug */,
 				46CA5786EC9471A1EF030010 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C366DF9F2BF8D09FEF7EFADA /* Build configuration list for PBXNativeTarget "ImmerseClip" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				22759D992B44E9E2BF19A565 /* Debug */,
+				B61CD88DF2DBEF108F1C9415 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -991,11 +1599,31 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = EntitlementCore;
 		};
+		3E1096564C6EB6986D99ED3B /* ImmerseServer */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ImmerseServer;
+		};
 		4BD8D171F1AA072D4894B1D4 /* ImmerseServer */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ImmerseServer;
 		};
+		52C8CA51B3687FB0A1BE03E5 /* NativeAdapters */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NativeAdapters;
+		};
 		54847413BC0280518CA9021C /* NativeAdapters */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NativeAdapters;
+		};
+		748BE85144010FE683376604 /* FilmRuntime */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FilmRuntime;
+		};
+		7D27DB662F7F4B67EB7138F0 /* FilmDomain */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FilmDomain;
+		};
+		80329A7FA0F797CACC51B3D3 /* NativeAdapters */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = NativeAdapters;
 		};
@@ -1003,9 +1631,17 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = FilmPersistence;
 		};
+		880EE370F7616B795DE96ECB /* EntitlementCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = EntitlementCore;
+		};
 		B003DCAC6B4E5C9D271D55C2 /* FilmDomain */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = FilmDomain;
+		};
+		B2EBF1035D6909EFEF023223 /* MediaCatalog */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MediaCatalog;
 		};
 		B549794A50EBE804BFE73FEC /* EntitlementCore */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1015,17 +1651,58 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = RenderCore;
 		};
+		BF01345E770CBA125593C6B0 /* FilmRuntime */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FilmRuntime;
+		};
 		C0FF9E35F716BA4898B3597B /* ImmerseServer */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ImmerseServer;
+		};
+		C329A17755A6C6DAC94DECEE /* MediaCatalog */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MediaCatalog;
+		};
+		C4DBA27930599BFA411F88D9 /* RenderCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RenderCore;
+		};
+		C5CE10833C45BDDA7A198048 /* RenderCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RenderCore;
+		};
+		CEA8D05DC275A6EC8E2EB53A /* ClerkKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9B5519111BB5F4CB5C65E49E /* XCRemoteSwiftPackageReference "clerk-ios" */;
+			productName = ClerkKit;
+		};
+		D42357CA1211CBC008695B71 /* FilmPersistence */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FilmPersistence;
+		};
+		E78D6126C7D8BB3F78BDC67F /* FilmDomain */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FilmDomain;
 		};
 		ECB5677E8658852E42741E9E /* FilmRuntime */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = FilmRuntime;
 		};
+		EE84D2B8E0359DBF2F2081BE /* EntitlementCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = EntitlementCore;
+		};
 		F57CEE519E8D1B8CE63C90E5 /* FilmDomain */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = FilmDomain;
+		};
+		F601DDE563A7B6FDCD5EB5E0 /* ImmerseServer */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ImmerseServer;
+		};
+		FA56CBA088BE9A352EF04442 /* FilmPersistence */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FilmPersistence;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

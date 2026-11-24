@@ -543,7 +543,8 @@ struct DoneRowLayout: Layout {
     }
 }
 
-/// The Debug-only switch in Settings, under the testing unlock.
+#if !APPCLIP
+/// The Debug-only switch in Settings, under the testing unlock. The mini-app has no Settings.
 struct DevelopedPreviewSection: View {
     @Bindable var previews: DevelopedPreviews
 
@@ -552,4 +553,5 @@ struct DevelopedPreviewSection: View {
                        note: "While on, each capture on every Camera but the Instant shows developed on the camera right away. The Film stays sealed and still develops when it is finished.")
     }
 }
+#endif
 #endif

@@ -1,6 +1,9 @@
 import CoreImage.CIFilterBuiltins
 import FilmDomain
 import ImmerseServer
+#if APPCLIP
+import StoreKit
+#endif
 import SwiftUI
 
 /// A Group Film's page (v2 PRD sections 5.2 to 5.9): what the event is and when it ends and reveals, the countdown, the
@@ -14,6 +17,9 @@ struct GroupFilmEventView: View {
     @State private var confirmWithdraw = false
     @State private var confirmLeave = false
     @State private var editingName = false
+    #if APPCLIP
+    @State private var inviting = false
+    #endif
 
     private var place: LocalPlace? { groupFilms?.place(eventID) }
 
@@ -30,9 +36,16 @@ struct GroupFilmEventView: View {
                         if let warning = groupFilms.rolls.storage.warning(for: .capture), place.place == .joined {
                             LowStorageNotice(text: warning)
                         }
-                        if place.summary.phase == .revealed { GroupAlbumSection(eventID: eventID) }
+                        if place.summary.phase == .revealed {
+                            GroupAlbumSection(eventID: eventID)
+                            #if APPCLIP
+                            OrbitNote(.info, GroupFilmsCopy.miniAppInstall, identifier: "group-get-immerse")
+                            #endif
+                        }
                         if place.place == .joined || place.place == .left { roll(place, groupFilms) }
+                        #if !APPCLIP
                         if place.isHost { GroupHostSection(eventID: eventID) }
+                        #endif
                     }
                 }
                 .foregroundStyle(.white)
@@ -46,6 +59,21 @@ struct GroupFilmEventView: View {
         .toolbarTitleDisplayMode(.inline)
         .refreshable { await groupFilms?.sync(eventID) }
         .task { await groupFilms?.sync(eventID); await groupFilms?.countWaiting() }
+        .onAppear {
+            // In the mini-app, a guest who has just taken a Roll goes straight to the camera (V2-FR-21).
+            if groupFilms?.shootOnArrival == eventID, place?.rollFilmID != nil {
+                groupFilms?.shootOnArrival = nil
+                shooting = true
+            }
+            #if APPCLIP
+            inviting = place?.summary.phase == .revealed
+            #endif
+        }
+        #if APPCLIP
+        // After the reveal, the invitation to install the full app, which would have told the guest the Film was ready
+        // (V2-FR-71; Apple: "Recommending your app to App Clip users").
+        .appStoreOverlay(isPresented: $inviting) { SKOverlay.AppClipConfiguration(position: .bottom) }
+        #endif
         .fullScreenCover(isPresented: $shooting, onDismiss: {
             groupFilms?.rolls.capture.endShootingSession()
             groupFilms?.startDevelopment()
@@ -150,6 +178,12 @@ struct GroupFilmEventView: View {
                 .orbitFont(.footnote).foregroundStyle(Orbit.label)
                 .accessibilityIdentifier("group-upload-count")
         }
+        #if APPCLIP
+        // The mini-app sends only while it is open (V2-FR-35), and says so while anything waits.
+        if waiting > 0 {
+            OrbitNote(.info, GroupFilmsCopy.miniAppKeepOpen, identifier: "group-keep-open")
+        }
+        #endif
         if let film, film.camera.revealRule == .instantPerExposure, place.summary.phase != .revealed {
             let prints = film.captures.filter { $0.revealState == .revealed && !$0.isDiscarded }
             if !prints.isEmpty {
@@ -167,8 +201,13 @@ struct GroupFilmEventView: View {
                 .orbitFont(.footnote).foregroundStyle(Orbit.label).fixedSize(horizontal: false, vertical: true)
         }
         if place.asGuest {
+            #if APPCLIP
+            Text(GroupFilmsCopy.miniAppPlace).orbitFont(.footnote).foregroundStyle(Orbit.label)
+                .fixedSize(horizontal: false, vertical: true)
+            #else
             Text(GroupFilmsCopy.unsignedPlace).orbitFont(.footnote).foregroundStyle(Orbit.label)
                 .fixedSize(horizontal: false, vertical: true)
+            #endif
             if groupFilms.hosting.isSignedIn {
                 Button("Keep My Place with My Account") { Task { await groupFilms.claimGuestPlaces() } }
                     .buttonStyle(OrbitPillStyle(kind: .outline, minHeight: 48, fullWidth: true))
@@ -218,9 +257,36 @@ private struct GuestNameEditor: View {
     }
 }
 
+/// A confirmation for something named at the moment, such as a guest to remove.
+struct GroupConfirmSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    let title: String
+    let message: String
+    let confirm: String
+    let action: () -> Void
+
+    var body: some View {
+        VStack(spacing: 16) {
+            Text(title).orbitFont(.heading).multilineTextAlignment(.center)
+            Text(message).orbitFont(.body).foregroundStyle(Orbit.body).multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+            Button(confirm) { action(); dismiss() }
+                .buttonStyle(OrbitPillStyle(kind: .white, minHeight: 56, fullWidth: true))
+                .accessibilityIdentifier("group-confirm-action")
+            Button("Cancel") { dismiss() }
+                .buttonStyle(OrbitPillStyle(kind: .outline, minHeight: 56, fullWidth: true))
+        }
+        .foregroundStyle(.white)
+        .padding(24)
+        .presentationDetents([.medium, .large])
+        .orbitSheetGround()
+    }
+}
+
+#if !APPCLIP
 /// The Host's controls (V2-FR-13 to V2-FR-17, V2-FR-26 to V2-FR-29, V2-FR-40, V2-FR-53 to V2-FR-55): the QR code and
-/// link, the counts and guests, never a picture before the reveal, the reports, and the settings allowed before and after
-/// the start.
+/// link, the counts and guests, never a picture before the reveal, the reports, the settings allowed before and after
+/// the start, and after the reveal the web album's switch (V2-FR-47). Hosting is the full app's alone.
 struct GroupHostSection: View {
     @Environment(\.groupFilms) private var groupFilms
     let eventID: String
@@ -298,6 +364,18 @@ struct GroupHostSection: View {
                         .buttonStyle(OrbitPillStyle(kind: .outline, minHeight: 44, fullWidth: true))
                         .accessibilityIdentifier("group-replace-code")
                 }
+                if phase == .revealed {
+                    // Off unless the Host turns it on, and off again at any time (V2-FR-47).
+                    Toggle(isOn: Binding(get: { view?.webAlbum ?? false },
+                                         set: { on in Task { await groupFilms.setWebAlbum(eventID, on) } })) {
+                        Text("Share the album on the web").orbitFont(.body, weight: .semibold)
+                    }
+                    .disabled(view == nil || groupFilms.busy)
+                    .accessibilityIdentifier("group-web-album")
+                    Text(view?.webAlbum == true ? GroupFilmsCopy.webAlbumOn : GroupFilmsCopy.webAlbumOff)
+                        .orbitFont(.footnote).foregroundStyle(Orbit.label).fixedSize(horizontal: false, vertical: true)
+                        .accessibilityIdentifier("group-web-album-note")
+                }
                 if phase == .open {
                     Button("End Early") { confirmEnd = true }
                         .buttonStyle(OrbitPillStyle(kind: .outline, minHeight: 44, fullWidth: true))
@@ -335,31 +413,6 @@ struct GroupHostSection: View {
         case .removed: "Removed"
         default: "\(guest.exposuresUsed) of \(exposures) used"
         }
-    }
-}
-
-/// A confirmation for something named at the moment, such as a guest to remove.
-struct GroupConfirmSheet: View {
-    @Environment(\.dismiss) private var dismiss
-    let title: String
-    let message: String
-    let confirm: String
-    let action: () -> Void
-
-    var body: some View {
-        VStack(spacing: 16) {
-            Text(title).orbitFont(.heading).multilineTextAlignment(.center)
-            Text(message).orbitFont(.body).foregroundStyle(Orbit.body).multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true)
-            Button(confirm) { action(); dismiss() }
-                .buttonStyle(OrbitPillStyle(kind: .white, minHeight: 56, fullWidth: true))
-            Button("Cancel") { dismiss() }
-                .buttonStyle(OrbitPillStyle(kind: .outline, minHeight: 56, fullWidth: true))
-        }
-        .foregroundStyle(.white)
-        .padding(24)
-        .presentationDetents([.medium, .large])
-        .orbitSheetGround()
     }
 }
 
@@ -428,7 +481,7 @@ struct JoinCodeCard: View {
             }
             Text(link.absoluteString).orbitFont(.footnote).foregroundStyle(Orbit.label).textSelection(.enabled)
                 .accessibilityIdentifier("group-link")
-            Text("Guests join by scanning the code or opening the link on an iPhone with Immerse. It stays the same for the event's whole life.")
+            Text("Guests join by scanning the code or opening the link on an iPhone, with nothing to install. It stays the same for the event's whole life.")
                 .orbitFont(.footnote).foregroundStyle(Orbit.label).multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity)
@@ -446,6 +499,8 @@ enum QRCode {
         return UIImage(cgImage: image)
     }
 }
+
+#endif
 
 enum GroupReportReasonCopy {
     static func title(_ reason: ReportReason) -> String {

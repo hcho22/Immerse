@@ -52,14 +52,26 @@ public enum GuestIdentityStoreError: Error, Equatable {
     case unreadable
 }
 
-/// The full app's guest identity in the Keychain, on this iPhone only and never synced, as v1's Trial record is: it
-/// survives a reinstall where the Keychain does (V2-FR-23), and it never leaves the phone in a backup to another one.
+/// A guest identity in the Keychain, on this iPhone only and never synced, as v1's Trial record is: it survives a
+/// reinstall where the Keychain does (V2-FR-23), and it never leaves the phone in a backup to another one.
+///
+/// The full app and the mini-app each keep their own item, under their own service and label, so neither can overwrite
+/// the other's (Apple: "Sharing data between your App Clip and your full app", Review keychain usage). The mini-app
+/// cannot read the full app's item. From iOS 15.4 the full app can read the mini-app's, which is how a mini-app guest's
+/// identity reaches the full app when it is installed (V2-FR-19): `miniApp` is that item, written by the mini-app and
+/// read by both.
 public struct KeychainGuestIdentityStore: GuestIdentityStoring {
     private let service: String
+    private let label: String
 
-    public init(service: String = "com.immerse.FilmJournal.guest-identity") {
+    public init(service: String = "com.immerse.FilmJournal.guest-identity", label: String = "immerse-app") {
         self.service = service
+        self.label = label
     }
+
+    /// The mini-app's guest identity.
+    public static let miniApp = KeychainGuestIdentityStore(service: "com.immerse.FilmJournal.Clip.guest-identity",
+                                                           label: "immerse-mini-app")
 
     private var query: [String: Any] {
         [kSecClass as String: kSecClassGenericPassword, kSecAttrService as String: service,
@@ -84,6 +96,7 @@ public struct KeychainGuestIdentityStore: GuestIdentityStoring {
         let data = try JSONEncoder().encode(identity)
         var item = query
         item[kSecValueData as String] = data
+        item[kSecAttrLabel as String] = label
         item[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
         let status = SecItemAdd(item as CFDictionary, nil)
         if status == errSecDuplicateItem {

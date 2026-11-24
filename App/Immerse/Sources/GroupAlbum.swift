@@ -1,11 +1,17 @@
 import CryptoKit
 import ImmerseServer
+#if !APPCLIP
 import Photos
+#endif
 import SwiftUI
 
 /// The revealed album (v2 PRD V2-FR-43 to V2-FR-45): every picture in capture order across all guests, with numbered gaps
 /// where one was withdrawn or removed, each opening full screen with its details. The reveal ritual shows the first time
 /// a member opens it (V2-FR-38). Any member saves any picture or the whole album to Photos with no Account (V2-FR-44).
+///
+/// In the mini-app, saving is one picture at a time through the system's share sheet, and the whole album is saved in
+/// the full app or from the web album (open check OC-6): Apple gives an App Clip no use of PhotoKit and no access to
+/// Photos, so the mini-app never asks for either.
 struct GroupAlbumSection: View {
     @Environment(\.groupFilms) private var groupFilms
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -15,8 +21,9 @@ struct GroupAlbumSection: View {
     @State private var ritual: Double?
     @State private var opened: AlbumPicture?
     @State private var saving: Int?
-    @State private var savedNoteShown = UserDefaults.standard.bool(forKey: "ImmerseSavedCopiesNoteShown")
-    @State private var noteBeforeSave: SaveRequest?
+    /// The note before the first save of the whole album. A single picture's is shown over the picture itself
+    /// (`AlbumPictureView`), since nothing can be presented from under its full-screen view.
+    @State private var notingBeforeSavingAll = false
 
     private enum SaveRequest: Identifiable {
         case one(AlbumPicture)
@@ -52,16 +59,12 @@ struct GroupAlbumSection: View {
         .task { await load() }
         .fullScreenCover(item: $opened) { picture in
             AlbumPictureView(eventID: eventID, picture: picture, isHost: album?.isHost ?? false, camera: album?.camera ?? .disposable,
-                             save: { requestSave(.one(picture)) }) {
+                             save: { perform(.one(picture)) }) {
                 Task { await load() }
             }
         }
-        .sheet(item: $noteBeforeSave) { request in
-            GroupConfirmSheet(title: "Save to Photos", message: GroupFilmsCopy.savedCopiesNote, confirm: "Save") {
-                UserDefaults.standard.set(true, forKey: "ImmerseSavedCopiesNoteShown")
-                savedNoteShown = true
-                perform(request)
-            }
+        .sheet(isPresented: $notingBeforeSavingAll) {
+            SavedCopiesNote { perform(.all) }
         }
     }
 
@@ -118,6 +121,13 @@ struct GroupAlbumSection: View {
     }
 
     @ViewBuilder private func saveAll(_ album: Album) -> some View {
+        #if APPCLIP
+        if album.entries.contains(where: { if case .picture = $0 { true } else { false } }) {
+            let onTheWeb = groupFilms?.place(eventID)?.summary.isOnTheWeb == true
+            OrbitNote(.info, onTheWeb ? GroupFilmsCopy.miniAppSaveAllOnTheWeb : GroupFilmsCopy.miniAppSaveAll,
+                      identifier: "group-save-in-app")
+        }
+        #else
         let pictures = album.entries.compactMap { if case .picture(let picture) = $0 { picture } else { nil } }
         let saved = groupFilms?.place(eventID)?.savedPictures ?? []
         let left = pictures.filter { !saved.contains($0.pictureId) }.count
@@ -127,29 +137,82 @@ struct GroupAlbumSection: View {
             }
         } else if !pictures.isEmpty {
             Button(left == pictures.count ? "Save the Whole Album" : left == 0 ? "All Saved to Photos" : "Save the Remaining \(left)") {
-                requestSave(.all)
+                if SavedCopiesNote.shown { perform(.all) } else { notingBeforeSavingAll = true }
             }
             .buttonStyle(OrbitPillStyle(kind: .outline, minHeight: 48, fullWidth: true))
             .disabled(left == 0)
             .accessibilityIdentifier("group-save-all")
         }
-    }
-
-    private func requestSave(_ request: SaveRequest) {
-        if savedNoteShown { perform(request) } else { noteBeforeSave = request }
+        #endif
     }
 
     private func perform(_ request: SaveRequest) {
         Task {
             switch request {
             case .one(let picture):
+                #if APPCLIP
+                await share(picture)
+                #else
                 await save([picture])
+                #endif
             case .all:
+                #if !APPCLIP
                 await saveWholeAlbum()
+                #endif
             }
         }
     }
 
+    /// The picture with read addresses that have not run out: its own, or fresh ones from the server, which also says
+    /// whether the person may still see it.
+    private func current(_ picture: AlbumPicture) async -> AlbumPicture? {
+        if picture.addressesExpireAt > .now.addingTimeInterval(10) { return picture }
+        guard let fresh = try? await groupFilms?.album(eventID) else { return nil }
+        album = fresh
+        for case .picture(let candidate) in fresh.entries where candidate.pictureId == picture.pictureId { return candidate }
+        return nil
+    }
+
+    /// The full picture as uploaded, checked against the checksum the album gave.
+    private func download(_ picture: AlbumPicture) async -> Data? {
+        guard let groupFilms else { return nil }
+        guard let picture = await current(picture),
+              let (data, response) = try? await URLSession.shared.data(from: picture.url) else {
+            groupFilms.notice = "Saving stopped. Check the connection, then try again."
+            return nil
+        }
+        #if DEBUG
+        // The Debug stand-in's album is files on this iPhone, with no checksum (DebugGroupFilms).
+        if picture.url.isFileURL { return data }
+        #endif
+        guard (response as? HTTPURLResponse)?.statusCode == 200,
+              Data(SHA256.hash(data: data)).base64EncodedString() == picture.sha256 else {
+            groupFilms.notice = "A picture did not download whole. Try again."
+            return nil
+        }
+        return data
+    }
+
+    #if APPCLIP
+    /// The mini-app hands one picture, as uploaded, to the system's share sheet, which saves or sends it (open check OC-6).
+    @discardableResult
+    private func share(_ picture: AlbumPicture) async -> Bool {
+        guard let data = await download(picture) else { return false }
+        let name = String(format: "Immerse %03d.%@", picture.number, picture.contentType == "image/heic" ? "heic" : "jpg")
+        let folder = FileManager.default.temporaryDirectory.appending(path: "Shared", directoryHint: .isDirectory)
+        let file = folder.appending(path: name)
+        do {
+            try? FileManager.default.removeItem(at: folder)
+            try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+            try data.write(to: file, options: .atomic)
+        } catch {
+            groupFilms?.notice = "Immerse could not get the picture ready. Free space and try again."
+            return false
+        }
+        ShareSheet.present([file])
+        return true
+    }
+    #else
     /// Saves every picture visible now that is not saved yet, resuming where an interrupted save stopped, and fetching
     /// fresh addresses as they run out.
     private func saveWholeAlbum() async {
@@ -183,12 +246,7 @@ struct GroupAlbumSection: View {
         }
         for picture in pictures {
             do {
-                let (data, response) = try await URLSession.shared.data(from: picture.url)
-                guard (response as? HTTPURLResponse)?.statusCode == 200,
-                      Data(SHA256.hash(data: data)).base64EncodedString() == picture.sha256 else {
-                    groupFilms.notice = "A picture did not download whole. Try again."
-                    return false
-                }
+                guard let data = await download(picture) else { return false }
                 try await PHPhotoLibrary.shared().performChanges {
                     PHAssetCreationRequest.forAsset().addResource(with: .photo, data: data, options: nil)
                 }
@@ -199,6 +257,55 @@ struct GroupAlbumSection: View {
             }
         }
         return true
+    }
+    #endif
+}
+
+#if APPCLIP
+/// The system's share sheet over whatever is on the screen, the picture's full view included.
+@MainActor
+enum ShareSheet {
+    static func present(_ items: [Any]) {
+        let scene = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first { $0.activationState == .foregroundActive }
+        guard var top = scene?.keyWindow?.rootViewController else { return }
+        while let presented = top.presentedViewController {
+            if presented.isBeingDismissed {
+                // The note that asked is still leaving the screen, and nothing can be presented until it has: the sheet
+                // follows it.
+                if let leaving = presented.transitionCoordinator {
+                    leaving.animate(alongsideTransition: nil) { _ in present(items) }
+                } else {
+                    DispatchQueue.main.async { present(items) }
+                }
+                return
+            }
+            top = presented
+        }
+        let sheet = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        sheet.popoverPresentationController?.sourceView = top.view
+        top.present(sheet, animated: true)
+    }
+}
+#endif
+
+/// Said once, before the first save (V2-FR-44): a saved picture is an independent copy that removing it later cannot
+/// recall. It is presented by whatever is on top, the album or one picture's full view.
+struct SavedCopiesNote: View {
+    private static let key = "ImmerseSavedCopiesNoteShown"
+    static var shown: Bool { UserDefaults.standard.bool(forKey: key) }
+    let save: () -> Void
+
+    #if APPCLIP
+    private static let title = "Save a Picture"
+    #else
+    private static let title = "Save to Photos"
+    #endif
+
+    var body: some View {
+        GroupConfirmSheet(title: Self.title, message: GroupFilmsCopy.savedCopiesNote, confirm: "Save") {
+            UserDefaults.standard.set(true, forKey: Self.key)
+            save()
+        }
     }
 }
 
@@ -215,6 +322,7 @@ struct AlbumPictureView: View {
     let changed: () -> Void
     @State private var confirmRemove = false
     @State private var reporting = false
+    @State private var notingBeforeSaving = false
 
     var body: some View {
         NavigationStack {
@@ -232,7 +340,9 @@ struct AlbumPictureView: View {
                         .orbitFont(.footnote).foregroundStyle(Orbit.label)
                 }
                 HStack(spacing: 24) {
-                    Button("Save", systemImage: "square.and.arrow.down") { save() }
+                    Button("Save", systemImage: "square.and.arrow.down") {
+                        if SavedCopiesNote.shown { save() } else { notingBeforeSaving = true }
+                    }
                         .buttonStyle(OrbitLabelledActionStyle(emphasized: true))
                         .accessibilityIdentifier("group-picture-save")
                     if picture.mine || isHost {
@@ -271,6 +381,7 @@ struct AlbumPictureView: View {
             }
         }
         .sheet(isPresented: $reporting) { ReportSheet(eventID: eventID, pictureID: picture.pictureId) }
+        .sheet(isPresented: $notingBeforeSaving) { SavedCopiesNote(save: save) }
     }
 }
 

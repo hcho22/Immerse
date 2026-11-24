@@ -21,6 +21,7 @@ public struct ServerConfiguration: Equatable, Sendable {
     public static let clerkPublishableKeyKey = "ImmerseClerkPublishableKey"
     public static let joinHostKey = "ImmerseJoinHost"
     public static let supportAddressKey = "ImmerseSupportAddress"
+    public static let appGroupKey = "ImmerseAppGroup"
 
     public init(convexURL: URL, clerkPublishableKey: String, joinHost: String? = nil, supportAddress: String? = nil) {
         self.convexURL = convexURL
@@ -32,24 +33,71 @@ public struct ServerConfiguration: Equatable, Sendable {
     /// The configuration in an Info.plist, or nil when either value is missing, empty or malformed. Only an https address
     /// is accepted, except a loopback address for a local backend.
     public init?(infoDictionary: [String: Any]) {
-        guard let address = (infoDictionary[Self.convexURLKey] as? String)?.trimmingCharacters(in: .whitespaces),
-              let key = (infoDictionary[Self.clerkPublishableKeyKey] as? String)?.trimmingCharacters(in: .whitespaces),
-              key.hasPrefix("pk_"), let url = URL(string: address), let host = url.host(), !host.isEmpty
+        guard let key = (infoDictionary[Self.clerkPublishableKeyKey] as? String)?.trimmingCharacters(in: .whitespaces),
+              key.hasPrefix("pk_"), let url = Self.serverURL(in: infoDictionary)
         else { return nil }
+        self.init(convexURL: url, clerkPublishableKey: key, joinHost: Self.joinHost(in: infoDictionary),
+                  supportAddress: Self.supportAddress(in: infoDictionary))
+    }
+
+    private static func text(_ key: String, in infoDictionary: [String: Any]) -> String? {
+        guard let value = (infoDictionary[key] as? String)?.trimmingCharacters(in: .whitespaces), !value.isEmpty else { return nil }
+        return value
+    }
+
+    /// The server's address: https, or http on a loopback address for a local backend.
+    static func serverURL(in infoDictionary: [String: Any]) -> URL? {
+        guard let address = text(convexURLKey, in: infoDictionary), let url = URL(string: address), let host = url.host(),
+              !host.isEmpty else { return nil }
         let loopback = host == "127.0.0.1" || host == "localhost"
         guard url.scheme == "https" || (url.scheme == "http" && loopback) else { return nil }
-        let text = { (key: String) -> String? in
-            guard let value = (infoDictionary[key] as? String)?.trimmingCharacters(in: .whitespaces), !value.isEmpty else { return nil }
-            return value
-        }
-        // A bare host name: letters, digits, dots and hyphens.
-        let joinHost = text(Self.joinHostKey).flatMap { $0.wholeMatch(of: /[A-Za-z0-9.-]+/) != nil ? $0.lowercased() : nil }
-        let support = text(Self.supportAddressKey).flatMap { $0.contains("@") ? $0 : nil }
-        self.init(convexURL: url, clerkPublishableKey: key, joinHost: joinHost, supportAddress: support)
+        return url
+    }
+
+    /// A bare host name: letters, digits, dots and hyphens.
+    static func joinHost(in infoDictionary: [String: Any]) -> String? {
+        text(joinHostKey, in: infoDictionary).flatMap { $0.wholeMatch(of: /[A-Za-z0-9.-]+/) != nil ? $0.lowercased() : nil }
+    }
+
+    static func supportAddress(in infoDictionary: [String: Any]) -> String? {
+        text(supportAddressKey, in: infoDictionary).flatMap { $0.contains("@") ? $0 : nil }
+    }
+
+    /// The App Group the full app and the mini-app keep Group Films in (`GroupFilmsFolder`), or nil when the build names
+    /// none, as every build without the server configuration does.
+    public static func appGroup(in infoDictionary: [String: Any]) -> String? {
+        text(appGroupKey, in: infoDictionary).flatMap { $0.wholeMatch(of: /group\.[A-Za-z0-9.-]+/) != nil ? $0 : nil }
     }
 
     /// The running app's configuration.
     public static var main: ServerConfiguration? {
         ServerConfiguration(infoDictionary: Bundle.main.infoDictionary ?? [:])
+    }
+}
+
+/// What the mini-app (the App Clip) needs of the server (v2 PRD V2-FR-19): where it is, the join host its links name and
+/// the support address. It carries no Clerk key, because a guest never signs in (V2-FR-21) and the mini-app has no
+/// sign-in in it. A mini-app built without these, as from the repository alone, can open no event.
+public struct MiniAppConfiguration: Equatable, Sendable {
+    public let convexURL: URL
+    public let joinHost: String
+    public let supportAddress: String?
+
+    public init(convexURL: URL, joinHost: String, supportAddress: String? = nil) {
+        self.convexURL = convexURL
+        self.joinHost = joinHost
+        self.supportAddress = supportAddress
+    }
+
+    /// The configuration in an Info.plist, or nil when the server's address or the join host is missing or malformed.
+    public init?(infoDictionary: [String: Any]) {
+        guard let url = ServerConfiguration.serverURL(in: infoDictionary),
+              let joinHost = ServerConfiguration.joinHost(in: infoDictionary) else { return nil }
+        self.init(convexURL: url, joinHost: joinHost, supportAddress: ServerConfiguration.supportAddress(in: infoDictionary))
+    }
+
+    /// The running mini-app's configuration.
+    public static var main: MiniAppConfiguration? {
+        MiniAppConfiguration(infoDictionary: Bundle.main.infoDictionary ?? [:])
     }
 }

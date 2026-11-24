@@ -58,7 +58,7 @@ final class GroupFilmsTests: XCTestCase {
         let signIn = DebugHostSignIn(server: server, signedIn: false)
         let hosting = HostingSession(signIn: signIn, functions: network,
                                      defaults: UserDefaults(suiteName: "GroupFilmsTests-\(UUID().uuidString)")!)
-        groupFilms = try GroupFilmsSetup.make(hosting: hosting, base: base, identities: identities,
+        groupFilms = try GroupFilmsSetup.make(hosting: hosting, folder: GroupFilmsFolder(url: base, isShared: false), identities: identities,
                                               joinHost: DebugGroupFilms.joinHost, supportAddress: nil)
     }
 
@@ -173,7 +173,7 @@ final class GroupFilmsTests: XCTestCase {
         defer { try? FileManager.default.removeItem(at: freshBase) }
         let hosting = HostingSession(signIn: DebugHostSignIn(server: server, signedIn: false), functions: network,
                                      defaults: UserDefaults(suiteName: "GroupFilmsTests-\(UUID().uuidString)")!)
-        let reinstalled = try GroupFilmsSetup.make(hosting: hosting, base: freshBase, identities: identities,
+        let reinstalled = try GroupFilmsSetup.make(hosting: hosting, folder: GroupFilmsFolder(url: freshBase, isShared: false), identities: identities,
                                                    joinHost: DebugGroupFilms.joinHost, supportAddress: nil)
         let ok = await reinstalled.join(code: DebugGroupFilms.openCode, guestName: "Jo")
         XCTAssertTrue(ok, reinstalled.notice ?? "")
