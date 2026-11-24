@@ -50,7 +50,16 @@ export type RefusalCode =
   // The event has revealed: Withdraw Before Reveal is over (V2-FR-50).
   | "alreadyRevealed"
   // The guest identity was claimed into another Account (V2-FR-04).
-  | "identityClaimed";
+  | "identityClaimed"
+  // This deployment sells no Rolls yet: the packs, Apple's settings or its key are not configured (V2-FR-64, OC-5).
+  | "purchasesUnavailable"
+  // The signed transaction is not a Roll purchase or subscription of this app that this deployment accepts: its
+  // signature, app, environment or product (V2-FR-60). Sending it again changes nothing.
+  | "purchaseRefused"
+  // Apple's App Store Server API could not confirm it now. Nothing changed; send it again later.
+  | "storeUnavailable"
+  // This deployment gives no subscriber's free Rolls yet (V2-FR-62, OC-5).
+  | "subscriberRollsNotOffered";
 
 export function refuse(code: RefusalCode, message?: string): never {
   throw new ConvexError({ code, message: message ?? code });

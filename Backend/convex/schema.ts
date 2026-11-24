@@ -3,8 +3,9 @@
 // Stage 1 built Accounts, the guest identity of section 9.2, picture upload records, push tokens and the
 // account-scoped records Delete Account must remove. Stage 2 adds Group Films with their Join Codes, memberships with
 // their Rolls, the viewing copies, reports and the Roll ledger's free credits and set-asides. Stage 3 adds only each
-// picture's CRC-32, for the web album's download. Purchases and the subscription link are Stage 4's. Nothing here ever holds a personal Film, an original capture, a location, a contact
-// list, an advertising identifier or anything for analytics.
+// picture's CRC-32, for the web album's download. Stage 4 adds each Account's purchase token, the Roll purchases Apple
+// confirmed with their refunds, and the subscription link. Nothing here ever holds a personal Film, an original
+// capture, a location, a contact list, an advertising identifier or anything for analytics.
 //
 // Removal markers (section 8) are kept in place rather than in a table of their own: a withdrawn or removed
 // picture keeps its row with only its event, shooter, exposure number and place in capture order (`pictureState`), a
@@ -63,9 +64,14 @@ export default defineSchema({
     createdAt: v.number(),
     // Set when Delete Account starts; from then on the Account can do nothing but finish its deletion.
     deletionRequestedAt: v.optional(v.number()),
+    // A random UUID the app sets as each Roll purchase's app account token (section 9.7), which Apple returns in the
+    // signed transaction, so a purchase is credited to the Account that bought it even when the app never reports it.
+    // Absent on an Account made before Stage 4 until it first shops (`purchases:shoppingToken`).
+    appAccountToken: v.optional(v.string()),
   })
     .index("by_token", ["tokenIdentifier"])
-    .index("by_clerk_user", ["clerkUserId"]),
+    .index("by_clerk_user", ["clerkUserId"])
+    .index("by_app_account_token", ["appAccountToken"]),
 
   // A Clerk user whose Account was deleted here but whose deletion at Clerk has not yet been confirmed. Delete
   // Account retries it, and the same Clerk user cannot make a new Account until it is gone (V2-FR-05: signing in
@@ -76,8 +82,9 @@ export default defineSchema({
     attempts: v.number(),
   }).index("by_clerk_user", ["clerkUserId"]),
 
-  // Each purchase credit, free credit, set-aside, return, refund and reversal (Stage 4 writes them). On Delete
-  // Account the purchase rows stay for accounting without the Account; every other row goes.
+  // Each purchase credit, free credit, set-aside, return, refund and reversal. A purchase's rows carry Apple's
+  // transaction id, and their sum is what that purchase adds to the balance now. On Delete Account the purchase rows
+  // stay for accounting without the Account; every other row goes.
   rollLedger: defineTable({
     accountId: v.optional(v.id("accounts")),
     kind: v.union(
@@ -101,14 +108,51 @@ export default defineSchema({
     .index("by_account_and_request", ["accountId", "requestId"])
     .index("by_transaction", ["appleTransactionId"]),
 
-  // Apple's original transaction id for a confirmed subscription, linked to one Account (Stage 4).
-  subscriptionLinks: defineTable({
-    accountId: v.id("accounts"),
+  // A Roll purchase as Apple last confirmed it (V2-FR-60, V2-FR-65, section 6.5): one row per Apple transaction, from
+  // the app's report or Apple's server notification, whichever came first. Its Rolls are fixed when it is first seen,
+  // so a later change to the packs on sale never changes what it credits or what its refund removes. On Delete
+  // Account it stays for accounting and refunds without the Account or its token.
+  purchases: defineTable({
+    transactionId: v.string(),
     originalTransactionId: v.string(),
+    productId: v.string(),
+    environment: v.union(v.literal("Production"), v.literal("Sandbox")),
+    // The pack's Rolls when the purchase was first seen; absent for a consumable of this app that is not a Roll pack on
+    // sale, which credits nothing until the packs name it.
+    rolls: v.optional(v.number()),
+    // The app account token Apple returned with the purchase, until the Account it names is deleted.
+    appAccountToken: v.optional(v.string()),
+    // The Account it credits. Set once and never moved; removed with the Account on Delete Account.
+    accountId: v.optional(v.id("accounts")),
+    // When it was first credited to an Account, which it never is again, even after that Account is deleted.
+    assignedAt: v.optional(v.number()),
+    purchasedAt: v.number(),
+    // Refunded as of Apple's latest signed view of the transaction (`stateSignedAt`): an older view never undoes a
+    // newer one, so a refund and its reversal apply in Apple's order whatever order they arrive in.
+    revoked: v.boolean(),
+    revokedAt: v.optional(v.number()),
+    stateSignedAt: v.number(),
+    firstSeenAt: v.number(),
+  })
+    .index("by_transaction", ["transactionId"])
+    .index("by_account", ["accountId"])
+    .index("by_app_account_token", ["appAccountToken"]),
+
+  // Apple's original transaction id for a confirmed subscription, linked to one Account (V2-FR-63). Its subscriber
+  // Rolls are credited once, when the link is made. On Delete Account the link to the Account is removed and the row
+  // stays without it, so the same subscription never brings subscriber Rolls to a second Account.
+  subscriptionLinks: defineTable({
+    accountId: v.optional(v.id("accounts")),
+    originalTransactionId: v.string(),
+    environment: v.union(v.literal("Production"), v.literal("Sandbox")),
     linkedAt: v.number(),
+    // The subscriber Rolls credited at the link.
+    rollsCredited: v.number(),
+    // When the linked Account was deleted.
+    accountDeletedAt: v.optional(v.number()),
   })
     .index("by_account", ["accountId"])
-    .index("by_original_transaction", ["originalTransactionId"]),
+    .index("by_original_transaction", ["environment", "originalTransactionId"]),
 
   // The device token for the alert, per signed-in or joined installation of the full app. One installation has one
   // row, which can carry both the Account signed in on it and the phone's guest identity (V2-FR-70).

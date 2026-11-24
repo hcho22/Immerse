@@ -1,6 +1,6 @@
-// The Host's balance of Rolls and its ledger (V2-FR-28, V2-FR-61, V2-FR-62, section 8). Stage 2 has free Rolls only:
-// everyone's once-ever free amount, set aside for events and returned at their End Time. Purchases, refunds and the
-// subscriber's larger free amount are Stage 4's; the ledger already has their kinds.
+// The Host's balance of Rolls and its ledger (V2-FR-28, V2-FR-61, V2-FR-62, section 8): everyone's once-ever free
+// amount, set-asides for events and Rolls returned at their End Time (Stage 2), and Stage 4's purchases, refunds,
+// reversals and the subscriber's larger free amount, which purchases.ts writes.
 import type { Doc, Id } from "./_generated/dataModel";
 import { query, type MutationCtx, type QueryCtx } from "./_generated/server";
 import { requireAccount } from "./lib/callers";
@@ -65,14 +65,19 @@ export async function settleUnclaimedRolls(ctx: MutationCtx, event: Doc<"events"
   await ctx.db.patch(event._id, { rollsSettledAt: now });
 }
 
-// The signed-in Host's balance, with everyone's free Rolls counted before they are first credited.
+// The balance the Host sees: the ledger, with everyone's free Rolls counted before they are first credited.
+export async function shownBalance(ctx: QueryCtx, accountId: Id<"accounts">): Promise<number> {
+  const rows = await ledgerOf(ctx, accountId);
+  const pendingFree = hasEveryonesFreeRolls(rows) ? 0 : freeRollsForEveryone();
+  return balanceOfRows(rows) + pendingFree;
+}
+
+// The signed-in Host's balance.
 export const balance = query({
   args: {},
   handler: async (ctx) => {
     const account = await requireAccount(ctx);
-    const rows = await ledgerOf(ctx, account._id);
-    const pendingFree = hasEveryonesFreeRolls(rows) ? 0 : freeRollsForEveryone();
-    return { rolls: balanceOfRows(rows) + pendingFree };
+    return { rolls: await shownBalance(ctx, account._id) };
   },
 });
 
@@ -92,6 +97,8 @@ export const history = query({
       .sort((a, b) => b.at - a.at)
       .map((row) => ({
         kind: row.kind,
+        // Which free amount a free row is: everyone's, or a subscriber's (Stage 4).
+        freeGrant: row.kind === "free" ? (row.freeGrant ?? "everyone") : undefined,
         rolls: row.rolls,
         at: row.at,
         eventTitle: row.eventId !== undefined ? titles.get(row.eventId) || undefined : undefined,

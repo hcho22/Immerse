@@ -1,4 +1,5 @@
-// The server's HTTP routes: Clerk's webhook, and what the join page's Worker asks before it shows anything (web.ts).
+// The server's HTTP routes: Clerk's webhook, what the join page's Worker asks before it shows anything (web.ts), and
+// Apple's App Store Server Notifications (Stage 4).
 //
 // Clerk's webhook (section 9.8): a Clerk user deleted anywhere, in Clerk's dashboard included, has their server
 // records removed as Delete Account removes them. Clerk sends webhooks through Svix; a request whose signature does
@@ -8,6 +9,7 @@ import { internal } from "./_generated/api";
 import { httpAction } from "./_generated/server";
 import { bytesToBase64, constantTimeEqual } from "./lib/crypto";
 import { presignRead, READ_ADDRESS_SECONDS, storageConfig } from "./lib/storage";
+import type { NotificationReply } from "./appStore";
 import type { PictureGrant, WebPage } from "./web";
 
 const TOLERANCE_SECONDS = 5 * 60;
@@ -132,6 +134,27 @@ http.route({
       size: grant.size,
       expiresInSeconds: READ_ADDRESS_SECONDS,
     });
+  }),
+});
+
+// Apple's App Store Server Notifications, version 2 (V2-FR-65, section 9.7): purchases, refunds and refund reversals.
+// The body is `{"signedPayload": "<JWS>"}`; only a payload Apple signed changes anything (appStore.ts). Anything but a
+// 2xx answer makes Apple send it again, for up to a few days.
+http.route({
+  path: "/apple/notifications",
+  method: "POST",
+  handler: httpAction(async (ctx, request) => {
+    const body = await fields(request);
+    if (body === null || typeof body.signedPayload !== "string") return json({ error: "malformed" }, 400);
+    try {
+      const reply: NotificationReply = await ctx.runAction(internal.appStore.receiveNotification, {
+        signedPayload: body.signedPayload,
+      });
+      return json({ handled: reply.handled }, reply.status);
+    } catch (error) {
+      console.error(`An App Store notification could not be applied now: ${(error as Error).message}`);
+      return json({ error: "retry" }, 500);
+    }
   }),
 });
 

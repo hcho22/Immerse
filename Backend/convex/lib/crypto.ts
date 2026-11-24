@@ -32,6 +32,15 @@ export function randomToken(byteCount = 32): string {
   return bytesToBase64Url(crypto.getRandomValues(new Uint8Array(byteCount)));
 }
 
+// A random (version 4) UUID, lowercase, as StoreKit's app account token takes one.
+export function randomUuid(): string {
+  const bytes = crypto.getRandomValues(new Uint8Array(16));
+  bytes[6] = (bytes[6]! & 0x0f) | 0x40;
+  bytes[8] = (bytes[8]! & 0x3f) | 0x80;
+  const hex = bytesToHex(bytes);
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+}
+
 // Compares two strings in time that depends only on their lengths.
 export function constantTimeEqual(a: string, b: string): boolean {
   if (a.length !== b.length) return false;

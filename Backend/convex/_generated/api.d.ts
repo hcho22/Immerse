@@ -10,6 +10,7 @@
 
 import type * as accounts from "../accounts.js";
 import type * as alerts from "../alerts.js";
+import type * as appStore from "../appStore.js";
 import type * as clerk from "../clerk.js";
 import type * as crons from "../crons.js";
 import type * as deletion from "../deletion.js";
@@ -19,6 +20,9 @@ import type * as http from "../http.js";
 import type * as identities from "../identities.js";
 import type * as joining from "../joining.js";
 import type * as lib_apns from "../lib/apns.js";
+import type * as lib_appStoreApi from "../lib/appStoreApi.js";
+import type * as lib_appStoreConfig from "../lib/appStoreConfig.js";
+import type * as lib_appleSigned from "../lib/appleSigned.js";
 import type * as lib_callers from "../lib/callers.js";
 import type * as lib_config from "../lib/config.js";
 import type * as lib_crc32 from "../lib/crc32.js";
@@ -32,6 +36,7 @@ import type * as lib_versions from "../lib/versions.js";
 import type * as measures from "../measures.js";
 import type * as pictures from "../pictures.js";
 import type * as proofs from "../proofs.js";
+import type * as purchases from "../purchases.js";
 import type * as push from "../push.js";
 import type * as pushTokens from "../pushTokens.js";
 import type * as reads from "../reads.js";
@@ -51,6 +56,7 @@ import type {
 declare const fullApi: ApiFromModules<{
   accounts: typeof accounts;
   alerts: typeof alerts;
+  appStore: typeof appStore;
   clerk: typeof clerk;
   crons: typeof crons;
   deletion: typeof deletion;
@@ -60,6 +66,9 @@ declare const fullApi: ApiFromModules<{
   identities: typeof identities;
   joining: typeof joining;
   "lib/apns": typeof lib_apns;
+  "lib/appStoreApi": typeof lib_appStoreApi;
+  "lib/appStoreConfig": typeof lib_appStoreConfig;
+  "lib/appleSigned": typeof lib_appleSigned;
   "lib/callers": typeof lib_callers;
   "lib/config": typeof lib_config;
   "lib/crc32": typeof lib_crc32;
@@ -73,6 +82,7 @@ declare const fullApi: ApiFromModules<{
   measures: typeof measures;
   pictures: typeof pictures;
   proofs: typeof proofs;
+  purchases: typeof purchases;
   push: typeof push;
   pushTokens: typeof pushTokens;
   reads: typeof reads;
