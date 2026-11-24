@@ -22,7 +22,7 @@ Where a vendor's dashboard has moved since 2026-11-22, the vendor's own page lin
    Manual check V03 shows the free plan's behavior at eight days.
 2. **The pricing decision comes before Stage 4 (OC-5).**
    It sets how many Roll packs there are, how many Rolls each adds, the price of each, everyone's free Rolls (the server's default is the PRD's "about 3") and a subscriber's larger free amount.
-   Until it is made, nothing is created in step 10, the server sells nothing (`purchases:catalog` lists no pack, and the app says Rolls are not on sale yet) and gives no subscriber's free Rolls, and Stage 4's sandbox and App Review proofs (section B of `Evidence/NativeApp/manual-validation.md`) cannot run.
+   Until it is made, nothing is created in step 10, the server sells nothing (`purchases:catalog` lists no pack, and the app says Rolls are not on sale yet) and gives no subscriber's free Rolls, and Stage 4's sandbox and App Review proofs (section K of `Evidence/NativeApp/manual-validation.md`) cannot run.
 3. **The App ID's capabilities.**
    The v2 build adds four capabilities to the existing App ID `com.immerse.FilmJournal`: Sign in with Apple, Push Notifications, Declared Age Range and Associated Domains.
    A build without the local configuration file signs with none of them, so v1 builds are unaffected until the configuration file is added on a Mac.
@@ -273,7 +273,7 @@ The app holds no product, size, price or free amount: it asks the server what is
    - Sandbox Server URL: `https://<the development deployment>.convex.site/apple/notifications` while Stage 4 is proved there, or the production deployment's while App Review buys against it
    Apple posts a signed payload there for each Roll purchase (`ONE_TIME_CHARGE`, which credits an Ask to Buy approved later or a purchase whose app never reported it), each refund (`REFUND`) and each reversal (`REFUND_REVERSED`) (V2-FR-65); the server applies only what Apple signed, and answers anything else with an error, which changes nothing.
    Use App Store Connect's or the App Store Server API's request for a test notification once the URL is set: the deployment's logs show it answered 200 (`handled: "test"`).
-6. **Sandbox testers.** Under Users and Access, Sandbox, create the sandbox Apple Accounts section B of the manual plan needs.
+6. **Sandbox testers.** Under Users and Access, Sandbox, create the sandbox Apple Accounts section K of the manual plan needs.
    A purchase in the sandbox credits real Rolls on whichever deployment accepts `Sandbox`; on the production deployment that is what lets App Review and TestFlight buy, at no charge to them.
 7. **App Review notes**, with the build: Group Films need an Account only to host; Rolls are consumables held on the server against the Account and restored by signing in, not by StoreKit's restore (guideline 3.1.1), and they never expire; every Account gets a small number of free Rolls once, and an Account linked to the v1 subscription a larger number once, after the server confirms the subscription with Apple; hosting needs no subscription; the App Clip sells nothing (guideline 2.5.16); Delete Account is in Settings, two taps from the Journal (guideline 5.1.1(v)); and the user-generated content answers of PRD section 11.4.
    Give App Review a sandbox account and the steps to reach the Rolls sheet (Settings, Rolls) and to buy a pack.
