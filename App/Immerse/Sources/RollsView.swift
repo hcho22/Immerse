@@ -137,7 +137,7 @@ struct RollsView: View {
         HStack(alignment: .firstTextBaseline) {
             VStack(alignment: .leading, spacing: 2) {
                 Text(RollShopCopy.history(entry)).orbitFont(.body, weight: .semibold)
-                Text(GroupFilmsCopy.time(entry.at)).orbitFont(.footnote).foregroundStyle(Orbit.label)
+                Text(RollShopCopy.historyTime(entry.at)).orbitFont(.footnote).foregroundStyle(Orbit.label)
             }
             Spacer(minLength: 12)
             Text(entry.rolls > 0 ? "+\(entry.rolls)" : "\(entry.rolls)").orbitFont(.headline).monospacedDigit()

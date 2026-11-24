@@ -320,6 +320,16 @@ enum RollShopCopy {
     static let belowZero = "A refund took your balance below zero. Rolls can be set aside again once it is above zero."
     static let keeping = "Rolls never expire. They stay with your Account, on every iPhone you sign in on, and Rolls nobody takes come back after an event."
 
+    /// When a history entry happened, as a line of its own in the person's time zone and locale: "Today at 8:57 AM",
+    /// "Yesterday at 8:57 AM", "Nov 22, 2026 at 8:57 AM".
+    static func historyTime(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        formatter.doesRelativeDateFormatting = true
+        return formatter.string(from: date)
+    }
+
     static func history(_ entry: BalanceEntry) -> String {
         switch entry.kind {
         case .purchase: "Bought"
