@@ -3,6 +3,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { requireAccount, signedInIdentity } from "./lib/callers";
+import { randomUuid } from "./lib/crypto";
 import { refuse } from "./lib/errors";
 import { ageConfirmationValidator } from "./schema";
 
@@ -77,6 +78,8 @@ export const createAccount = mutation({
       ageConfirmedAt: now,
       ageConfirmation: args.ageConfirmation,
       createdAt: now,
+      // The token each Roll purchase carries, so Apple's transaction names this Account (section 9.7).
+      appAccountToken: randomUuid(),
     });
     return { created: true };
   },

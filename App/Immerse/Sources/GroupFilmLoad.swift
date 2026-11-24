@@ -28,7 +28,7 @@ struct GroupFilmLoadView: View {
         if startsLater && startsAt <= .now { return "The Start Time is in the past." }
         if endsAt <= opens { return "The End Time comes after the event opens." }
         if endsAt.timeIntervalSince(opens) > 7 * 24 * 3600 { return "Shooting lasts at most 7 days from the event's opening." }
-        if rolls > balance { return "Your balance holds \(balance) Rolls." }
+        if rolls > balance { return RollsCopy.tooFew(balance) }
         return nil
     }
 
@@ -62,6 +62,8 @@ struct GroupFilmLoadView: View {
                     .accessibilityIdentifier("group-rolls")
                     Text("Your balance: \(balance) \(balance == 1 ? "Roll" : "Rolls"). Rolls nobody takes come back at the End Time.")
                         .orbitFont(.footnote).foregroundStyle(Orbit.label)
+                    // The balance too small for the Rolls wanted: buy Rolls or set aside fewer (section 7).
+                    BuyRollsButton()
                 }
                 field("When") {
                     Toggle(isOn: $startsLater) { Text("Open later, at a Start Time").orbitFont(.body, weight: .semibold) }

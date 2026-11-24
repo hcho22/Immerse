@@ -3,7 +3,8 @@
 // The app calls `deleteAccount`. The server then removes, in batches, everything section 8 holds that names the
 // person: every picture they took in any event (its marker first, then its media), their Guest Names, the guest
 // identities claimed into the Account and their tokens, their push tokens, their subscription link and their Roll
-// ledger, keeping only purchase rows for accounting with the Account taken off them. Events they host carry on
+// ledger, keeping only purchase records and rows for accounting with the Account taken off them, and the subscription's
+// record that its subscriber Rolls were given, without the Account. Events they host carry on
 // without a Host (V2-FR-06). Last, the Account itself goes, and the server deletes the Clerk user through Clerk's
 // Backend API, so deletion never depends on the app finishing. Clerk's `user.deleted` webhook (http.ts) runs the
 // same removal for a user deleted anywhere else. Every step checks the current state first, so repeating any of it,
@@ -181,15 +182,33 @@ export const deleteAccountBatch = internalMutation({
     }
     if (claimed.length === BATCH) return { done: false };
 
-    // 5. The subscription link.
+    // 5. The subscription link to the Account. The row stays without it, as the record that this subscription's
+    // subscriber Rolls were given, so they never come again to another Account (V2-FR-62, V2-FR-63).
     const links = await ctx.db
       .query("subscriptionLinks")
       .withIndex("by_account", (q) => q.eq("accountId", account._id))
       .take(BATCH);
-    for (const link of links) await ctx.db.delete(link._id);
+    for (const link of links) await ctx.db.patch(link._id, { accountId: undefined, accountDeletedAt: now });
     if (links.length === BATCH) return { done: false };
 
-    // 6. The Roll ledger: Apple's purchase, refund and reversal rows stay for accounting with no Account on them;
+    // 6. The Account's Roll purchases stay for accounting and refunds, without the Account or its purchase token.
+    const purchases = await ctx.db
+      .query("purchases")
+      .withIndex("by_account", (q) => q.eq("accountId", account._id))
+      .take(BATCH);
+    for (const purchase of purchases) await ctx.db.patch(purchase._id, { accountId: undefined, appAccountToken: undefined });
+    if (purchases.length === BATCH) return { done: false };
+    if (account.appAccountToken !== undefined) {
+      // A purchase seen before it was credited still carries the token; it no longer names anyone.
+      const unassigned = await ctx.db
+        .query("purchases")
+        .withIndex("by_app_account_token", (q) => q.eq("appAccountToken", account.appAccountToken))
+        .take(BATCH);
+      for (const purchase of unassigned) await ctx.db.patch(purchase._id, { appAccountToken: undefined });
+      if (unassigned.length === BATCH) return { done: false };
+    }
+
+    // 7. The Roll ledger: Apple's purchase, refund and reversal rows stay for accounting with no Account on them;
     // every other row goes, and so do the Rolls in the balance.
     const ledger = await ctx.db
       .query("rollLedger")
@@ -201,7 +220,7 @@ export const deleteAccountBatch = internalMutation({
     }
     if (ledger.length === BATCH) return { done: false };
 
-    // 7. The Account.
+    // 8. The Account.
     await ctx.db.delete(account._id);
     return { done: true };
   },

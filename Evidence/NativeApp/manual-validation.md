@@ -3494,3 +3494,169 @@ Apple's documentation says only that the system removes an App Clip "after a per
 
 **It fails if.**
 The mini-app's words promise more than this shows: bring the days observed to the captain if they are fewer than an event lasts.
+
+## v2 Stage 4: Buying Rolls and the Subscriber's Free Rolls in Apple's Sandbox and App Review
+
+These are the proofs the v2 PRD's Stage 4 ends with (section 12): a purchase in Apple's sandbox credits its Rolls once, on the server, and a refund notification removes them; a subscriber's Account gets its larger free Rolls only after Apple's confirmation, and a second Account with the same subscription gets none; and App Review accepts the purchases, the sign-in, account deletion, the App Clip and the user-generated content features.
+They are v2's, not v1's: the v1 candidate above needs none of them.
+The software and what it showed against local stand-ins, local StoreKit testing and signed test fixtures are in [087](v2-stage4-rolls-087.md); compile-only, simulator or stand-in evidence is not a pass, so **Stage 4 is not proved until K01 to K10 pass**.
+Each scenario reads **UNTESTED: pricing undecided (OC-5); no App Store Connect product, key, sandbox tester or real service provisioned**.
+
+**The pricing decision comes first.**
+The packs, their Rolls and prices, everyone's free Rolls and a subscriber's larger amount are open check OC-5, still open with the v1 subscription's price (DEC-02).
+None of the scenarios below can run until it is made and App Store Connect's products follow it; no number below is a proposal.
+
+**Before you start.**
+
+1. Provision the services in the order of [Backend/SETUP.md](../../Backend/SETUP.md), Stage 4's step 10 included: the Roll packs as consumables, the In-App Purchase key, the app's Apple ID, App Store Server Notifications version 2 with the sandbox URL on the development deployment, and the deployment's Stage 4 values in step 5 (`ROLL_PACKS`, `SUBSCRIPTION_PRODUCT_IDS`, `FREE_ROLLS_SUBSCRIBER`, `APPLE_ENVIRONMENTS=Sandbox` and the `APP_STORE_*` key).
+2. Build the full app of a commit that holds this change, signed for Development, with `App/Immerse/Config/Server.local.xcconfig` filled in and the v1 subscription's product identifiers in the build (`ImmerseMonthlyProductID`, `ImmerseYearlyProductID`).
+3. Have ready: two iPhones on iOS 26 (P1, P2), signed in to the App Store's sandbox under Settings, Developer, Sandbox Apple Account; three sandbox Apple Accounts (SB1, SB2, and SB3 as a child in a sandbox family with Ask to Buy on, if App Store Connect offers it); and three Immerse Accounts made by signing in (A1, A2, A3).
+4. Write down, for each scenario, the date, the build's commit, each device's model and system version, the sandbox Apple Account, the Immerse Account, the transaction ids, and what Convex's dashboard showed in `purchases`, `rollLedger` and `subscriptionLinks` and in the deployment's logs for `/apple/notifications`.
+
+### K01 - A pack bought in the sandbox credits its Rolls once, on the server (V2-FR-60, V2-FR-61)
+
+**Steps.**
+
+1. On P1, signed in as A1 with sandbox SB1, open Settings, Rolls; note the balance and that each pack shows the App Store's sandbox price and the number of Rolls the deployment's `ROLL_PACKS` gives it.
+2. Buy the smallest pack and confirm in Apple's sheet; time how long until the balance changes.
+3. In the dashboard, count `purchases` rows and ledger rows for the transaction.
+4. Force-quit and reopen the app twice; then sign in as A1 on P2 and open Rolls.
+5. On P1, sign out, tap a pack, and see what is asked.
+
+**Expect.**
+The balance grows by exactly the pack's Rolls within a minute, and the history shows "Bought"; the dashboard holds one purchase and one credit for it however often the app opened; P2 shows the same balance and history; a signed-out tap asks for sign-in and opens no App Store sheet.
+
+**It fails if.**
+The Rolls are credited twice or not at all, P2 shows another balance, or a signed-out person reaches Apple's sheet.
+
+### K02 - A failed and a cancelled purchase change nothing (V2-FR-65)
+
+**Steps.**
+
+1. On P1 as A1, tap a pack and cancel Apple's sheet.
+2. Tap a pack again and, in Settings, Developer, sandbox settings, make the purchase fail (or turn the network off at the confirm step).
+3. Read the balance, the history and the dashboard.
+
+**Expect.**
+A cancellation says nothing and changes nothing; a failure says the purchase did not finish and the balance is unchanged; no row is written for either.
+
+**It fails if.**
+Anything is added, or the app says Rolls were added.
+
+### K03 - Ask to Buy adds nothing until approved (V2-FR-65)
+
+**Steps.**
+
+1. On P2, signed in as A3 with the child sandbox account SB3, buy a pack; the parent's approval is asked.
+2. Read the balance on P2 and the dashboard, then wait ten minutes.
+3. Approve the request from the parent's side; keep P2's app closed until the server shows the purchase.
+4. Open the app on P2; repeat once with the request declined.
+
+**Expect.**
+The Rolls sheet says the purchase waits for approval and nothing is added while it waits; after approval the server credits the Rolls from Apple's `ONE_TIME_CHARGE` notification even with the app closed, once, and P2 shows them on opening; a declined request adds nothing.
+If the sandbox gives no way to approve, write that down and run K03 again on TestFlight with a real family.
+
+**It fails if.**
+Rolls arrive before approval, twice, or never after approval.
+
+### K04 - A purchase whose report is lost is credited later
+
+**Steps.**
+
+1. On P1 as A1, start buying a pack and turn on Airplane Mode as soon as Apple's sheet says done.
+2. Read what the Rolls sheet says, force-quit, turn the network back on and reopen the app.
+3. Read the deployment's logs for `/apple/notifications` and the dashboard.
+
+**Expect.**
+Offline, the app says the purchase is safe with Apple and its Rolls are added once the server confirms it; the Rolls are credited once, either from Apple's notification or from the app's report at the next launch, whichever comes first, and the other changes nothing.
+
+**It fails if.**
+The purchase is lost, credited twice, or stays unfinished on the iPhone after the server holds it.
+
+### K05 - A refund removes the Rolls, may take the balance below zero, and leaves events alone (V2-FR-65)
+
+**Steps.**
+
+1. On P1 as A1, buy a pack, then load a Group Film setting aside more Rolls than the balance would hold without that pack, and have a guest on P2 take a Roll and shoot one picture.
+2. Ask Apple for a refund of the pack in the sandbox the way Apple's documentation on testing refund requests says at the time, and approve it; the app has no refund button of its own, so this may need a build that calls StoreKit's refund request or Apple's own tooling, and if the sandbox offers no way, write that down and run this step on TestFlight with a real refund.
+3. Time from the refund's approval to the `REFUND` notification in the deployment's logs and to the balance changing.
+4. On P1, try to load another Group Film and to add Rolls to the running one.
+5. Check the running event, the guest's Roll and picture.
+
+**Expect.**
+Within an hour of Apple's notification the balance falls by the refunded Rolls, below zero if they were already set aside, and the history shows "Refunded by Apple"; while it is below zero the app says so and no Rolls can be set aside; the running event, the guest's Roll and picture are untouched.
+
+**It fails if.**
+The balance does not fall within an hour, falls by more than the pack, an event loses a Roll or a picture, or Rolls can be set aside below zero.
+
+### K06 - A refund reversed, and notifications nobody signed
+
+**Steps.**
+
+1. If App Store Connect or the sandbox can reverse K05's refund, do so and watch for `REFUND_REVERSED`.
+2. From a computer, send `/apple/notifications` a body that is not Apple's: empty, a JSON object, and the payload of a real notification with one character changed.
+3. From App Store Connect (App Store Server Notifications) or the App Store Server API, request a test notification.
+
+**Expect.**
+A reversal adds the Rolls back once and the history shows "Refund reversed by Apple"; if the sandbox cannot reverse a refund, write that down, since then only 087's signed fixtures hold it; each forged body is answered with an error and changes no row; the test notification is answered 200 (`handled: "test"`).
+
+**It fails if.**
+A reversal adds the Rolls twice or not at all, or any forged body changes the database.
+
+### K07 - A subscriber's free Rolls only after Apple confirms the subscription (V2-FR-62, V2-FR-63)
+
+**Steps.**
+
+1. On P1 with sandbox SB2, subscribe to the v1 subscription in the app's own subscription screen, without signing in to Immerse; note that personal Films work as before.
+2. Before signing in, read the dashboard: no `subscriptionLinks` row exists.
+3. Sign in as A2 and open Rolls; time until the subscriber's free Rolls arrive.
+4. Let the sandbox renew the subscription several times (sandbox renewals are minutes apart) and reopen the app after each.
+5. Cancel the subscription, let it lapse, and reopen the app; then, on another subscription bought with a sandbox account, have Apple refund it and reopen the app.
+
+**Expect.**
+Nothing is credited before sign-in or before Apple confirms; after sign-in A2's balance gains exactly `FREE_ROLLS_SUBSCRIBER` once, the history shows "Free Rolls for subscribers" and the dashboard holds one link to A2; renewals add nothing; after the lapse and the refund nothing more is credited and the Rolls already credited stay.
+
+**It fails if.**
+Subscriber Rolls arrive before Apple's confirmation, more than once, or are taken away by a lapse or a refund.
+
+### K08 - A second Account with the same subscription gets none; Delete Account (V2-FR-63, V2-FR-05)
+
+**Steps.**
+
+1. After K07, on P2 with the same sandbox SB2 (the same subscription), sign in as A3 and open Rolls.
+2. Read what the app says and the dashboard.
+3. On P1, delete A2 from Settings; then sign in as a new Account A4 with SB2 still subscribed, and open Rolls.
+
+**Expect.**
+A3 gets no subscriber Rolls and is told the subscription's free Rolls went to another Immerse Account, without naming it, and that support can move them; after Delete Account the subscription's row stays with no Account on it and A4 gets none, which is the build's reading of V2-FR-05 with V2-FR-62 and V2-FR-63 (087, "A reading for the captain").
+**Captain's question:** should a subscription whose Account was deleted feed a new Account? If yes, the build changes before this scenario is accepted.
+
+**It fails if.**
+A3 or A4 gets subscriber Rolls, or the message names A2.
+
+### K09 - Nothing on sale until configured, and the mini-app sells nothing (V2-FR-64, V2-FR-60)
+
+**Steps.**
+
+1. On the development deployment, unset `ROLL_PACKS`, open Rolls, then set it back.
+2. Change one pack's Rolls in `ROLL_PACKS`, open Rolls, and read the history of a purchase made before the change; refund that purchase in the sandbox.
+3. Open an event through the App Clip on an iPhone without the full app and look everywhere for a purchase.
+
+**Expect.**
+With no packs the sheet says Rolls are not on sale yet; a changed count shows for new purchases only, and an older purchase's credit and refund keep its own count; the App Clip has no purchase, no balance and no price anywhere.
+
+**It fails if.**
+The app shows a pack the server does not sell, an old purchase changes, or the App Clip offers anything for sale.
+
+### K10 - App Review accepts the purchases, the sign-in, account deletion, the App Clip and the user-generated content features
+
+**Steps.**
+
+1. Switch the production deployment to `APPLE_ENVIRONMENTS=Production,Sandbox`, set the Sandbox Server URL as `Backend/SETUP.md` step 10 says while App Review buys against it, and submit a build with the Roll packs attached and step 10's review notes, a sandbox account and the steps to reach Rolls.
+2. Keep every message from App Review.
+
+**Expect.**
+App Review approves the build with the purchases (guideline 3.1.1, consumables restored by signing in), the sign-in (4.8, with Sign in with Apple), Delete Account (5.1.1(v)), the App Clip (2.5.16) and the user-generated content features (1.2: reporting, the Host removing a picture or a guest, support's removal and the published support address); any rejection is brought to the captain with App Review's words.
+
+**It fails if.**
+App Review rejects the build for any of the five; a rejection for something else is recorded and does not fail this scenario.

@@ -39,6 +39,8 @@ final class HostingSession {
     }
 
     private(set) var phase: Phase
+    /// Counts the times a signed-in Account left this iPhone, so what was read for one Account is never shown for the next.
+    private(set) var accountSession = 0
     private(set) var busy = false
     /// What went wrong with the last request, in words for the person.
     var problem: String?
@@ -180,6 +182,7 @@ final class HostingSession {
     }
 
     private func settle(_ next: Phase) {
+        if isSignedIn, next != phase { accountSession += 1 }
         phase = next
         if case .signedIn(let name) = next { defaults.set(name, forKey: Self.displayNameKey) }
         else { defaults.removeObject(forKey: Self.displayNameKey) }

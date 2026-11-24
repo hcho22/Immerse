@@ -17,6 +17,23 @@ enum HostingSetup {
     }
 }
 
+extension HostingSetup {
+    /// Buying Rolls, where the app has a hosting session; nil otherwise. A Debug build launched with
+    /// `-ImmerseDebugRollStore <scenario>` stands in for StoreKit (`DebugRollStore`).
+    static func rollShop(hosting: HostingSession?, groupFilms: GroupFilms?) -> RollShop? {
+        guard let hosting else { return nil }
+        var store: RollStore = StoreKitRollStore()
+        #if DEBUG
+        if let debug = DebugRollStore.make(hosting: hosting, arguments: ProcessInfo.processInfo.arguments) { store = debug }
+        #endif
+        let shop = RollShop(hosting: hosting, functions: hosting.functions, store: store,
+                            subscriptionProductIDs: SubscriptionController.bundleConfiguration()?.productIDs ?? [],
+                            supportAddress: groupFilms?.supportAddress ?? ServerConfiguration.main?.supportAddress)
+        shop.balanceChanged = { [weak groupFilms] in await groupFilms?.refreshBalance() }
+        return shop
+    }
+}
+
 /// This installation's push token, for the push test (open check OC-7). iOS hands the token to the app delegate.
 @MainActor
 final class PushRegistration {

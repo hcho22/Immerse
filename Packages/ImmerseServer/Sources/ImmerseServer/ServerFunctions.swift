@@ -12,6 +12,8 @@ public enum RefusalCode: Equatable, Sendable {
     // Group Films (Stage 2).
     case notTheHost, unknownCode, codeReplaced, notYetOpen, joiningPaused, rollsTaken, shootingEnded, removedFromEvent
     case rollLimit, balanceTooLow, notRevealed, alreadyRevealed, identityClaimed
+    // Buying Rolls and the subscriber's free Rolls (Stage 4).
+    case purchasesUnavailable, purchaseRefused, storeUnavailable, subscriberRollsNotOffered
     case other(String)
 
     private static let named: [String: RefusalCode] = [
@@ -23,6 +25,8 @@ public enum RefusalCode: Equatable, Sendable {
         "rollsTaken": .rollsTaken, "shootingEnded": .shootingEnded, "removedFromEvent": .removedFromEvent,
         "rollLimit": .rollLimit, "balanceTooLow": .balanceTooLow, "notRevealed": .notRevealed,
         "alreadyRevealed": .alreadyRevealed, "identityClaimed": .identityClaimed,
+        "purchasesUnavailable": .purchasesUnavailable, "purchaseRefused": .purchaseRefused,
+        "storeUnavailable": .storeUnavailable, "subscriberRollsNotOffered": .subscriberRollsNotOffered,
     ]
 
     init(_ code: String) {

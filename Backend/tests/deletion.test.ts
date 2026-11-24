@@ -78,7 +78,28 @@ async function mayaWithEverything() {
   await maya.mutation(api.pushTokens.register, { installationId: randomId(), token: "ab".repeat(32), environment: "production" });
   await ana.mutation(api.pushTokens.register, { installationId: randomId(), token: "ef".repeat(32), environment: "production" });
   await t.run(async (ctx) => {
-    await ctx.db.insert("subscriptionLinks", { accountId, originalTransactionId: "2000000000000001", linkedAt: Date.now() });
+    await ctx.db.insert("subscriptionLinks", {
+      accountId,
+      originalTransactionId: "2000000000000001",
+      environment: "Sandbox",
+      linkedAt: Date.now(),
+      rollsCredited: 20,
+    });
+    const token = (await ctx.db.get(accountId))!.appAccountToken!;
+    await ctx.db.insert("purchases", {
+      transactionId: "2000000000000002",
+      originalTransactionId: "2000000000000002",
+      productId: "test.rolls.pack",
+      environment: "Sandbox",
+      rolls: 10,
+      appAccountToken: token,
+      accountId,
+      assignedAt: Date.now(),
+      purchasedAt: Date.now(),
+      revoked: false,
+      stateSignedAt: Date.now(),
+      firstSeenAt: Date.now(),
+    });
     await ctx.db.insert("rollLedger", { accountId, kind: "free", rolls: 3, at: Date.now() });
     await ctx.db.insert("rollLedger", { accountId, kind: "purchase", rolls: 10, appleTransactionId: "2000000000000002", at: Date.now() });
     await ctx.db.insert("rollLedger", { accountId, kind: "setAside", rolls: -5, eventId: mayasEvent, at: Date.now() });
@@ -95,6 +116,7 @@ describe("Delete Account", () => {
   test("removes everything that names the person, everywhere, and nothing else", async () => {
     const { t, maya, accountId, mayasEvent, anasEvent, claimedGuest, mayasKeys } = await mayaWithEverything();
     expect(mayasKeys.length).toBe(5);
+    const purchaseToken = await t.run(async (ctx) => (await ctx.db.get(accountId))!.appAccountToken!);
     expect(await maya.action(api.deletion.deleteAccount, {})).toEqual({ deleted: true });
     await drainStorageDeletions(t);
 
@@ -105,9 +127,20 @@ describe("Delete Account", () => {
     expect(text).not.toContain("user_maya");
     expect(text).not.toContain(claimedGuest.publicId);
     expect(text).not.toContain("Maya");
-    // Her push tokens, subscription link and non-purchase ledger rows are gone; the purchase row stays, nameless.
+    expect(text).not.toContain(purchaseToken);
+    // Her push tokens, her link to the subscription and non-purchase ledger rows are gone; the purchase stays, nameless,
+    // and so does the record that the subscription's subscriber Rolls were given, without her.
     expect(rows.filter((r) => r.table === "pushTokens").map((r) => r.row.token)).toEqual(["ef".repeat(32)]);
-    expect(rows.filter((r) => r.table === "subscriptionLinks")).toHaveLength(0);
+    const links = rows.filter((r) => r.table === "subscriptionLinks").map((r) => r.row);
+    expect(links).toHaveLength(1);
+    expect(links[0]).toMatchObject({ originalTransactionId: "2000000000000001", rollsCredited: 20 });
+    expect(links[0]!.accountId).toBeUndefined();
+    expect(typeof links[0]!.accountDeletedAt).toBe("number");
+    const purchases = rows.filter((r) => r.table === "purchases").map((r) => r.row);
+    expect(purchases).toHaveLength(1);
+    expect(purchases[0]).toMatchObject({ transactionId: "2000000000000002", rolls: 10 });
+    expect(purchases[0]!.accountId).toBeUndefined();
+    expect(purchases[0]!.appAccountToken).toBeUndefined();
     const ledger = rows.filter((r) => r.table === "rollLedger").map((r) => r.row);
     expect(ledger).toHaveLength(1);
     expect(ledger[0]).toMatchObject({ kind: "purchase", appleTransactionId: "2000000000000002" });

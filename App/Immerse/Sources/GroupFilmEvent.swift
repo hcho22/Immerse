@@ -358,6 +358,10 @@ struct GroupHostSection: View {
                         .buttonStyle(OrbitPillStyle(kind: .outline, minHeight: 44, fullWidth: true))
                         .disabled((groupFilms.balance ?? 0) < adding)
                         .accessibilityIdentifier("group-add-rolls")
+                    #if !APPCLIP
+                    // The mini-app sells nothing (V2-FR-60); the full app's Host buys Rolls here.
+                    BuyRollsButton()
+                    #endif
                     Button("Change the Times") { editingTimes = true }
                         .buttonStyle(OrbitPillStyle(kind: .outline, minHeight: 44, fullWidth: true))
                     Button("Replace the Code") { confirmReplace = true }
