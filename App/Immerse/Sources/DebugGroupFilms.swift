@@ -95,6 +95,12 @@ final class DebugEventBackend: @unchecked Sendable {
     private let state = Mutex<(events: [String: Event], members: [Member], balance: Int, retired: Set<String>)>(([:], [], 3, []))
     private let unreachableUploads = Mutex(false)
 
+    /// The balance, for the Roll functions' stand-in (`DebugRollBackend`).
+    var balance: Int { state.withLock { $0.balance } }
+
+    /// Adds bought Rolls to the balance.
+    func credit(_ rolls: Int) { state.withLock { $0.balance += rolls } }
+
     /// While set, the upload path cannot be reached, so what waits keeps waiting.
     var uploadsUnreachable: Bool {
         get { unreachableUploads.withLock { $0 } }

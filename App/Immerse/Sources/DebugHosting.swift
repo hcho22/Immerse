@@ -54,6 +54,9 @@ final class DebugHostSignIn: HostSignIn {
 final class DebugHostingServer: ServerFunctions {
     private let state: Mutex<(session: Bool, accountName: String?)>
     private let eventBackend = Mutex<DebugEventBackend?>(nil)
+    #if !APPCLIP
+    private let rollBackend = Mutex<DebugRollBackend?>(nil)
+    #endif
 
     init(accountName: String?) {
         state = Mutex((false, accountName))
@@ -64,10 +67,21 @@ final class DebugHostingServer: ServerFunctions {
         set { eventBackend.withLock { $0 = newValue } }
     }
 
+    #if !APPCLIP
+    /// The Roll functions, where a screen test asked for them (`DebugRollStore`). The mini-app sells nothing.
+    var rolls: DebugRollBackend? {
+        get { rollBackend.withLock { $0 } }
+        set { rollBackend.withLock { $0 = newValue } }
+    }
+    #endif
+
     func setSession(_ session: Bool) { state.withLock { $0.session = session } }
 
     func call(_ kind: FunctionKind, _ path: String, _ args: [String: JSONValue]) async throws(ServerError) -> JSONValue {
         let (session, accountName) = state.withLock { ($0.session, $0.accountName) }
+        #if !APPCLIP
+        if let rolls, let reply = try rolls.call(path, args, signedIn: session) { return reply }
+        #endif
         if let events, let reply = try events.call(path, args, signedIn: session, accountName: accountName) { return reply }
         return try state.withLock { (state) throws(ServerError) -> JSONValue in
             guard state.session else {

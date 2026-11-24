@@ -8,6 +8,8 @@ struct ImmerseApp: App {
     @State private var hosting: HostingSession?
     /// Group Films, only where the app has a server (v2 Stage 2); nil in every build without one.
     @State private var groupFilms: GroupFilms?
+    /// Buying Rolls, only where the app has a server (v2 Stage 4); nil in every build without one.
+    @State private var rollShop: RollShop?
     @Environment(\.scenePhase) private var scenePhase
 
     init() {
@@ -16,6 +18,9 @@ struct ImmerseApp: App {
         let groupFilms = GroupFilmsSetup.make(hosting: hosting)
         _groupFilms = State(initialValue: groupFilms)
         GroupFilmAlertRouter.shared.groupFilms = groupFilms
+        // Started at launch, so a Roll purchase still waiting for the server, or one Apple completed while the app was
+        // closed, is reported as soon as the app runs.
+        _rollShop = State(initialValue: HostingSetup.rollShop(hosting: hosting, groupFilms: groupFilms))
     }
 
     var body: some Scene {
@@ -32,6 +37,7 @@ struct ImmerseApp: App {
             .orbitRoot()
             .environment(\.hosting, hosting)
             .environment(\.groupFilms, groupFilms)
+            .environment(\.rollShop, rollShop)
             // Reads the Host's Account in the background; nothing waits on it, and without a network it keeps what it knew.
             .task { await hosting?.refresh() }
             // A Join Code's link opens the app at the event's Join Confirmation (V2-FR-19), as a universal link or a URL.

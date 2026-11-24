@@ -52,7 +52,7 @@ enum GroupFilmsCopy {
         case .codeReplaced: "This link no longer works. Ask the Host for the new one."
         case .unknownCode, .eventGone: "This event is no longer available."
         case .rollLimit: "An event has at most 200 Rolls."
-        case .balanceTooLow: "Your balance does not hold that many Rolls. Set aside fewer."
+        case .balanceTooLow: "Your balance does not hold that many Rolls. Buy Rolls or set aside fewer."
         case .notRevealed: "That waits for the reveal."
         case .alreadyRevealed: "The album has already revealed."
         case .identityClaimed: "This iPhone's guest identity belongs to another Account."
@@ -119,4 +119,13 @@ enum GroupFilmsCopy {
     static let miniAppSaveAll = "This mini-app saves one picture at a time, through the share sheet. Get Immerse to save the whole album to Photos."
     static let miniAppSaveAllOnTheWeb = "This mini-app saves one picture at a time, through the share sheet. To save them all, get Immerse or open the event's link in Safari, where the Host shares the album."
     static let deleteGuestIdentity = "Every picture this iPhone's guest identity took, in every Group Film it joined, is removed for everyone, with any still waiting here. Copies others already saved to Photos cannot be recalled."
+}
+
+/// The balance's words on the screens that set Rolls aside (V2-FR-61, V2-FR-65, section 7).
+enum RollsCopy {
+    static func tooFew(_ balance: Int) -> String {
+        balance < 0
+            ? "A refund took your balance below zero. Rolls can be set aside again once it is above zero."
+            : "Your balance holds \(balance) \(balance == 1 ? "Roll" : "Rolls"). Buy Rolls or set aside fewer."
+    }
 }

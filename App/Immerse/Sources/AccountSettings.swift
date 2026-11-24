@@ -5,9 +5,11 @@ import SwiftUI
 /// and confirmed with a second (guideline 5.1.1(v)). Shown only where the app has a server and someone is signed in.
 struct AccountSettingsSection: View {
     let hosting: HostingSession
+    @Environment(\.rollShop) private var rollShop
     @State private var confirmDelete = false
+    @State private var showingRolls = false
 
-    static let deleteMessage = "Every picture you took in any Group Film is removed for everyone, sealed or revealed, with your name. Your Account, its sign-in, any Rolls in your balance and your link to a subscription are removed too. Copies others already saved to Photos cannot be recalled. An Apple subscription keeps billing until you cancel it in iPhone Settings. Your personal Films stay on this iPhone."
+    static let deleteMessage = "Every picture you took in any Group Film is removed for everyone, sealed or revealed, with your name. Your Account, its sign-in, any Rolls in your balance and your link to a subscription are removed too, and that subscription's free Rolls are not given again. Copies others already saved to Photos cannot be recalled. An Apple subscription keeps billing until you cancel it in iPhone Settings. Your personal Films stay on this iPhone."
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -22,6 +24,24 @@ struct AccountSettingsSection: View {
                 if case .signedIn(let name) = hosting.phase {
                     Text("Signed in as \(name)").orbitFont(.body, weight: .semibold).foregroundStyle(.white)
                         .orbitRow().accessibilityIdentifier("account-name")
+                    if let rollShop {
+                        // The balance and buying Rolls (V2-FR-60, V2-FR-61).
+                        Button { showingRolls = true } label: {
+                            HStack {
+                                Text("Rolls").orbitFont(.body, weight: .semibold)
+                                Spacer()
+                                if let balance = rollShop.balance { Text("\(balance)").orbitFont(.headline).monospacedDigit() }
+                                Image(systemName: "chevron.right").font(.system(size: 14, weight: .bold)).foregroundStyle(Orbit.label)
+                                    .accessibilityHidden(true)
+                            }
+                            .foregroundStyle(.white)
+                            .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .orbitRow()
+                        .accessibilityLabel(rollShop.balance.map { "Rolls, \($0) in your balance" } ?? "Rolls")
+                        .accessibilityIdentifier("account-rolls")
+                    }
                 }
                 Button("Sign Out") { Task { await hosting.signOut() } }
                     .buttonStyle(OrbitPillStyle(kind: .outline, minHeight: 56, fullWidth: true))
@@ -34,7 +54,11 @@ struct AccountSettingsSection: View {
             }
         }
         .disabled(hosting.busy)
-        .task { await hosting.refresh() }
+        .task {
+            await hosting.refresh()
+            await rollShop?.refresh()
+        }
+        .sheet(isPresented: $showingRolls) { RollsSheet() }
         .orbitConfirmation(isPresented: $confirmDelete, symbol: "person.crop.circle.badge.xmark", title: "Delete Account?",
                            message: Self.deleteMessage, confirm: "Delete Account", identifier: "confirm-delete-account") {
             Task { await hosting.deleteAccount() }

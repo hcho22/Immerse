@@ -10,7 +10,8 @@
 # `PreviewDevelopment` in Packages/FilmRuntime and the shooting screen's notice that it is on) and the
 # photo view's hosted-test probe (`PhotoViewProbe` in App/Immerse/Sources/PhotoView.swift) and v2 Stage 1's stand-in
 # server and Server checks (`DebugHosting.swift`, `ServerChecksView.swift`) and v2 Stage 2's stand-in for the event
-# functions (`DebugGroupFilms.swift`) to Debug.
+# functions (`DebugGroupFilms.swift`) and v2 Stage 4's stand-in for StoreKit and the Roll functions (`DebugRollStore.swift`)
+# to Debug.
 # The app alone also carries no App Clip in either configuration (v2 Stage 3): the mini-app is embedded only by the
 # ImmerseWithClip scheme, whose own check is Scripts/verify-app-clip-size.sh.
 set -eu
@@ -30,7 +31,8 @@ for configuration in Debug Release; do
     for marker in TestingUnlock ImmerseDebugTestingUnlock "Testing unlock" DebugFreeSpace ImmerseDebugFreeSpace \
         DevelopedPreviews PreviewDevelopment ImmerseDebugDevelopedPreview "Develop at once" "Debug preview" \
         develop-at-once-notice PhotoViewProbe DebugHosting ImmerseDebugHosting ServerChecksView "Server checks" \
-        DebugGroupFilms DebugEventBackend ImmerseDebugGroupFilm ImmerseDebugJoinLink; do
+        DebugGroupFilms DebugEventBackend ImmerseDebugGroupFilm ImmerseDebugJoinLink \
+        DebugRollStore DebugRollBackend ImmerseDebugRollStore; do
         if grep -rqaF "$marker" "$bundle"; then found=yes; else found=no; fi
         case "$configuration:$found" in
             Debug:no) echo "Debug bundle lacks \"$marker\"; the Release check cannot be trusted" >&2; exit 1 ;;

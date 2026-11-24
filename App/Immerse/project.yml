@@ -103,6 +103,9 @@ targets:
           - HostingSetup.swift
           - ImmerseApp.swift
           - JournalView.swift
+          - DebugRollStore.swift
+          - RollShop.swift
+          - RollsView.swift
           - ServerChecksView.swift
           - SettingsView.swift
           - SubscriptionView.swift

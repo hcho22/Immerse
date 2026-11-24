@@ -21,17 +21,26 @@ struct GroupFilmEntry: View {
     }
 }
 
-struct GroupFilmGate: View {
+/// Whatever needs a signed-in Host (V2-FR-02): Load Film, and the Rolls sheet, which asks a signed-out person to sign in
+/// before anything is bought (V2-FR-60). It shows the sign-in steps until there is an Account, then its content.
+struct GroupFilmGate<SignedIn: View>: View {
     @Environment(\.hosting) private var hosting
     @State private var confirmation: AgeConfirmationMethod?
     @State private var tooYoung = false
+    let title: String
+    @ViewBuilder let signedIn: () -> SignedIn
+
+    init(title: String, @ViewBuilder signedIn: @escaping () -> SignedIn) {
+        self.title = title
+        self.signedIn = signedIn
+    }
 
     var body: some View {
         Group {
             if let hosting {
                 switch hosting.phase {
-                case .signedIn(let name):
-                    GroupFilmSignedIn(displayName: name)
+                case .signedIn:
+                    signedIn()
                 case .needsAccount:
                     if tooYoung { TooYoungView() }
                     else if let confirmation { CreatingAccount(confirmation: confirmation) }
@@ -44,7 +53,7 @@ struct GroupFilmGate: View {
             }
         }
         .orbitSheetGround(screen: true)
-        .navigationTitle("Group Film")
+        .navigationTitle(title)
         .toolbarTitleDisplayMode(.inline)
         .onAppear { tooYoung = hosting.map { AgeDecline.isRecent(defaults: $0.defaults) } ?? false }
         .task { await hosting?.refresh() }
@@ -352,10 +361,9 @@ private struct CreatingAccount: View {
 }
 
 /// Signed in, with an Account: Load Film for the Group Film (v2 Stage 2).
-private struct GroupFilmSignedIn: View {
-    let displayName: String
-
-    var body: some View {
-        GroupFilmLoadView()
+extension GroupFilmGate where SignedIn == GroupFilmLoadView {
+    /// Group Film under Start a Film: Load Film once signed in.
+    init() {
+        self.init(title: "Group Film") { GroupFilmLoadView() }
     }
 }
