@@ -311,9 +311,27 @@ final class JournalModel {
     /// elsewhere, so its question is missed and does not come back by itself (the captain's "C"), and the Film screen's
     /// Originals button remains.
     func packEndOriginalQuestion(_ id: UUID) -> [Int] {
+        // An event Roll's originals never leave the phone and have no question (v2 PRD V2-FR-36).
+        guard !isEventRoll(id) else { return [] }
         guard let film = film(id), film.camera.id == .instant1970s, film.remainingExposures == 0,
               !film.captures.contains(where: { $0.revealState == .sealed }) else { return [] }
         return printsAwaitingOriginalChoice(id, among: revealedInstantPrints(id))
+    }
+
+    /// Whether a Film is a Roll taken in a Group Film (v2), which only the Group Films' own Journal holds.
+    func isEventRoll(_ id: UUID) -> Bool {
+        (try? repository.filmAccess(filmID: id).isGroupRoll) == true
+    }
+
+    /// Makes the local Film of a Roll taken in a Group Film (v2 PRD V2-FR-25, V2-FR-31): the event's Camera and Film
+    /// Stock with the Camera package current on this iPhone, so the guest can shoot offline. Its right to shoot is the
+    /// server's, so it never asks the subscription or the Trial (V2-FR-07); only the Group Films' Journal, whose store is
+    /// apart from personal Films, calls it. The exposures the server already counts as used stay used.
+    func loadEventRoll(eventID: String, camera: CameraPackage, title: String, filmStock: FilmStock?, exposuresUsed: Int) throws -> Film {
+        let film = try repository.createEventRoll(eventID: eventID, camera: camera, title: title, filmStock: filmStock,
+                                                  exposuresUsed: exposuresUsed)
+        refresh()
+        return film
     }
 
     func selectMovieSound(_ id: UUID, choice: MovieSoundChoice, assetID: String?) async throws {

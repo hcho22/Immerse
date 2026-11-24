@@ -5,5 +5,11 @@ IMMERSE_CONVEX_URL = https:/$()/your-deployment.convex.cloud
 // The Clerk instance's publishable key (pk_test_... or pk_live_...). It is public by design, but stays out of the
 // repository with the rest of the configuration.
 IMMERSE_CLERK_PUBLISHABLE_KEY = pk_test_REPLACE_ME
-// Sign in with Apple, push notifications and Declared Age Range, which the App ID must have enabled first.
+// The host of a Group Film's Join Code link, https://<host>/j/<code>, which the join page serves and the app's associated
+// domain claims (Backend/SETUP.md, step 7). A bare host name.
+IMMERSE_JOIN_HOST = join.example.com
+// The support address reports go to, shown in the app (OQ-12). Use the operator's own address; never commit it.
+IMMERSE_SUPPORT_ADDRESS = support@example.com
+// Sign in with Apple, push notifications, Declared Age Range and Associated Domains, which the App ID must have enabled
+// first.
 IMMERSE_V2_ENTITLEMENTS = Config/ImmerseV2.entitlements

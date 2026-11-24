@@ -5,10 +5,39 @@
 // no Account is a short-lived guest token for one event, passed as an argument (open check OC-4, section 9.2): the
 // token is random, only its hash is stored, and it names one guest identity in one event, so it can act for nobody
 // else and stops working the moment its session row is deleted (a removed guest, Delete Guest Identity).
+import { v } from "convex/values";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { QueryCtx } from "../_generated/server";
-import { sha256Hex } from "./crypto";
+import { constantTimeEqual, sha256Hex } from "./crypto";
 import { refuse } from "./errors";
+import { isLive, phaseOf } from "./phase";
+
+// A guest identity's id and secret (section 9.2), for the few calls a guest makes before it holds a token: joining,
+// learning where it stands in an event, claiming, and deleting the identity.
+export const guestCredentials = v.object({ publicId: v.string(), secret: v.string() });
+export type GuestCredentials = { publicId: string; secret: string };
+
+const PUBLIC_ID = /^[A-Za-z0-9_-]{22,64}$/;
+const SECRET = /^[A-Za-z0-9_-]{43,128}$/;
+
+export function wellFormedCredentials({ publicId, secret }: GuestCredentials): boolean {
+  return PUBLIC_ID.test(publicId) && SECRET.test(secret);
+}
+
+// The guest identity the credentials prove, or null for a malformed id, an unknown one, or a wrong secret, which are
+// all answered the same.
+export async function identityForCredentials(
+  ctx: QueryCtx,
+  credentials: GuestCredentials,
+): Promise<Doc<"guestIdentities"> | null> {
+  if (!wellFormedCredentials(credentials)) return null;
+  const identity = await ctx.db
+    .query("guestIdentities")
+    .withIndex("by_public_id", (q) => q.eq("publicId", credentials.publicId))
+    .unique();
+  if (identity === null) return null;
+  return constantTimeEqual(identity.secretVerifier, await sha256Hex(credentials.secret)) ? identity : null;
+}
 
 export async function signedInIdentity(ctx: QueryCtx) {
   const identity = await ctx.auth.getUserIdentity();
@@ -84,8 +113,13 @@ export async function membershipOf(
 // An event that still exists: not gone at its 12-month end and not deleted by its Host.
 export async function liveEvent(ctx: QueryCtx, eventId: Id<"events">): Promise<Doc<"events">> {
   const event = await ctx.db.get(eventId);
-  if (event === null || event.state === "gone" || event.state === "deleted") refuse("eventGone");
+  if (event === null || !isLive(phaseOf(event, Date.now()))) refuse("eventGone");
   return event;
+}
+
+// Whether the caller is the event's Host. A deleted Host's event has none (V2-FR-06).
+export function isHostOf(event: Doc<"events">, caller: Caller): boolean {
+  return caller.kind === "account" && event.hostAccountId !== undefined && event.hostAccountId === caller.account._id;
 }
 
 // A member who may still send pictures they took: joined, or left on their own (V2-FR-56: their pictures stay).
@@ -98,4 +132,9 @@ export function maySendPictures(membership: Doc<"memberships"> | null): membersh
 // included (V2-FR-43, V2-FR-56).
 export function maySeeAlbum(membership: Doc<"memberships"> | null): membership is Doc<"memberships"> {
   return maySendPictures(membership);
+}
+
+// Why a caller without a current place is refused: removed by the Host, or never in the event.
+export function refusalForPlace(membership: Doc<"memberships"> | null): "removedFromEvent" | "notAMember" {
+  return membership?.status === "removed" ? "removedFromEvent" : "notAMember";
 }

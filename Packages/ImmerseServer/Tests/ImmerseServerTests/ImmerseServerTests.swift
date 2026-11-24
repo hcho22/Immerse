@@ -48,7 +48,7 @@ final class ConvexHTTPClientTests: XCTestCase {
     func testRefusalsCarryTheServersCode() async {
         let session = StubNetwork.session { _ in refusal("sealed") }
         let client = ConvexHTTPClient(deploymentURL: deployment, session: session) { nil }
-        await assertThrows(.refused(.sealed)) { _ = try await client.call(.action, "reads:readAddresses", [:]) }
+        await assertThrows(.refused(.sealed)) { _ = try await client.call(.action, "reads:album", [:]) }
     }
 
     func testARejectedSessionTokenIsUnauthenticated() async {

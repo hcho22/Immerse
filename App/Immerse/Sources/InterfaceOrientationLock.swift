@@ -1,6 +1,7 @@
 import NativeAdapters
 import SwiftUI
 import UIKit
+import UserNotifications
 
 /// The interface orientations the app lets its window take. Screens turn with the iPhone, as the Info.plist allows,
 /// except the shooting screen and Darkroom, which keep their portrait layouts while the iPhone is held sideways.
@@ -12,6 +13,8 @@ final class ImmerseAppDelegate: NSObject, UIApplicationDelegate {
         _ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         MainActor.assumeIsolated { OrbitAppearance.apply() }
+        // A tap on Group Films' one alert, "Your Film is ready" (v2 V2-FR-70), opens its event.
+        UNUserNotificationCenter.current().delegate = self
         return true
     }
 
@@ -28,6 +31,19 @@ final class ImmerseAppDelegate: NSObject, UIApplicationDelegate {
         _ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?
     ) -> UIInterfaceOrientationMask {
         MainActor.assumeIsolated { Self.supportedOrientations }
+    }
+}
+
+extension ImmerseAppDelegate: UNUserNotificationCenterDelegate {
+    nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
+        guard let eventID = response.notification.request.content.userInfo["eventId"] as? String else { return }
+        await MainActor.run { GroupFilmAlertRouter.shared.open(eventID: eventID) }
+    }
+
+    /// While Immerse is open the alert still shows, so the person knows the album is ready.
+    nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                            willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
+        [.banner, .sound]
     }
 }
 

@@ -9,9 +9,8 @@ extension EnvironmentValues {
     @Entry var hosting: HostingSession? = nil
 }
 
-/// Group Film under Start a Film (V2-FR-02, V2-FR-10): the one place that asks a signed-out person to sign in. Stage 1
-/// builds the way in: the age 13-or-over confirmation, then Sign in with Apple, Google or email through Clerk, then the
-/// Account. Creating the Group Film itself is Stage 2.
+/// Group Film under Start a Film (V2-FR-02, V2-FR-10): the one place that asks a signed-out person to sign in: the age
+/// 13-or-over confirmation, then Sign in with Apple, Google or email through Clerk, then the Account, then Load Film.
 struct GroupFilmEntry: View {
     var body: some View {
         NavigationLink { GroupFilmGate() } label: {
@@ -352,22 +351,11 @@ private struct CreatingAccount: View {
     }
 }
 
-/// Signed in, with an Account. Stage 2 puts creating the Group Film here.
+/// Signed in, with an Account: Load Film for the Group Film (v2 Stage 2).
 private struct GroupFilmSignedIn: View {
     let displayName: String
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                Text("Signed in as \(displayName)").orbitFont(.title).accessibilityAddTraits(.isHeader)
-                    .accessibilityIdentifier("hosting-signed-in")
-                Text("Creating a Group Film, with its link and QR code, comes in a later update. Your personal Films work as always.")
-                    .orbitFont(.body).foregroundStyle(Orbit.body).fixedSize(horizontal: false, vertical: true)
-                Text("Manage your Account in Settings.").orbitFont(.footnote).foregroundStyle(Orbit.label)
-            }
-            .foregroundStyle(.white)
-            .padding(.horizontal, Orbit.gutter).padding(.vertical, 16)
-            .frame(maxWidth: .infinity, alignment: .leading)
-        }
+        GroupFilmLoadView()
     }
 }

@@ -89,7 +89,7 @@ final class HostingUITests: ScreenTestCase {
         code.tap()
         code.typeText("424242")
         app.buttons["email-verify"].tap()
-        XCTAssertTrue(app.staticTexts["hosting-signed-in"].exists(within: 10), "Signed in, with an Account")
+        XCTAssertTrue(app.textFields["group-title"].exists(within: 10), "Signed in, with an Account, at Load Film")
         keep(app, "Hosting-signed-in")
         app.navigationBars["Group Film"].buttons.element(boundBy: 0).tap()
         app.buttons["Cancel"].tap()

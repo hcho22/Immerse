@@ -4,6 +4,10 @@
 // Server.local.xcconfig (ignored by git) and fills it in.
 IMMERSE_CONVEX_URL =
 IMMERSE_CLERK_PUBLISHABLE_KEY =
+// The host of a Group Film's link, https://<host>/j/<code>, and the support address reports go to (v2 Stage 2). Empty
+// here, so a build from the repository alone has neither.
+IMMERSE_JOIN_HOST =
+IMMERSE_SUPPORT_ADDRESS =
 // The entitlements a v2 build needs: Sign in with Apple, push and Declared Age Range. Empty here, so a v1 build signs
 // with none of them and needs no change to the App ID.
 IMMERSE_V2_ENTITLEMENTS =

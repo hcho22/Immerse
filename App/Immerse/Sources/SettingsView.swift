@@ -8,6 +8,7 @@ struct SettingsView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(JournalModel.self) private var model
     @Environment(\.hosting) private var hosting
+    @Environment(\.groupFilms) private var groupFilms
 
     var body: some View {
         NavigationStack {
@@ -33,6 +34,7 @@ struct SettingsView: View {
                     }
                     #endif
                     if let hosting { AccountSettingsSection(hosting: hosting) }
+                    if let groupFilms { GroupFilmsSettingsSection(groupFilms: groupFilms) }
                     OrbitSectionLabel("Privacy").padding(.leading, 4).padding(.top, 8)
                     privacy
                     OrbitSectionLabel("Films").padding(.leading, 4).padding(.top, 8)
@@ -188,6 +190,36 @@ struct OrbitSwitchRow: View {
             .orbitRow()
             Text(note).orbitFont(.footnote).foregroundStyle(Orbit.label).padding(.horizontal, 4)
                 .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+}
+
+/// Group Films in Settings (v2 PRD V2-FR-54, V2-FR-57): the support address reports also go to, and Delete Guest Identity
+/// for a guest who never signed in. Shown only where the app has a server.
+private struct GroupFilmsSettingsSection: View {
+    let groupFilms: GroupFilms
+    @State private var confirmDelete = false
+
+    var body: some View {
+        if groupFilms.supportAddress != nil || groupFilms.hasGuestIdentity {
+            VStack(alignment: .leading, spacing: 12) {
+                OrbitSectionLabel("Group Films").padding(.leading, 4).padding(.top, 8)
+                if let address = groupFilms.supportAddress {
+                    Text("Reports and questions about Group Films go to \(address). Immerse's support answers within 48 hours.")
+                        .orbitFont(.body).foregroundStyle(Orbit.body).fixedSize(horizontal: false, vertical: true)
+                        .orbitRow()
+                        .accessibilityIdentifier("support-address")
+                }
+                if groupFilms.hasGuestIdentity {
+                    Button("Delete Guest Identity") { confirmDelete = true }
+                        .buttonStyle(OrbitPillStyle(kind: .outline, minHeight: 56, fullWidth: true))
+                        .accessibilityIdentifier("delete-guest-identity")
+                }
+            }
+            .orbitConfirmation(isPresented: $confirmDelete, symbol: "person.crop.circle.badge.xmark", title: "Delete Guest Identity?",
+                               message: GroupFilmsCopy.deleteGuestIdentity, confirm: "Delete", identifier: "confirm-delete-guest-identity") {
+                Task { await groupFilms.deleteGuestIdentity() }
+            }
         }
     }
 }

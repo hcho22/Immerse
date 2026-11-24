@@ -1,13 +1,16 @@
-// Fixtures for Stage 1's proofs, before Stage 2 builds Load Film and joining: a proof event an Account shoots in,
-// a guest with no Account in it, and the reveal. They are internal functions, which no app or browser can call;
-// they run only from the Convex dashboard, `npx convex run` with the deployment's key, or the tests. Stage 2
-// replaces them with Load Film, Join and the timed reveal.
+// Fixtures for the server proofs and the tests: a proof event an Account shoots in, a guest with no Account in it,
+// removing that guest, and moving the event's End Time and reveal to now. They are internal functions, which no app or
+// browser can call; they run only from the Convex dashboard, `npx convex run` with the deployment's key, or the tests.
+// The app itself uses Load Film (`hosting:create`), joining (`joining:join`) and the timed reveal (schedule.ts); these
+// reach the same code underneath.
 import { v } from "convex/values";
 import { internalMutation, internalQuery } from "./_generated/server";
 import { ensureGuestIdentity } from "./guests";
-import { removePicture } from "./deletion";
-
-const DAY_MS = 24 * 60 * 60 * 1000;
+import { removeMember } from "./hosting";
+import { DAY_MS } from "./lib/config";
+import { insertEvent, scheduleSteps } from "./lib/events";
+import { CameraPackageVersion } from "./lib/versions";
+import { endNow, revealNow } from "./schedule";
 
 // An Account's id, for running the push test against it (`push:sendTestAlert`).
 export const accountIdForClerkUser = internalQuery({
@@ -21,27 +24,30 @@ export const accountIdForClerkUser = internalQuery({
   },
 });
 
-// A Disposable proof event the Account hosts and holds a Roll in, open for seven days and revealing at its end.
+// A Disposable proof event the Account hosts and holds a Roll in, open for seven days and revealing at its end. Its
+// Rolls are set aside outside the balance, so a proof never spends a Host's free Rolls.
 export const createProofEvent = internalMutation({
-  args: { clerkUserId: v.string(), title: v.optional(v.string()) },
-  handler: async (ctx, { clerkUserId, title }) => {
+  args: { clerkUserId: v.string(), title: v.optional(v.string()), rolls: v.optional(v.number()) },
+  handler: async (ctx, { clerkUserId, title, rolls }) => {
     const account = await ctx.db
       .query("accounts")
       .withIndex("by_clerk_user", (q) => q.eq("clerkUserId", clerkUserId))
       .unique();
     if (account === null) throw new Error("No Account for that Clerk user");
     const now = Date.now();
-    const endsAt = now + 7 * DAY_MS;
-    const eventId = await ctx.db.insert("events", {
-      title: title ?? "Stage 1 proof",
-      hostAccountId: account._id,
-      camera: "disposable",
-      exposuresPerRoll: 27,
-      endsAt,
-      revealsAt: endsAt,
-      state: "open",
-      createdAt: now,
-    });
+    const eventId = await insertEvent(
+      ctx,
+      {
+        title: title ?? "Proof event",
+        hostAccountId: account._id,
+        camera: "disposable",
+        treatmentVersion: CameraPackageVersion,
+        rolls: rolls ?? 10,
+        endsAt: now + 7 * DAY_MS,
+        revealDelayMs: 0,
+      },
+      now,
+    );
     await ctx.db.insert("memberships", {
       eventId,
       accountId: account._id,
@@ -50,6 +56,7 @@ export const createProofEvent = internalMutation({
       status: "joined",
       joinedAt: now,
     });
+    await ctx.db.patch(eventId, { rollsTaken: 1 });
     return { eventId };
   },
 });
@@ -72,11 +79,13 @@ export const addProofGuest = internalMutation({
       status: "joined",
       joinedAt: Date.now(),
     });
+    const event = (await ctx.db.get(eventId))!;
+    await ctx.db.patch(eventId, { rollsTaken: event.rollsTaken + 1 });
     return { membershipId };
   },
 });
 
-// The Host's removal of a guest, as Stage 2 will build it (V2-FR-53): their tokens end, their pictures go.
+// The Host's removal of a guest (V2-FR-53): their tokens end, their pictures go.
 export const removeProofGuest = internalMutation({
   args: { eventId: v.id("events"), publicId: v.string() },
   handler: async (ctx, { eventId, publicId }) => {
@@ -89,42 +98,32 @@ export const removeProofGuest = internalMutation({
       .query("memberships")
       .withIndex("by_event_and_guest_identity", (q) => q.eq("eventId", eventId).eq("guestIdentityId", identity._id))
       .unique();
-    if (membership === null) return;
-    const now = Date.now();
-    for (const session of await ctx.db
-      .query("guestSessions")
-      .withIndex("by_guest_identity", (q) => q.eq("guestIdentityId", identity._id))
-      .collect()) {
-      if (session.eventId === eventId) await ctx.db.delete(session._id);
-    }
-    for (const picture of await ctx.db
-      .query("pictures")
-      .withIndex("by_shooter_and_exposure", (q) => q.eq("membershipId", membership._id))
-      .collect()) {
-      await removePicture(ctx, picture, now);
-    }
-    await ctx.db.patch(membership._id, { status: "removed" });
+    if (membership !== null) await removeMember(ctx, membership, Date.now());
   },
 });
 
-// Ends shooting now, as the End Time would.
+// Ends shooting now, as the End Time would, with the reveal an hour or the Reveal Delay later, whichever is longer.
 export const endProofEvent = internalMutation({
   args: { eventId: v.id("events") },
   handler: async (ctx, { eventId }) => {
     const event = await ctx.db.get(eventId);
-    if (event === null || event.state !== "open") return;
+    if (event === null || event.state === "revealed" || event.state === "gone" || event.state === "deleted") return;
     const now = Date.now();
-    await ctx.db.patch(eventId, { state: "ended", endsAt: Math.min(event.endsAt, now) });
+    if (event.endsAt <= now) return;
+    await ctx.db.patch(eventId, { endsAt: now, revealsAt: now + Math.max(event.revealDelayMs, 60 * 60_000) });
+    await endNow(ctx, (await ctx.db.get(eventId))!, now);
+    await scheduleSteps(ctx, eventId, now);
   },
 });
 
-// Reveals the event now, as the scheduled reveal will.
+// Reveals the event now, as the scheduled reveal would.
 export const revealProofEvent = internalMutation({
   args: { eventId: v.id("events") },
   handler: async (ctx, { eventId }) => {
     const event = await ctx.db.get(eventId);
     if (event === null || event.state === "revealed" || event.state === "gone" || event.state === "deleted") return;
     const now = Date.now();
-    await ctx.db.patch(eventId, { state: "revealed", endsAt: Math.min(event.endsAt, now), revealsAt: now });
+    await ctx.db.patch(eventId, { endsAt: Math.min(event.endsAt, now), revealsAt: now });
+    await revealNow(ctx, eventId, now);
   },
 });

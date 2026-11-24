@@ -40,6 +40,8 @@ public enum PersistenceError: Error, Equatable {
     case assembledMoviePlanMismatch(expected: [Int], actual: [Int])
     case missingDevelopedClip(Int)
     case clipChecksumMismatch(Int)
+    /// The operation is only for an event Roll, and this is a personal Film (v2 PRD V2-FR-72).
+    case notAnEventRoll
 }
 
 public final class FilmRepository {
@@ -708,7 +710,7 @@ public final class FilmRepository {
         }
     }
 
-    private func finishPendingDeletions(filmID: UUID? = nil) throws {
+    func finishPendingDeletions(filmID: UUID? = nil) throws {
         let roots = [mediaRootURL, rootURL.appendingPathComponent("Staging"), rootURL.appendingPathComponent("Work")]
             .map { $0.resolvingSymlinksInPath().path + "/" }
         try attemptEach(database.pendingDeletionPaths(filmID: filmID)) { path in

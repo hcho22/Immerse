@@ -49,18 +49,27 @@ final class DebugHostSignIn: HostSignIn {
     }
 }
 
-/// The server functions the hosting screens call, held in memory.
+/// The server functions the hosting screens call, held in memory, and Group Films' event functions where a screen test
+/// asked for them (`DebugGroupFilms`).
 final class DebugHostingServer: ServerFunctions {
     private let state: Mutex<(session: Bool, accountName: String?)>
+    private let eventBackend = Mutex<DebugEventBackend?>(nil)
 
     init(accountName: String?) {
         state = Mutex((false, accountName))
     }
 
+    var events: DebugEventBackend? {
+        get { eventBackend.withLock { $0 } }
+        set { eventBackend.withLock { $0 = newValue } }
+    }
+
     func setSession(_ session: Bool) { state.withLock { $0.session = session } }
 
     func call(_ kind: FunctionKind, _ path: String, _ args: [String: JSONValue]) async throws(ServerError) -> JSONValue {
-        try state.withLock { (state) throws(ServerError) -> JSONValue in
+        let (session, accountName) = state.withLock { ($0.session, $0.accountName) }
+        if let events, let reply = try events.call(path, args, signedIn: session, accountName: accountName) { return reply }
+        return try state.withLock { (state) throws(ServerError) -> JSONValue in
             guard state.session else {
                 if path == "accounts:me" { return ["state": "signedOut"] }
                 throw .refused(.unauthenticated)

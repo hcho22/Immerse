@@ -324,6 +324,8 @@ struct PhotoView: View {
     let filmID: UUID
     let sequence: Int
     let isInstantReveal: Bool
+    /// The Group Film whose Roll this print belongs to (v2); nil for a personal Film.
+    @Environment(\.eventShooting) private var eventShooting
     @State private var shownSequence: Int
     @State private var editing = false
     /// Counts the Darkroom's closings, by Save or Cancel, each of which shows the print whole.
@@ -374,7 +376,9 @@ struct PhotoView: View {
                 if let error { OrbitNote(.error, error).padding(.horizontal, Orbit.gutter).padding(.top, 8) }
             }
             .safeAreaBar(edge: .bottom) {
-                // Darkroom, white, and Discard, as labelled round actions (H03).
+                // Darkroom, white, and Discard, as labelled round actions (H03). An event Roll's print has neither: event
+                // pictures are never edited in Immerse (v2 PRD section 2.2), and its shooter withdraws rather than discards.
+                if eventShooting == nil {
                 HStack(spacing: 48) {
                     Button("Darkroom", systemImage: "slider.horizontal.3") { editing = true }
                         #if DEBUG
@@ -390,6 +394,7 @@ struct PhotoView: View {
                 }
                 .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
                 .padding(.top, 8)
+                }
             }
             .background(Color.black.ignoresSafeArea())
             // The photo view is black as the Photos app is: its progress and errors draw for that.

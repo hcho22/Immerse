@@ -1307,4 +1307,4 @@ Decided by the captain on 2026-11-22 (v2 PRD, version 1.1).
 
 Interpret the ADR with the v2 PRD, version 1.1: V2-FR-12, V2-FR-25, V2-FR-26, V2-FR-40, V2-FR-43, V2-FR-53, V2-FR-56, V2-FR-62 and V2-FR-63, and its section 16.
 The parked rules it supersedes stay in the domain model's section on the superseded Group design and in PRD 2.1 section 8 as history.
-The open question it leaves open, OQ-12, is the v2 PRD's.
+The open question it left open, OQ-12, is the v2 PRD's; the captain answered it on 2026-11-23 (PRD version 1.2): reports go to a configurable support address, and Immerse's operator answers support within 48 hours.

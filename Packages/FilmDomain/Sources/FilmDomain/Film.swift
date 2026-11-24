@@ -395,6 +395,30 @@ public struct Film: Codable, Equatable, Identifiable, Sendable {
         }
     }
 
+    /// Retires a capture of an event Roll, sealed or revealed, to a numbered placeholder (v2 PRD V2-FR-34, V2-FR-50): its
+    /// exposure stays used, and nothing of it is shown again. Only an event Roll's store calls it
+    /// (`FilmRepository.retireEventCapture`); a personal Film discards only revealed captures.
+    public mutating func retireEventCapture(sequenceNumber: Int) throws {
+        guard let index = captures.firstIndex(where: { $0.sequenceNumber == sequenceNumber }) else {
+            throw FilmDomainError.captureNotFound
+        }
+        captures[index].revealState = .discardedPlaceholder
+    }
+
+    /// Marks an event Roll's first exposures used, as numbered placeholders, when its Film is made on a phone for a Roll
+    /// the server already holds exposures of (v2 PRD V2-FR-04, V2-FR-56): its next capture takes the next exposure, and
+    /// none comes back. Only an event Roll's store calls it (`FilmRepository.createEventRoll`).
+    public mutating func recordUsedEventExposures(_ used: Int, at date: Date) throws {
+        guard camera.medium == .photo, case let .exposures(limit) = camera.capacity else {
+            throw FilmDomainError.wrongCameraMedium
+        }
+        while captures.count < min(used, limit) {
+            captures.append(CaptureRecord(sequenceNumber: captures.count + 1, kind: .photo, savedAt: date,
+                                          revealState: .discardedPlaceholder))
+        }
+        completeIfCapacityReached()
+    }
+
     private func ensureCaptureOpen() throws {
         guard completionState == .open else {
             throw FilmDomainError.captureAlreadyComplete

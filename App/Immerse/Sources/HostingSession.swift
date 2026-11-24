@@ -44,6 +44,21 @@ final class HostingSession {
     var problem: String?
     /// Said once after Delete Account succeeds.
     var accountDeletedNotice = false
+    /// Called once Delete Account has succeeded on the server, so Group Films can delete what waits on this phone for the
+    /// Account's places (v2 PRD V2-FR-05).
+    @ObservationIgnored var accountDeleted: (@MainActor () -> Void)?
+
+    /// Whether a Host is signed in with an Account.
+    var isSignedIn: Bool {
+        if case .signedIn = phase { return true }
+        return false
+    }
+
+    /// The signed-in Host's display name.
+    var displayName: String? {
+        if case .signedIn(let name) = phase { return name }
+        return nil
+    }
 
     let signIn: HostSignIn
     private let accounts: AccountServer
@@ -158,6 +173,7 @@ final class HostingSession {
     func deleteAccount() async {
         let deleted = await run { try await self.accounts.deleteAccount() }
         guard deleted else { return }
+        accountDeleted?()
         try? await signIn.signOut()
         settle(.signedOut)
         accountDeletedNotice = true

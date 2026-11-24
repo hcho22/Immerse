@@ -26,6 +26,8 @@ export const READ_ADDRESS_SECONDS = 60;
 // object whole inside an action, whose memory is bounded.
 export const MAX_PICTURE_BYTES = 25 * 1024 * 1024;
 export const PICTURE_CONTENT_TYPES = ["image/jpeg", "image/heic"] as const;
+// The viewing copy the phone makes beside each picture is always a JPEG (section 9.4).
+export const VIEW_CONTENT_TYPE = "image/jpeg";
 
 export function storageConfig(): StorageConfig {
   const read = (name: string) => {

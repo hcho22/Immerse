@@ -30,6 +30,7 @@ beforeAll(async () => {
     R2_ACCESS_KEY_ID: storage.accessKeyId,
     R2_SECRET_ACCESS_KEY: storage.secretAccessKey,
     R2_REGION: storage.region,
+    JOIN_CODE_SECRET: randomBytes(32).toString("base64url"),
     ...apns.config,
   });
   api = httpApi(backend);
@@ -112,11 +113,15 @@ describe("Stage 1 on Convex's local backend", () => {
 
   test("it cannot be read without a grant, and a grant is given only after the reveal", async () => {
     const maya = api.as(clerk.sessionToken("user_maya"));
-    expect(await maya.action("reads:readAddresses", { eventId })).toMatchObject({ ok: false, code: "sealed" });
+    expect(await maya.action("reads:album", { eventId })).toMatchObject({ ok: false, code: "sealed" });
     expect((await api.admin.mutation("proofs:revealProofEvent", { eventId })).ok).toBe(true);
-    const grant = await maya.action("reads:readAddresses", { eventId });
+    const grant = await maya.action("reads:album", { eventId });
     expect(grant.ok).toBe(true);
-    const addresses = (grant as { value: Array<{ url: string; sha256: string; exposureNumber: number }> }).value;
+    const entries = (grant as { value: { entries: Array<{ url: string; sha256: string; exposureNumber: number; shooterName: string }> } })
+      .value.entries;
+    // Maya's two pictures, and the one the Swift client's guest sent.
+    expect(entries.map((a) => a.shooterName).sort()).toEqual(["Jo", "Maya", "Maya"]);
+    const addresses = entries.filter((a) => a.shooterName === "Maya");
     expect(addresses.map((a) => a.exposureNumber).sort()).toEqual([1, 2]);
     const address = addresses.find((a) => a.exposureNumber === 1);
     const bytes = Buffer.from(await (await fetch(address!.url)).arrayBuffer());
@@ -141,7 +146,7 @@ describe("Stage 1 on Convex's local backend", () => {
 
   test("Delete Account removes the Host's pictures and Account, and deletes the Clerk user", async () => {
     const maya = api.as(clerk.sessionToken("user_maya"));
-    const objectUrl = (await maya.action("reads:readAddresses", { eventId })) as { value: Array<{ url: string }> };
+    const objectUrl = (await maya.action("reads:album", { eventId })) as { value: { entries: Array<{ url: string }> } };
     expect(await maya.action("deletion:deleteAccount")).toMatchObject({ ok: true, value: { deleted: true } });
     expect(clerk.deletions).toEqual(["user_maya"]);
     expect(await maya.query("accounts:me")).toMatchObject({ ok: true, value: { state: "noAccount" } });
@@ -152,7 +157,7 @@ describe("Stage 1 on Convex's local backend", () => {
     // Within a minute, the picture's media is gone from storage.
     let status = 0;
     for (let attempt = 0; attempt < 600 && status !== 404; attempt += 1) {
-      status = (await fetch(objectUrl.value[0]!.url)).status;
+      status = (await fetch(objectUrl.value.entries[0]!.url)).status;
       if (status !== 404) await new Promise((r) => setTimeout(r, 100));
     }
     expect(status).toBe(404);

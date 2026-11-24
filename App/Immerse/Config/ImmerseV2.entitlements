@@ -10,5 +10,9 @@
 	<string>development</string>
 	<key>com.apple.developer.declared-age-range</key>
 	<true/>
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:$(IMMERSE_JOIN_HOST)</string>
+	</array>
 </dict>
 </plist>
