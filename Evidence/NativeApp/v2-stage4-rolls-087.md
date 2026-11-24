@@ -60,6 +60,9 @@ All on a MacBook running macOS 26 with Xcode 26.5 and Node 24, on 2026-11-24.
 | `ImmerseTests/RollShopStoreKitTests` (Apple's local StoreKit testing) | **Not run here**: 5 tests | A bought pack carries the token, is credited once and finished only once the server holds it; one the server cannot confirm stays unfinished and is credited when the app runs again; Ask to Buy adds nothing until approved and nothing when declined; a failed purchase changes nothing; a refund reaches the server. They need StoreKit's local test session, which iOS 26.5 does not activate (Apple's known Code=3 issue); v1's `StoreKitSubscriptionTests` fail the same way on this Mac's iOS 26.5 simulator, and this Mac cannot download iOS 26.2. CI runs both on its iOS 26.2 billing simulator, and CI's run of this change is the check that counts |
 | `ImmerseUITests/RollsUITests` | 4 passed | The Host buys a pack and sees the balance and its history; Ask to Buy waits and the Rolls arrive once approved; a failed purchase changes nothing; Load Film offers Rolls and says when none are on sale |
 | `ImmerseUITests/HostingUITests`, `GroupFilmUITests` | 9 passed | Stages 1 to 3's screens beside the Rolls sheet: Settings' Account section, the Host's event page and Load Film |
+| The rest of `ImmerseTests`, StoreKit aside (above) | 161 hosted tests passed in all | v1's and Stages 1 to 3's hosted tests, `RollShopTests` among them, on this change |
+| `ImmerseClipUITests` (the App Clip in the simulator) | 6 passed | Stage 3's mini-app screens on the Group Film code this change touches, with nothing for sale in them |
+| `python3 -m unittest discover -s Scripts/Tests` | 85 passed | The scripts' own tests |
 | `Scripts/verify-release-excludes-testing-unlock.sh` | Passed | The Debug-only stand-ins, the Debug Roll store included, absent from Release |
 
 Screenshots of the Rolls sheet from that run are in [v2-stage4-rolls-087](v2-stage4-rolls-087).
