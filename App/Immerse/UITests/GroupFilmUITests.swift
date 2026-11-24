@@ -47,6 +47,49 @@ final class GroupFilmUITests: ScreenTestCase {
         keep(app, "GroupFilm-host-page")
     }
 
+    /// The view-only web album's switch (v2 Stage 3, V2-FR-47): absent before the reveal, off after it until the Host
+    /// turns it on, and it says that anyone with the link can then see the pictures.
+    func testTheHostSwitchesTheWebAlbumOnAfterTheRevealAndOffAgain() {
+        let app = app(hosting: "signedIn")
+        app.launch()
+        openCameraCatalog(app)
+        tapWhole(app, app.buttons["group-film"])
+        let title = app.textFields["group-title"]
+        XCTAssertTrue(title.exists(within: 10))
+        title.tap()
+        title.typeText("Garden Party")
+        let load = app.buttons["group-load"]
+        scrollUpUntilWhole(app, load)
+        tapWhole(app, load)
+        let confirm = app.buttons.matching(identifier: "confirm-group-load").firstMatch
+        XCTAssertTrue(confirm.exists(within: 5))
+        confirm.tap()
+        XCTAssertTrue(app.staticTexts["group-event-title"].exists(within: 10))
+        XCTAssertFalse(app.switches["group-web-album"].exists, "Before the reveal there is no album to share")
+        // Ending early reveals the album at once (V2-FR-40).
+        let end = app.buttons["group-end-early"]
+        scrollUpUntilWhole(app, end)
+        tapWhole(app, end)
+        let confirmEnd = app.buttons.matching(identifier: "confirm-end-early").firstMatch
+        XCTAssertTrue(confirmEnd.exists(within: 5))
+        confirmEnd.tap()
+        let webAlbum = app.switches["group-web-album"]
+        scrollUp(app) { webAlbum.exists }
+        XCTAssertTrue(webAlbum.exists(within: 10), "After the reveal the Host can share the album on the web")
+        scrollUpUntilWhole(app, webAlbum)
+        XCTAssertEqual(webAlbum.value as? String, "0", "Off unless the Host turns it on")
+        let note = app.staticTexts["group-web-album-note"]
+        XCTAssertTrue(note.label.hasPrefix("Off: the pictures are seen only by the people who joined."), note.label)
+        webAlbum.switches.firstMatch.exists ? webAlbum.switches.firstMatch.flipSwitch() : webAlbum.flipSwitch()
+        let on = NSPredicate(format: "label BEGINSWITH %@", "Anyone with the event's link can see and save the pictures on the web")
+        XCTAssertTrue(app.staticTexts.matching(on).firstMatch.exists(within: 10), "The switch says who can see the album")
+        XCTAssertEqual(webAlbum.value as? String, "1")
+        keep(app, "GroupFilm-web-album-on")
+        webAlbum.switches.firstMatch.exists ? webAlbum.switches.firstMatch.flipSwitch() : webAlbum.flipSwitch()
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Off: the pictures are seen only")).firstMatch.exists(within: 10))
+        XCTAssertEqual(webAlbum.value as? String, "0")
+    }
+
     func testAGuestJoinsByTheLinkWithANameAndOneTapAndIsNeverAskedToSignIn() {
         let app = app(hosting: "signedOut", link: "https://join.immerse.test/j/OpenEventCodeForTests0")
         app.launch()

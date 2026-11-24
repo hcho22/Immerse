@@ -77,6 +77,7 @@ final class DebugEventBackend: @unchecked Sendable {
         var generation = 1
         var deleted = false
         var revealed = false
+        var webAlbum = false
         var album: [JSONValue] = []
     }
 
@@ -183,6 +184,7 @@ final class DebugEventBackend: @unchecked Sendable {
             "startsAt": event.startsAt.map(JSONValue.number) ?? .null, "opensAt": .number(event.startsAt ?? event.createdAt),
             "endsAt": .number(event.endsAt), "revealDelayMs": .number(event.revealDelayMs), "revealsAt": .number(event.revealsAt),
             "albumEndsAt": .number(event.revealsAt + 365 * 86_400_000), "albumNotice": "none", "joiningPaused": .bool(event.paused),
+            "webAlbumOn": .bool(phase == "revealed" && event.webAlbum),
         ]
     }
 
@@ -234,7 +236,7 @@ final class DebugEventBackend: @unchecked Sendable {
                     "rolls": ["setAside": .number(Double(event.rollsSetAside)), "taken": .number(Double(event.rollsTaken)),
                               "free": .number(Double(event.rollsSetAside - event.rollsTaken)), "limit": 200],
                     "picturesArrived": .number(Double(state.members.filter { $0.eventID == event.id }.reduce(0) { $0 + $1.stored.count })),
-                    "guests": .array(guests), "reports": [],
+                    "guests": .array(guests), "reports": [], "webAlbum": .bool(event.webAlbum),
                 ])
             case "hosting:hosted":
                 return .array(state.events.values.filter { $0.hostName == accountName && signedIn }.map(summary))
@@ -260,6 +262,12 @@ final class DebugEventBackend: @unchecked Sendable {
                 state.events[args["eventId"]?.string ?? ""]?.revealsAt = now
                 state.events[args["eventId"]?.string ?? ""]?.revealed = true
                 return [:]
+            case "hosting:setWebAlbum":
+                guard let event = state.events[args["eventId"]?.string ?? ""] else { throw .refused(.notTheHost) }
+                let on = args["on"]?.bool ?? false
+                if on, !(event.revealed || Self.now >= event.revealsAt) { throw .refused(.notRevealed) }
+                state.events[event.id]?.webAlbum = on
+                return ["on": .bool(on)]
             case "hosting:rename":
                 state.events[args["eventId"]?.string ?? ""]?.title = args["title"]?.string ?? ""
                 return [:]

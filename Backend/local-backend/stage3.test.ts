@@ -6,7 +6,10 @@
 //
 // The stand-ins are not Cloudflare, Convex's cloud or a browser: Evidence/NativeApp says what only the real domain, the
 // real Worker and real browsers can show.
+import { execFile } from "node:child_process";
 import { createHash, randomBytes } from "node:crypto";
+import { resolve } from "node:path";
+import { promisify } from "node:util";
 import { afterAll, beforeAll, describe, expect, inject, test } from "vitest";
 import { AGENTS, unzip, words } from "../tests/support/web";
 import { type JoinPage, startJoinPage } from "./support/join-page";
@@ -79,7 +82,7 @@ describe("the join page and the web album in Cloudflare's runtime, on Convex's l
   test("an open event: an iPhone gets the way in, an Android phone and a computer the right message, and Apple its files", async () => {
     expect(await maya().mutation("accounts:createAccount", { displayName: "Maya", ageConfirmed: true, ageConfirmation: "birthMonthAndYear" })).toMatchObject({ ok: true });
     const created = await maya().mutation("hosting:create", {
-      requestId: randomBytes(16).toString("base64url"), title: "Ana & Leo", camera: "instant", rolls: 3,
+      requestId: randomBytes(16).toString("base64url"), title: "Ana & Leo", camera: "instant", rolls: 2,
       endsAt: Date.now() + 3_600_000, revealDelayMs: 3_600_000, treatmentVersion: "film-look-5",
     });
     expect(created.ok).toBe(true);
@@ -192,6 +195,40 @@ describe("the join page and the web album in Cloudflare's runtime, on Convex's l
     expect((await get(`/j/${joinCode}/album.zip`)).status).toBe(404);
     expect(await words(await get(`/j/${joinCode}`, AGENTS.android))).toContain("This event's pictures are not shared on the web.");
   }, 120_000);
+
+  test("a mini-app guest's place and waiting pictures go on from the full app, and the server holds each picture once", async () => {
+    // The hand-off on the phone's own Swift client and upload queue (Packages/ImmerseServer, HandOffLocalBackendTests),
+    // against this backend: an event of its own, with the one Roll the Host's free Rolls still hold.
+    const created = await maya().mutation("hosting:create", {
+      requestId: randomBytes(16).toString("base64url"), title: "Hand-off", camera: "disposable", rolls: 1,
+      endsAt: Date.now() + 3_600_000, revealDelayMs: 0, treatmentVersion: "film-look-5",
+    });
+    expect(created.ok).toBe(true);
+    const handOff = created.value as { eventId: string; joinCode: string };
+    let output: string;
+    try {
+      output = (
+        await promisify(execFile)(
+          "swift",
+          ["test", "--package-path", resolve(import.meta.dirname, "../../Packages/ImmerseServer"), "--filter", "HandOffLocalBackendTests"],
+          {
+            env: { ...process.env, IMMERSE_LOCAL_CONVEX_URL: backend.url, IMMERSE_LOCAL_HANDOFF_CODE: handOff.joinCode },
+            encoding: "utf8",
+            maxBuffer: 16 * 1024 * 1024,
+          },
+        )
+      ).stdout;
+    } catch (error) {
+      const failed = error as { stdout?: string; stderr?: string };
+      throw new Error(`The Swift hand-off test failed:\n${failed.stdout ?? ""}\n${failed.stderr ?? ""}`.slice(-6000));
+    }
+    expect(output).toMatch(/HandOffLocalBackendTests.*passed/);
+    expect(output).not.toMatch(/skipped/);
+    // The server's own record: three pictures in the event, no more.
+    expect(await maya().mutation("hosting:endEarly", { eventId: handOff.eventId })).toMatchObject({ ok: true });
+    const album = await maya().action("reads:album", { eventId: handOff.eventId });
+    expect((album.value as { entries: Array<{ shooterName: string }> }).entries.map((entry) => entry.shooterName)).toEqual(["Lee", "Lee", "Lee"]);
+  }, 900_000);
 
   test("one address opening links too fast is told to wait; the Worker without the deployment's secret shows nothing", async () => {
     const statuses: number[] = [];
