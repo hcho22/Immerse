@@ -13,3 +13,9 @@ IMMERSE_SUPPORT_ADDRESS = support@example.com
 // Sign in with Apple, push notifications, Declared Age Range and Associated Domains, which the App ID must have enabled
 // first.
 IMMERSE_V2_ENTITLEMENTS = Config/ImmerseV2.entitlements
+// The mini-app (v2 Stage 3; Backend/SETUP.md, step 1a). The App Group must be registered and enabled on both App IDs
+// first, and the App Clip's App ID must exist with its capabilities. Build the ImmerseWithClip scheme for the app with
+// the App Clip inside it; the Immerse scheme stays the app alone.
+IMMERSE_APP_GROUP = group.com.example.immerse
+IMMERSE_CLIP_ENTITLEMENTS = Config/ImmerseClip.entitlements
+IMMERSE_V2_WITH_CLIP_ENTITLEMENTS = Config/ImmerseV2WithClip.entitlements

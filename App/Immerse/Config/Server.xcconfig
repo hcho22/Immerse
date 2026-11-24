@@ -11,4 +11,12 @@ IMMERSE_SUPPORT_ADDRESS =
 // The entitlements a v2 build needs: Sign in with Apple, push and Declared Age Range. Empty here, so a v1 build signs
 // with none of them and needs no change to the App ID.
 IMMERSE_V2_ENTITLEMENTS =
+// The mini-app (v2 Stage 3). The App Group is the container the full app and the App Clip keep Group Films in, so a
+// mini-app guest's place, Roll and pictures are there when the full app is installed. The two entitlements files are
+// the App Clip's own and the full app's when the App Clip is embedded in it (the ImmerseWithClip scheme). All empty
+// here: a build from the repository alone has no App Group, signs with no entitlements, and its App Clip can open no
+// event.
+IMMERSE_APP_GROUP =
+IMMERSE_CLIP_ENTITLEMENTS =
+IMMERSE_V2_WITH_CLIP_ENTITLEMENTS =
 #include? "Server.local.xcconfig"

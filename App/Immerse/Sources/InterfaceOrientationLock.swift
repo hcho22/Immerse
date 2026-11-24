@@ -13,11 +13,14 @@ final class ImmerseAppDelegate: NSObject, UIApplicationDelegate {
         _ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         MainActor.assumeIsolated { OrbitAppearance.apply() }
+        #if !APPCLIP
         // A tap on Group Films' one alert, "Your Film is ready" (v2 V2-FR-70), opens its event.
         UNUserNotificationCenter.current().delegate = self
+        #endif
         return true
     }
 
+    #if !APPCLIP
     /// The device token for the push test (open check OC-7); asked for only from the Debug build's server checks.
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         MainActor.assumeIsolated { PushRegistration.shared.registered(deviceToken) }
@@ -26,6 +29,7 @@ final class ImmerseAppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         MainActor.assumeIsolated { PushRegistration.shared.failed(error) }
     }
+    #endif
 
     func application(
         _ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?
@@ -34,6 +38,8 @@ final class ImmerseAppDelegate: NSObject, UIApplicationDelegate {
     }
 }
 
+// The mini-app has no alert: its guests come back through the same link (v2 V2-FR-71).
+#if !APPCLIP
 extension ImmerseAppDelegate: UNUserNotificationCenterDelegate {
     nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
         guard let eventID = response.notification.request.content.userInfo["eventId"] as? String else { return }
@@ -46,6 +52,7 @@ extension ImmerseAppDelegate: UNUserNotificationCenterDelegate {
         [.banner, .sound]
     }
 }
+#endif
 
 @MainActor
 enum InterfaceOrientationLock {

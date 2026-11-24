@@ -50,10 +50,15 @@ public struct EventSummary: Codable, Equatable, Sendable {
     private let albumEndsAtMs: Double
     public let albumNotice: AlbumNotice
     public let joiningPaused: Bool
+    /// Whether the album is on the web now (V2-FR-47). Absent in what a phone kept before Stage 3, which reads as off.
+    private let webAlbumOn: Bool?
+
+    /// Whether the Host shares the revealed album on the web, where anyone with the link can see and save it.
+    public var isOnTheWeb: Bool { webAlbumOn ?? false }
 
     enum CodingKeys: String, CodingKey {
         case eventId, title, hostName, hostLeft, camera, filmStock, exposuresPerRoll, phase, revealDelayMs, albumNotice
-        case joiningPaused
+        case joiningPaused, webAlbumOn
         case startsAtMs = "startsAt", opensAtMs = "opensAt", endsAtMs = "endsAt", revealsAtMs = "revealsAt"
         case albumEndsAtMs = "albumEndsAt"
     }
@@ -191,8 +196,10 @@ public struct HostEventView: Decodable, Equatable, Sendable {
     public let picturesArrived: Int
     public let guests: [Guest]
     public let reports: [Report]
+    /// The Host's switch for the view-only web album (V2-FR-47), which shows the album only once the event has revealed.
+    public let webAlbum: Bool
 
-    enum CodingKeys: String, CodingKey { case joinCode, joinCodeGeneration, rolls, picturesArrived, guests, reports }
+    enum CodingKeys: String, CodingKey { case joinCode, joinCodeGeneration, rolls, picturesArrived, guests, reports, webAlbum }
 
     public init(from decoder: Decoder) throws {
         summary = try EventSummary(from: decoder)
@@ -203,6 +210,7 @@ public struct HostEventView: Decodable, Equatable, Sendable {
         picturesArrived = try container.decode(Int.self, forKey: .picturesArrived)
         guests = try container.decode([Guest].self, forKey: .guests)
         reports = try container.decode([Report].self, forKey: .reports)
+        webAlbum = try container.decodeIfPresent(Bool.self, forKey: .webAlbum) ?? false
     }
 }
 

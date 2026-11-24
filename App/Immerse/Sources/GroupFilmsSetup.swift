@@ -14,30 +14,38 @@ struct NoTrialStore: DeviceTrialStoring {
 
 @MainActor
 enum GroupFilmsSetup {
+    #if !APPCLIP
     /// Group Films, where the app has a hosting session (a server configuration, or a Debug stand-in); nil otherwise.
+    ///
+    /// They are kept in the folder the mini-app shares (`GroupFilmsFolder`), so a guest who joined in the mini-app finds
+    /// the same event, Roll and waiting pictures here, with the mini-app's guest identity read from the Keychain
+    /// (V2-FR-19). The full app marks the folder as its own, so a mini-app still open hands over instead of writing.
     static func make(hosting: HostingSession?) -> GroupFilms? {
         guard let hosting else { return nil }
         do {
-            let base = try FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil,
-                                                   create: true).appending(path: "GroupFilms", directoryHint: .isDirectory)
             #if DEBUG
-            if let debug = DebugGroupFilms.make(hosting: hosting, base: base) { return debug }
+            if let debug = DebugGroupFilms.make(hosting: hosting) { return debug }
             #endif
             let configuration = ServerConfiguration.main
-            return try make(hosting: hosting, base: base, identities: KeychainGuestIdentityStore(),
-                            joinHost: configuration?.joinHost, supportAddress: configuration?.supportAddress)
+            let folder = try GroupFilmsFolder.locate(appGroup: ServerConfiguration.appGroup(in: Bundle.main.infoDictionary ?? [:]))
+            if folder.isShared { try folder.markTakenOverByFullApp() }
+            return try make(hosting: hosting, folder: folder, identities: KeychainGuestIdentityStore(),
+                            miniAppIdentities: KeychainGuestIdentityStore.miniApp, joinHost: configuration?.joinHost,
+                            supportAddress: configuration?.supportAddress)
         } catch {
             return nil
         }
     }
+    #endif
 
-    static func make(hosting: HostingSession, base: URL, identities: any GuestIdentityStoring, joinHost: String?,
+    static func make(hosting: HostingSession, folder: GroupFilmsFolder, identities: any GuestIdentityStoring,
+                     miniAppIdentities: (any GuestIdentityStoring)? = nil, joinHost: String?,
                      supportAddress: String?) throws -> GroupFilms {
-        let rollsRoot = base.appending(path: "Rolls", directoryHint: .isDirectory)
+        let rollsRoot = folder.url.appending(path: "Rolls", directoryHint: .isDirectory)
         let rolls = try JournalModel(root: rollsRoot, trialStore: NoTrialStore(), subscriptions: nil)
-        let queue = try UploadQueue(directory: base.appending(path: "Uploads", directoryHint: .isDirectory))
+        let queue = try UploadQueue(directory: folder.url.appending(path: "Uploads", directoryHint: .isDirectory))
         return GroupFilms(server: EventServer(functions: hosting.functions), hosting: hosting, rolls: rolls, rollsRoot: rollsRoot,
-                          queue: queue, root: base, identities: identities, joinHost: joinHost, supportAddress: supportAddress,
-                          functions: hosting.functions)
+                          queue: queue, folder: folder, identities: identities, miniAppIdentities: miniAppIdentities,
+                          joinHost: joinHost, supportAddress: supportAddress, functions: hosting.functions)
     }
 }

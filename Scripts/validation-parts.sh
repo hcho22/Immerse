@@ -9,6 +9,7 @@
 # harness    the test targets of harness_probe
 # ui-text    text_size_suites of app_screen_test_target
 # ui-flows   every other suite of app_screen_test_target, then dark_suites again in dark appearance
+# mini-app   the App Clip's size against Apple's cap (Scripts/verify-app-clip-size.sh) and mini_app_screen_test_target
 
 mac_packages="FilmDomain MediaCatalog RenderFixtures RenderCore FilmPersistence NativeAdapters EntitlementCore FilmRuntime ImmerseServer"
 # The v2 backend (Backend/README.md): its Convex function tests against the local stand-ins, then the same functions
@@ -25,3 +26,7 @@ app_unit_test_target="ImmerseTests"
 app_screen_test_target="ImmerseUITests"
 text_size_suites="ContentSizeTests"
 dark_suites="JournalFlowTests MovieCapacityUITests FilmStockUITests LowStorageUITests HostingUITests"
+# The mini-app (v2 Stage 3): the App Clip's own scheme and its screen tests, whose sources are mini_app_screen_tests.
+mini_app_scheme="ImmerseClip"
+mini_app_screen_test_target="ImmerseClipUITests"
+mini_app_screen_tests="App/Immerse/ClipUITests"

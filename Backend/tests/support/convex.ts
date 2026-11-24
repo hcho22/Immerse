@@ -79,9 +79,11 @@ export async function readAddresses(
   return album.entries.filter((entry): entry is AlbumPicture => !entry.removed);
 }
 
-// Runs every queued storage deletion now.
+// Runs every queued storage deletion now. A drain the queue scheduled itself may already have claimed rows, which
+// this drain then skips, so it also waits for scheduled drains already running to settle theirs.
 export async function drainStorageDeletions(t: Backend) {
   await t.action(internal.storageQueue.drain, {});
+  await t.finishInProgressScheduledFunctions();
 }
 
 // Reads every row of every table, for checks that nothing names a deleted person.

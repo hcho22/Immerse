@@ -1,5 +1,5 @@
 {
-  /* The tests and the local-backend run; convex/tsconfig.json covers the functions. */
+  /* The tests, the local-backend run and the join page's Worker; convex/tsconfig.json covers the functions. */
   "compilerOptions": {
     "strict": true,
     "moduleResolution": "Bundler",
@@ -11,5 +11,5 @@
     "isolatedModules": true,
     "types": ["node", "vite/client"]
   },
-  "include": ["tests/**/*", "local-backend/**/*", "vitest.config.ts", "vitest.local-backend.config.ts"]
+  "include": ["tests/**/*", "local-backend/**/*", "worker/src/**/*", "vitest.config.ts", "vitest.local-backend.config.ts"]
 }

@@ -1,9 +1,10 @@
-# Setting up the real services for v2 Stages 1 and 2
+# Setting up the real services for v2 Stages 1 to 3
 
-This is the list of what the captain creates, in the order to create it, before Stages 1 and 2 can be proved on iPhones and the real services ([the v2 PRD](../2026-09-29-film-camera-experience-v1/2026-11-22-film-camera-experience-v2-prd.md), section 12).
+This is the list of what the captain creates, in the order to create it, before Stages 1 to 3 can be proved on iPhones and the real services ([the v2 PRD](../2026-09-29-film-camera-experience-v1/2026-11-22-film-camera-experience-v2-prd.md), section 12).
 Nothing in it has been created: no account, project, deployment, bucket, application, key or certificate exists for Immerse's server yet.
 Every value below goes into the Convex deployment's environment or the untracked `App/Immerse/Config/Server.local.xcconfig`, never into the repository.
-`Backend/.env.example` and `App/Immerse/Config/Server.local.xcconfig.example` hold placeholders only.
+`Backend/.env.example`, `App/Immerse/Config/Server.local.xcconfig.example` and `Backend/worker/wrangler.example.jsonc` hold placeholders only.
+Stage 3 adds steps 1a (the App Clip's identifiers), 4a (the join page's Worker), the Worker's secret in step 5, the mini-app's lines in step 7 and step 9 (the App Clip experience); Stages 1 and 2 can be proved without them.
 
 Each step names the values it produces and where they go.
 Where a vendor's dashboard has moved since 2026-11-22, the vendor's own page linked in the step is the authority.
@@ -31,6 +32,21 @@ Where a vendor's dashboard has moved since 2026-11-22, the vendor's own page lin
    Keep the `.p8` file out of the repository and every shared folder.
 3. Associated Domains carry a Group Film's link, `https://<join host>/j/<code>`, into the full app (V2-FR-15, V2-FR-19).
    The entitlement claims `applinks:<join host>` from the build setting `IMMERSE_JOIN_HOST` (step 7), and the join host serves Apple's association file (step 4, item 6).
+
+## 1a. Apple Developer: the App Clip and the App Group (Stage 3)
+
+The mini-app is an App Clip of the full app (V2-FR-19).
+It needs identifiers of its own, which only the account's owner can create; nothing in the repository creates them.
+
+1. Register an **App Group**, such as `group.<the operator's reverse domain>.immerse`; it is `IMMERSE_APP_GROUP`.
+   The full app and the App Clip keep Group Films in its container, so a mini-app guest's place, Roll and pictures are there when the full app is installed.
+2. Register the App Clip's App ID, `com.immerse.FilmJournal.Clip`, as an App Clip of `com.immerse.FilmJournal`, with **On Demand Install Capable** (Xcode's name for the App Clip capability), **Associated Domains** and **App Groups**, and add the App Group to it.
+3. On the full app's App ID `com.immerse.FilmJournal`, enable **App Groups** and add the same group.
+4. The entitlements are in the repository: `App/Immerse/Config/ImmerseClip.entitlements` for the App Clip (`appclips:<join host>`, the App Group, and its parent application), and `App/Immerse/Config/ImmerseV2WithClip.entitlements` for the full app when the App Clip is inside it (Stage 1 and 2's entitlements, `appclips:<join host>` beside `applinks:<join host>`, the App Group, and the App Clip it is associated with).
+   The association between the two is what lets the full app read the guest identity the App Clip kept in the Keychain ([Apple: sharing data between your App Clip and your full app](https://developer.apple.com/documentation/appclip/sharing-data-between-your-app-clip-and-your-full-app)).
+5. The App Clip links no sign-in SDK, asks for no notifications and has no in-app purchase; its Info.plist asks only for the camera.
+6. Build the **ImmerseWithClip** scheme for the app with the App Clip inside it, which is what is archived for TestFlight and the App Store; the **Immerse** scheme stays the app alone, and the **ImmerseClip** scheme runs the App Clip by itself from Xcode with a link in `_XCAppClipURL`.
+7. Before the first submission, read the App Clip's size from Xcode's App Thinning Size Report on a signed export (manual scenario J10); `Scripts/verify-app-clip-size.sh` holds the unsigned figure under its budget in CI.
 
 ## 2. Convex: the project and its deployment
 
@@ -66,16 +82,36 @@ Where a vendor's dashboard has moved since 2026-11-22, the vendor's own page lin
 4. Create an R2 API token with **Object Read & Write** on this bucket alone.
    It produces `R2_ACCESS_KEY_ID` and `R2_SECRET_ACCESS_KEY`; the account's S3 endpoint, `https://<account id>.r2.cloudflarestorage.com`, is `R2_ENDPOINT`.
    `R2_BUCKET` is `immerse-pictures` and `R2_REGION` is `auto`.
-5. The join page and web album Worker are Stage 3.
+5. The join page and web album Worker are step 4a.
 6. **The join host (Stage 2).** Choose the host a Group Film's link uses, a domain or subdomain the operator controls, such as `join.<the operator's domain>`; it is `IMMERSE_JOIN_HOST`.
-   Until Stage 3's Worker serves the join page there, the host serves only Apple's association file, at `https://<join host>/.well-known/apple-app-site-association`, as JSON over HTTPS with no redirect:
+   Until the Worker of step 4a serves the join page there, the host serves only Apple's association file, at `https://<join host>/.well-known/apple-app-site-association`, as JSON over HTTPS with no redirect:
 
    ```json
    { "applinks": { "details": [ { "appIDs": ["<team id>.com.immerse.FilmJournal"], "components": [ { "/": "/j/*" } ] } ] } }
    ```
 
    A Cloudflare Worker or Pages site on the operator's zone can serve it; Apple's CDN fetches it when the app is installed ([Apple: supporting associated domains](https://developer.apple.com/documentation/xcode/supporting-associated-domains)).
-   Until Stage 3, the link opened on a device without Immerse finds no page there; Stage 2's guests install the full app first.
+   Until step 4a, the link opened on a device without Immerse finds no page there; Stage 2's guests install the full app first.
+
+## 4a. Cloudflare: the join page and the web album (Stage 3)
+
+The join host is served by one Worker, `Backend/worker` (V2-FR-15, V2-FR-18, V2-FR-47).
+It shows what a link shows in a browser, the web album while the Host shares it, and Apple's association file, which it makes from its configuration and so replaces the hand-made file of step 4.
+It holds no credential for the picture bucket: it asks the Convex deployment for every page and every picture, and Convex signs a one-minute read address for a picture only while its event is revealed and its web album is on.
+The bucket of step 4 stays private, with no binding to the Worker.
+
+1. Copy `Backend/worker/wrangler.example.jsonc` to `Backend/worker/wrangler.jsonc` (git ignores it) and fill it in: the join host as the route's custom domain, `CONVEX_SITE_URL` (the deployment's `https://<name>.convex.site` of step 2), `APPLE_TEAM_ID`, the two bundle identifiers, `SUPPORT_ADDRESS`, and `APP_STORE_ID` once the app has one (until then the page names no store and shows no App Clip card).
+2. Generate the secret the Worker and the deployment share, set it on the deployment in step 5 as `WEB_GATEWAY_SECRET`, and give the same value to the Worker: `npx wrangler secret put WEB_GATEWAY_SECRET` from `Backend/worker`.
+   Without it on both sides the Worker shows no event and no picture.
+3. `ALBUM_PART_PICTURES` is how many pictures one part of the album's download holds.
+   The Worker makes two requests of its own for each picture, so keep it under half of the plan's limit on subrequests: 20 on the free plan, up to 400 on a paid one.
+4. The rate limit (`ratelimits` in the file) allows 60 link openings a minute from one address, which is where a Join Code could be guessed at (V2-FR-15, risk RK-V2-10); check its binding's current form against [Cloudflare's rate limiting binding page](https://developers.cloudflare.com/workers/runtime-apis/bindings/rate-limit/).
+5. Deploy from `Backend/worker` with `npx wrangler deploy`, logged in to the operator's Cloudflare account; `wrangler` is not a dependency of the repository.
+6. Check `https://<join host>/.well-known/apple-app-site-association`: JSON, no redirect, naming `<team id>.com.immerse.FilmJournal` under `applinks` and `<team id>.com.immerse.FilmJournal.Clip` under `appclips`.
+   Apple asks that the server allow the `AASA-Bot` and `CFNetwork` user agents; do not put a bot challenge on this path.
+7. The page carries no preview image, because a link previews with the event's title only (V2-FR-15).
+   Apple's page on [invocations from Messages](https://developer.apple.com/documentation/appclip/supporting-invocations-from-your-website-and-the-messages-app) asks for one before a link in Messages opens the App Clip directly; without it the link opens the join page, where the App Clip card shows.
+   Adding a preview image would be the captain's choice, not a setting.
 
 ## 5. The Convex deployment's environment
 
@@ -104,6 +140,12 @@ npx convex env set SUPPORT_REPORT_WEBHOOK_URL https://<the relay's address>
 npx convex env set SUPPORT_REPORT_WEBHOOK_SECRET "$(openssl rand -hex 32)"
 # Optional: everyone's once-ever free Rolls (default 3) and a subscriber's (Stage 4; default 0).
 npx convex env set FREE_ROLLS_EVERYONE 3
+```
+
+Stage 3 adds the secret the join page's Worker proves itself with (step 4a); without it the deployment answers the Worker nothing:
+
+```sh
+npx convex env set WEB_GATEWAY_SECRET "$(openssl rand -base64 48)"
 ```
 
 `JOIN_CODE_SECRET` derives every event's Join Code (`convex/lib/joinCode.ts`); the database keeps only each code's verifier.
@@ -138,7 +180,9 @@ The push checks the schema and type-checks the functions.
 ## 7. The app's configuration on the Mac that builds for the iPhones
 
 1. Copy `App/Immerse/Config/Server.local.xcconfig.example` to `App/Immerse/Config/Server.local.xcconfig` (git ignores it) and fill in `IMMERSE_CONVEX_URL` from step 2 (written `https:/$()/<name>.convex.cloud`, since xcconfig reads `//` as a comment), `IMMERSE_CLERK_PUBLISHABLE_KEY` from step 3, `IMMERSE_JOIN_HOST` from step 4, `IMMERSE_SUPPORT_ADDRESS` (the operator's support address), and `IMMERSE_V2_ENTITLEMENTS = Config/ImmerseV2.entitlements`.
-2. Build the Debug configuration from Xcode to each iPhone.
+2. For the mini-app (Stage 3), add `IMMERSE_APP_GROUP` from step 1a, `IMMERSE_CLIP_ENTITLEMENTS = Config/ImmerseClip.entitlements` and `IMMERSE_V2_WITH_CLIP_ENTITLEMENTS = Config/ImmerseV2WithClip.entitlements`, and build the **ImmerseWithClip** scheme.
+   The App Clip reads the server's address, the join host, the support address and the App Group from the same file; it needs no Clerk key.
+3. Build the Debug configuration from Xcode to each iPhone.
    With the file present, Start a Film offers **Host a Group Film**, Settings shows the Account section once signed in, and Settings > Debug testing shows **Server checks**.
    Without it, the app is exactly the v1 app.
 
@@ -166,6 +210,20 @@ npx convex run measures:lateReveals '{"since": <milliseconds>}'
 
 Section S of `Evidence/NativeApp/manual-validation.md` says when.
 
+## 9. App Store Connect: the App Clip experience (Stage 3)
+
+An App Clip opens from a link or a QR code only once a version of the app that holds it has passed App Review; until then, test iPhones open it through a local experience (manual plan, section J).
+
+1. Upload a build of the **ImmerseWithClip** scheme; App Store Connect then shows the App Clip under the version.
+2. Fill in the **default App Clip experience**: the card's title, subtitle, header image and call to action (Open).
+3. Add one **advanced App Clip experience** with the invocation URL `https://<join host>/j/`.
+   Apple matches invocation URLs by prefix, so this one experience covers every event's link, `https://<join host>/j/<code>`, and passes the whole link to the App Clip.
+   The demo link cannot be used: it carries no parameters, so it could not say which event was scanned (the OC-1 record).
+4. Read the domain's status in the build's App Clip section, which shows whether Apple could validate the association file of step 4a.
+5. Set `APP_STORE_ID` in the Worker's configuration and deploy it again, so the join page shows the App Clip card and the App Store link.
+6. In the review notes, say that the App Clip joins a photo event by its link with a name only, that everything it does the full app does, and that it has no purchase, no sign-in and no advertising (guideline 2.5.16).
+7. App Clips are not offered to an Apple Account of a child under 13 or with Ask to Buy on; those guests install the full app, which the join page tells them.
+
 ## What each value is
 
 | Value | Where it goes | Secret | Comes from |
@@ -175,6 +233,10 @@ Section S of `Evidence/NativeApp/manual-validation.md` says when.
 | `IMMERSE_V2_ENTITLEMENTS` | `Server.local.xcconfig` | No | `Config/ImmerseV2.entitlements` |
 | `IMMERSE_JOIN_HOST` | `Server.local.xcconfig` | No | The operator's domain, step 4 |
 | `IMMERSE_SUPPORT_ADDRESS` | `Server.local.xcconfig` | No (published, still kept out of the repository) | The operator |
+| `IMMERSE_APP_GROUP` | `Server.local.xcconfig` | No | Apple, step 1a |
+| `IMMERSE_CLIP_ENTITLEMENTS`, `IMMERSE_V2_WITH_CLIP_ENTITLEMENTS` | `Server.local.xcconfig` | No | `Config/ImmerseClip.entitlements`, `Config/ImmerseV2WithClip.entitlements` |
+| `WEB_GATEWAY_SECRET` | Convex environment and the Worker's secret | Yes | Generated, steps 4a and 5 |
+| `CONVEX_SITE_URL`, `APPLE_TEAM_ID`, `APP_BUNDLE_ID`, `APP_CLIP_BUNDLE_ID`, `APP_STORE_ID`, `SUPPORT_ADDRESS`, `ALBUM_PART_PICTURES` | `Backend/worker/wrangler.jsonc` | No | Convex, Apple and the operator, step 4a |
 | `JOIN_CODE_SECRET` | Convex environment | Yes | Generated, step 5 |
 | `SUPPORT_REPORT_WEBHOOK_URL` | Convex environment | No | The relay, step 5a |
 | `SUPPORT_REPORT_WEBHOOK_SECRET` | Convex environment and the relay | Yes | Generated, step 5 |

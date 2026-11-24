@@ -48,7 +48,8 @@ struct TestingUnlockNotice: View {
     }
 }
 
-/// The Debug-only switch in Settings.
+#if !APPCLIP
+/// The Debug-only switch in Settings. The mini-app has no Settings.
 struct TestingUnlockSection: View {
     @Bindable var unlock: TestingUnlock
 
@@ -57,4 +58,5 @@ struct TestingUnlockSection: View {
                        note: "Debug builds only. While on, every Camera loads as a subscription Film and this iPhone's Trial is not used. Turn off to test the Trial, locked and plan screens. Films loaded while on stay usable.")
     }
 }
+#endif
 #endif

@@ -28,7 +28,9 @@ class VerifyValidationPartsTests(unittest.TestCase):
         self.write("Backend/package.json", "{}")
         self.copy("App/Immerse/project.yml")
         self.copy("Probes/PopulatedJournalHarness/project.yml")
-        for source in glob.glob(os.path.join(ROOT, "App/Immerse/UITests/*.swift")):
+        sources = glob.glob(os.path.join(ROOT, "App/Immerse/UITests/*.swift")) \
+            + glob.glob(os.path.join(ROOT, "App/Immerse/ClipUITests/*.swift"))
+        for source in sources:
             with open(source) as file:
                 classes = re.findall(r"^.*class \w+ *: *(?:XCTestCase|ScreenTestCase).*$", file.read(), re.M)
             self.write(os.path.relpath(source, ROOT), "\n".join(classes) + "\n")
@@ -118,6 +120,19 @@ class VerifyValidationPartsTests(unittest.TestCase):
         self.assertRegex(result.stdout, r"ui-flows runs.* ArchiveFlowTests")
         self.assertNotIn("ScreenTestCase", result.stdout)
 
+
+    def test_the_mini_app_part_must_have_a_suite_to_run(self):
+        result = self.verify()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertRegex(result.stdout, r"mini-app runs the App Clip's size check and MiniAppUITests")
+        for source in glob.glob(os.path.join(self.tree, "App/Immerse/ClipUITests/*.swift")):
+            os.remove(source)
+        self.assertRefuses("App/Immerse/ClipUITests holds no suite")
+
+    def test_the_mini_apps_test_target_must_be_the_one_the_project_defines(self):
+        self.edit("Scripts/validation-parts.sh", 'mini_app_screen_test_target="ImmerseClipUITests"',
+                  'mini_app_screen_test_target="ImmerseMiniAppUITests"')
+        self.assertRefuses("the app's test target ImmerseClipUITests belongs to no part")
 
     def test_the_backend_must_be_where_validation_runs_it(self):
         os.remove(os.path.join(self.tree, "Backend", "package.json"))

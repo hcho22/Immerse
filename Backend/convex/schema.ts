@@ -2,8 +2,8 @@
 //
 // Stage 1 built Accounts, the guest identity of section 9.2, picture upload records, push tokens and the
 // account-scoped records Delete Account must remove. Stage 2 adds Group Films with their Join Codes, memberships with
-// their Rolls, the viewing copies, reports and the Roll ledger's free credits and set-asides. Purchases and the
-// subscription link are Stage 4's. Nothing here ever holds a personal Film, an original capture, a location, a contact
+// their Rolls, the viewing copies, reports and the Roll ledger's free credits and set-asides. Stage 3 adds only each
+// picture's CRC-32, for the web album's download. Purchases and the subscription link are Stage 4's. Nothing here ever holds a personal Film, an original capture, a location, a contact
 // list, an advertising identifier or anything for analytics.
 //
 // Removal markers (section 8) are kept in place rather than in a table of their own: a withdrawn or removed
@@ -174,7 +174,7 @@ export default defineSchema({
     revealsAt: v.number(),
     joiningPaused: v.boolean(),
     joinCodeGeneration: v.number(),
-    // The view-only web album (V2-FR-47) is Stage 3's; it stays off until then.
+    // The view-only web album (V2-FR-47): off unless the Host switches it on after the reveal (hosting:setWebAlbum).
     webAlbumOn: v.boolean(),
     // The stored state; `lib/phase.ts` derives the current one from the times, so nothing waits on the scheduler.
     state: eventState,
@@ -247,6 +247,8 @@ export default defineSchema({
     // SHA-256 of the file, base64, as the phone computed it and as the upload address requires.
     sha256: v.optional(v.string()),
     storageKey: v.optional(v.string()),
+    // CRC-32 of the file, computed by the server when it confirms the upload, for the web album's download (Stage 3).
+    crc32: v.optional(v.number()),
     // The viewing copy, a smaller JPEG the phone made from the developed picture.
     viewSize: v.optional(v.number()),
     viewSha256: v.optional(v.string()),

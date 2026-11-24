@@ -23,8 +23,11 @@ struct LocalPlace: Codable, Equatable, Identifiable {
     var summary: EventSummary
     /// The signed-in Host hosts it.
     var isHost: Bool
-    /// The place is the phone's guest identity's; otherwise it is the signed-in Account's.
+    /// The place is a guest identity's on this phone; otherwise it is the signed-in Account's.
     var asGuest: Bool
+    /// Which guest identity holds it: the app's own, or the one the mini-app made before the full app was installed
+    /// (V2-FR-19). Nil in what a phone kept before Stage 3, which is the app's own.
+    var guestPublicID: String?
     /// Where this phone's person stands: in it with a Roll, left, removed, or no place (a Host who does not shoot).
     var place: EventPlace
     var rollFilmID: UUID?
@@ -77,6 +80,11 @@ final class GroupFilms {
     /// Where `rolls` keeps its Films.
     let rollsRoot: URL
     private let identities: any GuestIdentityStoring
+    /// The mini-app's guest identity, which the full app can read once it is installed (V2-FR-19), so a guest who joined
+    /// in the mini-app keeps acting as the guest they were. Nil in the mini-app, whose own identity is `identities`.
+    private let miniAppIdentities: (any GuestIdentityStoring)?
+    /// The folder these Group Films are kept in, shared with the mini-app where the build has an App Group.
+    let folder: GroupFilmsFolder
     private let placesURL: URL
     private let uploader: PictureUploader
 
@@ -96,6 +104,9 @@ final class GroupFilms {
     var notice: String?
     private(set) var busy = false
     private var developing: Task<Void, Never>?
+    /// The Rolls' launch recovery, run once when Group Films start, as the personal Journal's is when it opens: until it
+    /// ends every Roll reads as finishing a save, and a save cut off mid-way is carried on.
+    private var recovering: Task<Void, Never>?
     private var uploading: Task<Void, Never>?
     private var developmentFailures: [String: Int] = [:]
     private var pathMonitor: NWPathMonitor?
@@ -103,9 +114,15 @@ final class GroupFilms {
     private var active = true
     /// The Load Film request id, kept until it succeeds so a retried Load Film makes one event (V2-FR-81).
     private var loadRequestID: String?
+    /// The event each opened link named, so joining through it acts as the person who already holds a place there.
+    private var linkEvents: [String: String] = [:]
+    /// The event whose shooting screen opens as soon as its page shows: in the mini-app, a guest who has just taken a Roll
+    /// goes straight to the camera, with only the name and one tap (V2-FR-21).
+    var shootOnArrival: String?
 
-    init(server: EventServer, hosting: HostingSession, rolls: JournalModel, rollsRoot: URL, queue: UploadQueue, root: URL,
-         identities: any GuestIdentityStoring, joinHost: String?, supportAddress: String?, functions: any ServerFunctions) {
+    init(server: EventServer, hosting: HostingSession, rolls: JournalModel, rollsRoot: URL, queue: UploadQueue,
+         folder: GroupFilmsFolder, identities: any GuestIdentityStoring, miniAppIdentities: (any GuestIdentityStoring)? = nil,
+         joinHost: String?, supportAddress: String?, functions: any ServerFunctions) {
         self.server = server
         self.hosting = hosting
         self.rolls = rolls
@@ -114,10 +131,13 @@ final class GroupFilms {
         self.joinHost = joinHost
         self.supportAddress = supportAddress
         self.identities = identities
-        self.placesURL = root.appending(path: "places.json")
+        self.miniAppIdentities = miniAppIdentities
+        self.folder = folder
+        self.placesURL = folder.url.appending(path: "places.json")
         self.uploader = PictureUploader(functions: functions)
         places = (try? JSONDecoder().decode([LocalPlace].self, from: Data(contentsOf: placesURL))) ?? []
         hosting.accountDeleted = { [weak self] in self?.accountDeleted() }
+        recovering = Task { [rolls] in await rolls.recoverAtLaunch() }
     }
 
     // MARK: Places
@@ -146,18 +166,41 @@ final class GroupFilms {
         save()
     }
 
-    private func caller(for place: LocalPlace) throws -> EventCaller {
-        place.asGuest ? .guest(try identities.identity()) : .account
+    /// Every guest identity this phone holds: the app's own and, in the full app, the one the mini-app made.
+    private func heldIdentities() -> [GuestIdentity] {
+        var held: [GuestIdentity] = []
+        for store in [identities, miniAppIdentities] {
+            if let identity = try? store?.read(), !held.contains(identity) { held.append(identity) }
+        }
+        return held
     }
 
-    /// Who joins through a link: the signed-in Account, so the place follows it to any iPhone, or else the phone's guest
-    /// identity. Joining never asks anyone to sign in (V2-FR-02, V2-FR-21).
+    private func caller(for place: LocalPlace) throws -> EventCaller {
+        guard place.asGuest else { return .account }
+        guard let publicID = place.guestPublicID else { return .guest(try identities.identity()) }
+        // A place is only ever acted on as the identity that holds it: a new identity in its stead would be a stranger
+        // to the server, and its waiting pictures could not be sent.
+        guard let identity = heldIdentities().first(where: { $0.publicId == publicID }) else { throw GuestIdentityStoreError.unreadable }
+        return .guest(identity)
+    }
+
+    /// Who joins through a link: the signed-in Account, so the place follows it to any iPhone, or else a guest identity
+    /// this phone already holds (the mini-app's, where the guest began there), or else a new one. Joining never asks
+    /// anyone to sign in (V2-FR-02, V2-FR-21).
     private func joiningCaller() throws -> EventCaller {
-        hosting.isSignedIn ? .account : .guest(try identities.identity())
+        if hosting.isSignedIn { return .account }
+        return .guest(try identities.read() ?? miniAppIdentities?.read() ?? identities.identity())
+    }
+
+    /// Who acts on a link that was opened: the person who already holds a place in its event on this phone, so a guest who
+    /// joined in the mini-app, or before signing in, comes back to their own Roll (V2-FR-19); otherwise whoever joins now.
+    private func caller(forLink code: String) throws -> EventCaller {
+        if let eventID = linkEvents[code], let held = place(eventID), held.place != .none { return try caller(for: held) }
+        return try joiningCaller()
     }
 
     /// Whether this phone holds a guest identity, for Delete Guest Identity in Settings (V2-FR-57).
-    var hasGuestIdentity: Bool { (try? identities.read()) != nil }
+    var hasGuestIdentity: Bool { !heldIdentities().isEmpty }
 
     #if DEBUG
     /// Debug builds only: a place as a screen test's scenario sets it (`DebugGroupFilms`).
@@ -253,6 +296,11 @@ final class GroupFilms {
         await hostAction(eventID) { try await self.server.removePictureAsHost(eventID: eventID, pictureID: pictureID) }
     }
 
+    /// The Host switches the view-only web album on, after the reveal, or off (V2-FR-47).
+    func setWebAlbum(_ eventID: String, _ on: Bool) async {
+        await hostAction(eventID) { try await self.server.setWebAlbum(eventID: eventID, on: on) }
+    }
+
     /// The Host deletes the whole event (V2-FR-55); this phone's own waiting pictures and prints for it go too.
     func deleteEvent(_ eventID: String) async {
         let deleted = await run { try await self.server.deleteEvent(eventID: eventID) }
@@ -282,23 +330,43 @@ final class GroupFilms {
     }
 
     func preview(code: String) async throws(ServerError) -> JoinPreview {
-        let caller: EventCaller
-        do { caller = try joiningCaller() } catch { throw .failed("The guest identity is unavailable") }
-        return try await server.preview(code: code, as: caller)
+        let first: EventCaller
+        do { first = try caller(forLink: code) } catch { throw .failed("The guest identity is unavailable") }
+        let preview = try await server.preview(code: code, as: first)
+        guard let eventID = preview.event?.eventId else { return preview }
+        linkEvents[code] = eventID
+        // The link names an event this phone already holds a place in, as someone else than first asked.
+        if let held = try? caller(forLink: code), held != first { return try await server.preview(code: code, as: held) }
+        return preview
+    }
+
+    /// Opens an event the server says this person is in. Where its place is not on this iPhone, after a reinstall or once
+    /// iOS has cleared the mini-app's data, the server gives it back first: joining again returns the same place.
+    func openAsMember(code: String, eventID: String) async -> Bool {
+        if let held = place(eventID), held.place != .none {
+            joinRequest = nil
+            openEvent = eventID
+            return true
+        }
+        return await join(code: code, guestName: "")
     }
 
     /// Joins, or rejoins, with only a Guest Name (V2-FR-21): the Roll's local Film is made so the guest can shoot offline.
     func join(code: String, guestName: String) async -> Bool {
         await run { [self] in
-            let caller = try joiningCaller()
+            let caller = try caller(forLink: code)
             let joined = try await server.join(code: code, guestName: guestName, as: caller)
             let eventID = joined.event.eventId
+            #if APPCLIP
+            let newcomer = self.place(eventID).map { $0.place == .none } ?? true
+            #endif
             var place = self.place(eventID) ?? LocalPlace(eventID: eventID, summary: joined.event, isHost: false,
                                                            asGuest: caller != .account, place: .joined)
             place.summary = joined.event
             place.place = .joined
             place.guestName = joined.guestName
             place.asGuest = caller != .account
+            if case .guest(let identity) = caller { place.guestPublicID = identity.publicId } else { place.guestPublicID = nil }
             if place.rollFilmID == nil || rolls.film(place.rollFilmID!) == nil {
                 let film = try rolls.loadEventRoll(eventID: eventID, camera: Self.package(for: joined.event.camera),
                                                    title: joined.event.title, filmStock: Self.filmStock(joined.event.filmStock),
@@ -309,6 +377,11 @@ final class GroupFilms {
             places.append(place)
             save()
             joinRequest = nil
+            #if APPCLIP
+            // Having just taken a Roll in the mini-app, the guest goes straight to the camera: from the link to the
+            // shooting screen is the name and one tap (V2-FR-21).
+            if newcomer, joined.event.phase == .open, joined.exposuresUsed < joined.event.exposuresPerRoll { shootOnArrival = eventID }
+            #endif
             openEvent = eventID
             Task { await askForTheAlert(as: caller) }
         }
@@ -403,12 +476,22 @@ final class GroupFilms {
     /// Claim Guest Identity (V2-FR-04): the places of the phone's guest identity move to the signed-in Account, and follow
     /// it to any iPhone it signs in on.
     func claimGuestPlaces() async {
-        guard hosting.isSignedIn, let identity = try? identities.read() else { return }
+        let held = heldIdentities()
+        guard hosting.isSignedIn, !held.isEmpty else { return }
         let done = await run { [self] in
-            let (moved, kept) = try await server.claim(identity)
-            for eventID in moved { update(eventID) { $0.asGuest = false } }
-            if !kept.isEmpty {
-                notice = "Your Account already had a place in \(kept.count == 1 ? "one of these Group Films" : "some of these Group Films"), so both places stay as they were, each with its own Roll."
+            var keptPlaces = 0
+            for identity in held {
+                let (moved, kept) = try await server.claim(identity)
+                for eventID in moved {
+                    update(eventID) {
+                        $0.asGuest = false
+                        $0.guestPublicID = nil
+                    }
+                }
+                keptPlaces += kept.count
+            }
+            if keptPlaces > 0 {
+                notice = "Your Account already had a place in \(keptPlaces == 1 ? "one of these Group Films" : "some of these Group Films"), so both places stay as they were, each with its own Roll."
             }
         }
         if done { await refresh() }
@@ -417,11 +500,13 @@ final class GroupFilms {
     /// Delete Guest Identity (V2-FR-57): every picture of the phone's guest identity goes from every event it joined, its
     /// waiting pictures never upload, and its Instant prints on this phone go too.
     func deleteGuestIdentity() async {
-        guard let identity = try? identities.read() else { return }
-        let done = await run { try await self.server.deleteGuestIdentity(identity) }
+        let held = heldIdentities()
+        guard !held.isEmpty else { return }
+        let done = await run { for identity in held { try await self.server.deleteGuestIdentity(identity) } }
         guard done else { return }
         for place in places where place.asGuest { await forget(place.eventID) }
         try? identities.delete()
+        try? miniAppIdentities?.delete()
         notice = "Your guest identity and its pictures were deleted."
     }
 
@@ -438,6 +523,7 @@ final class GroupFilms {
     /// Learns what changed while the phone was away, for every place: a moved End Time, the reveal, a removal or a
     /// deleted event (V2-FR-31, V2-FR-53, V2-FR-55), and sends what it owes the server.
     func refresh() async {
+        await recovering?.value
         for place in places {
             guard place.asGuest || hosting.isSignedIn else { continue }
             await sync(place.eventID)
@@ -711,12 +797,14 @@ final class GroupFilms {
     }
 
     /// The app left the screen: Development pauses, as v1's does (V2-FR-33), and the queue gets the time iOS allows an
-    /// app that leaves the screen to send what waits (V2-FR-35). The rest goes when the app is next opened.
+    /// app that leaves the screen to send what waits (V2-FR-35). The rest goes when the app is next opened. The mini-app
+    /// gets no such time: an App Clip cannot work in the background, so it sends only while it is open (V2-FR-35).
     func enteredBackground() {
         active = false
         developing?.cancel()
         developing = nil
         timer?.cancel()
+        #if !APPCLIP
         let time = BackgroundTime()
         time.identifier = UIApplication.shared.beginBackgroundTask(withName: "Group Film uploads") {
             MainActor.assumeIsolated { time.end() }
@@ -725,6 +813,7 @@ final class GroupFilms {
             await uploadPass()
             time.end()
         }
+        #endif
     }
 
     // MARK: The alert
@@ -732,6 +821,8 @@ final class GroupFilms {
     /// Asks once to allow notifications, so the reveal's "Your Film is ready" can arrive (V2-FR-70), and registers this
     /// installation's token for the Account or the guest identity. Declining blocks nothing.
     private func askForTheAlert(as caller: EventCaller) async {
+        // The mini-app asks for nothing and gets no alert: its guests come back through the same link (V2-FR-71).
+        #if !APPCLIP
         guard (try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound])) == true else { return }
         guard let token = try? await PushRegistration.shared.register() else { return }
         let installation = HostingSession.installationID()
@@ -743,6 +834,7 @@ final class GroupFilms {
             try? await server.registerGuestPushToken(token, installationID: installation,
                                                      environment: PushRegistration.environment, identity: identity)
         }
+        #endif
     }
 
     /// A tap on "Your Film is ready": the event opens once the server has said the person may still see it (V2-FR-70).
@@ -770,6 +862,7 @@ final class GroupFilms {
     }
 }
 
+#if !APPCLIP
 /// The time iOS gives an app that leaves the screen, ended once, by the work finishing or by iOS.
 @MainActor
 private final class BackgroundTime {
@@ -781,6 +874,7 @@ private final class BackgroundTime {
         identifier = .invalid
     }
 }
+#endif
 
 /// Sends a queued picture through the upload path, with the guest's token for its event, or the Account's session.
 private struct QueueSender: QueuedPictureSending {

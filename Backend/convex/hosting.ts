@@ -1,6 +1,6 @@
-// The Host's side of a Group Film (v2 PRD sections 5.2 to 5.5 and 5.9): Load Film, the event's settings before and
-// after it opens, the Join Code, adding Rolls, ending early, renaming, deleting the event, removing a guest or a
-// picture, and the Host's view of counts, never pictures, before the reveal.
+// The Host's side of a Group Film (v2 PRD sections 5.2 to 5.5, 5.8 and 5.9): Load Film, the event's settings before and
+// after it opens, the Join Code, adding Rolls, ending early, renaming, the web album's switch, deleting the event,
+// removing a guest or a picture, and the Host's view of counts, never pictures, before the reveal.
 //
 // Every function resolves the caller on the server and refuses anyone but the event's Host; a deleted Host's event has
 // none, so nobody can change it (V2-FR-06). Every change can be repeated safely (V2-FR-81): Load Film and adding Rolls
@@ -108,7 +108,16 @@ export const view = query({
     const now = Date.now();
     const summary = await eventSummary(ctx, event, now);
     if (!isLive(summary.phase)) {
-      return { ...summary, joinCode: null, joinCodeGeneration: null, rolls: null, picturesArrived: 0, guests: [], reports: [] };
+      return {
+        ...summary,
+        joinCode: null,
+        joinCodeGeneration: null,
+        rolls: null,
+        picturesArrived: 0,
+        guests: [],
+        reports: [],
+        webAlbum: false,
+      };
     }
     const memberships = await ctx.db
       .query("memberships")
@@ -146,6 +155,8 @@ export const view = query({
       reports: reports
         .filter((report) => report.resolvedAt === undefined)
         .map((report) => ({ reportId: report._id, pictureId: report.pictureId, reason: report.reason, at: report.at })),
+      // The Host's switch as it stands (V2-FR-47); the album shows on the web only once the event has revealed.
+      webAlbum: event.webAlbumOn,
     };
   },
 });
@@ -298,6 +309,21 @@ export const rename = mutation({
     const cleaned = cleanFilmTitle(title);
     if (cleaned !== event.title) await ctx.db.patch(eventId, { title: cleaned });
     return { title: cleaned };
+  },
+});
+
+// Switches the view-only web album on or off (V2-FR-47): on only after the reveal, off at any time, and off takes the
+// pictures off the web at once, since every page and picture the Worker serves asks web.ts first. A deleted Host's
+// event keeps the setting it had, because it has no Host to change it (V2-FR-06).
+export const setWebAlbum = mutation({
+  args: { eventId: v.id("events"), on: v.boolean() },
+  handler: async (ctx, { eventId, on }) => {
+    const { event } = await hostedEvent(ctx, eventId);
+    const phase = phaseOf(event, Date.now());
+    if (!isLive(phase)) refuse("eventGone");
+    if (on && phase !== "revealed") refuse("notRevealed");
+    if (event.webAlbumOn !== on) await ctx.db.patch(eventId, { webAlbumOn: on });
+    return { on };
   },
 });
 

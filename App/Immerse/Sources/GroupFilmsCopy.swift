@@ -100,7 +100,7 @@ enum GroupFilmsCopy {
         }
     }
 
-    static let savedCopiesNote = "A picture saved to Photos is your own copy, outside Immerse. Removing it from the album later cannot recall it."
+    static let savedCopiesNote = "A saved picture is your own copy, outside Immerse. Removing it from the album later cannot recall it."
     static let withdraw = "Every picture you took in this event is removed for good, unseen, including any still waiting on this iPhone. Nobody can bring them back, and no exposures come back. You can keep shooting with what is left of your Roll until shooting ends."
     static let removeMine = "This picture leaves the album for everyone, for good. No exposure comes back. Copies others already saved to Photos cannot be recalled."
     static let removeAsHost = "This picture leaves the album for everyone, for good. Copies members already saved to Photos cannot be recalled."
@@ -110,5 +110,13 @@ enum GroupFilmsCopy {
     static let deleteEvent = "Every picture is removed for everyone, for good, and the link stops working. Copies already saved to Photos cannot be recalled. Rolls nobody took return to your balance."
     static let leave = "You stop shooting in this event, and your Roll stays used. Your pictures stay, and you still see the album after the reveal. While the event is open you can rejoin through its link."
     static let unsignedPlace = "Your place lives on this iPhone only. If you lose or replace it without signing in, your place cannot be recovered. Signing in keeps it on any iPhone."
+    static let webAlbumOn = "Anyone with the event's link can see and save the pictures on the web while this is on, without Immerse. Switching it off takes them off the web at once; copies already saved cannot be recalled."
+    static let webAlbumOff = "Off: the pictures are seen only by the people who joined. Switched on, anyone with the event's link can see and save them on the web, such as guests with an Android phone."
+    /// The mini-app (V2-FR-35, V2-FR-71, open checks OC-6 and OC-10).
+    static let miniAppKeepOpen = "Keep Immerse open until all your pictures are sent, or come back through the same link. This mini-app sends only while it is open, and the pictures wait on this iPhone alone until then."
+    static let miniAppPlace = "Your place lives on this iPhone only, in a mini-app that iOS can clear when it has not been used for a while. Installing Immerse keeps your place, your Roll and any pictures still waiting."
+    static let miniAppInstall = "Get Immerse to be told when a Film is ready, to save a whole album to Photos, and to keep your place."
+    static let miniAppSaveAll = "This mini-app saves one picture at a time, through the share sheet. Get Immerse to save the whole album to Photos."
+    static let miniAppSaveAllOnTheWeb = "This mini-app saves one picture at a time, through the share sheet. To save them all, get Immerse or open the event's link in Safari, where the Host shares the album."
     static let deleteGuestIdentity = "Every picture this iPhone's guest identity took, in every Group Film it joined, is removed for everyone, with any still waiting here. Copies others already saved to Photos cannot be recalled."
 }

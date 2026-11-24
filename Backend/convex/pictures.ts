@@ -18,6 +18,7 @@ import { v } from "convex/values";
 import { internal } from "./_generated/api";
 import type { Doc, Id } from "./_generated/dataModel";
 import { action, internalMutation, internalQuery } from "./_generated/server";
+import { crc32 } from "./lib/crc32";
 import { isBase64Sha256, randomToken, sha256Base64 } from "./lib/crypto";
 import { liveEvent, maySendPictures, membershipOf, resolveCaller } from "./lib/callers";
 import { refusalForPlace } from "./lib/callers";
@@ -206,8 +207,14 @@ export const pictureToConfirm = internalQuery({
 });
 
 export const markStored = internalMutation({
-  args: { pictureId: v.id("pictures"), storageKey: v.string(), viewStorageKey: v.optional(v.string()), sha256: v.string() },
-  handler: async (ctx, { pictureId, storageKey, viewStorageKey, sha256 }): Promise<"stored" | "removed" | "changed"> => {
+  args: {
+    pictureId: v.id("pictures"),
+    storageKey: v.string(),
+    viewStorageKey: v.optional(v.string()),
+    sha256: v.string(),
+    crc32: v.number(),
+  },
+  handler: async (ctx, { pictureId, storageKey, viewStorageKey, sha256, crc32 }): Promise<"stored" | "removed" | "changed"> => {
     const picture = await ctx.db.get(pictureId);
     if (picture === null || picture.state === "removed") {
       // Removed while it was being checked: its objects must go too (section 9.8).
@@ -219,7 +226,7 @@ export const markStored = internalMutation({
     if (picture.state === "stored") return picture.storageKey === storageKey ? "stored" : "changed";
     // Replaced by a different file while this one was being checked.
     if (picture.storageKey !== storageKey || picture.sha256 !== sha256) return "changed";
-    await ctx.db.patch(pictureId, { state: "stored", storedAt: Date.now(), everStored: true });
+    await ctx.db.patch(pictureId, { state: "stored", storedAt: Date.now(), everStored: true, crc32 });
     // The Host's list shows each guest's exposures used (V2-FR-22); a stored picture proves at least this many.
     const membership = await ctx.db.get(picture.membershipId);
     if (membership !== null && membership.exposuresUsed < picture.exposureNumber) {
@@ -251,10 +258,12 @@ export const rejectObject = internalMutation({
   },
 });
 
-async function matches(key: string, size: number, sha256: string): Promise<boolean | null> {
+// Whether the object at a key is what the phone said it sent, with its CRC-32 when it is; null when no object is there.
+async function matches(key: string, size: number, sha256: string): Promise<{ whole: boolean; crc32: number } | null> {
   const object = await readObject(storageConfig(), key);
   if (object === null) return null;
-  return object.size === size && object.bytes.byteLength === size && (await sha256Base64(object.bytes)) === sha256;
+  const whole = object.size === size && object.bytes.byteLength === size && (await sha256Base64(object.bytes)) === sha256;
+  return { whole, crc32: whole ? crc32(object.bytes) : 0 };
 }
 
 // Confirms an upload by the objects' sizes and SHA-256. "stored" means the phone may delete its copy (V2-FR-34).
@@ -269,20 +278,22 @@ export const confirmUpload = action({
     if (picture.storageKey === undefined || picture.size === undefined || picture.sha256 === undefined) {
       return { status: "missing" };
     }
-    const checks = [await matches(picture.storageKey, picture.size, picture.sha256)];
+    const full = await matches(picture.storageKey, picture.size, picture.sha256);
+    const checks = [full];
     if (picture.viewStorageKey !== undefined && picture.viewSize !== undefined && picture.viewSha256 !== undefined) {
       checks.push(await matches(picture.viewStorageKey, picture.viewSize, picture.viewSha256));
     }
-    if (checks.includes(false)) {
+    if (checks.some((check) => check !== null && !check.whole)) {
       await ctx.runMutation(internal.pictures.rejectObject, { pictureId: picture._id, storageKey: picture.storageKey });
       return { status: "mismatch" };
     }
-    if (checks.includes(null)) return { status: "missing" };
+    if (full === null || checks.includes(null)) return { status: "missing" };
     const outcome = await ctx.runMutation(internal.pictures.markStored, {
       pictureId: picture._id,
       storageKey: picture.storageKey,
       viewStorageKey: picture.viewStorageKey,
       sha256: picture.sha256,
+      crc32: full.crc32,
     });
     if (outcome === "removed") refuse("pictureRemoved");
     return { status: outcome === "stored" ? "stored" : "missing" };

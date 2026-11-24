@@ -170,5 +170,8 @@ export async function eventSummary(ctx: QueryCtx, event: Doc<"events">, now: num
     albumEndsAt: albumEndsAt(event),
     albumNotice: albumNotice(event, now),
     joiningPaused: event.joiningPaused,
+    // Whether the album is on the web now (V2-FR-47), which anyone with the link can see for themselves; the mini-app
+    // points a guest there to save more than one picture (open check OC-6).
+    webAlbumOn: phase === "revealed" && event.webAlbumOn,
   };
 }

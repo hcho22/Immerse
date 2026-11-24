@@ -7,7 +7,7 @@ import unittest
 
 from support import ROOT
 
-EVERY = ["packages", "harness", "ui-text", "ui-flows"]
+EVERY = ["packages", "harness", "ui-text", "ui-flows", "mini-app"]
 # The six files of the Markdown-only pull request whose check failed on a dropped touch on 2026-10-13.
 TEST_PLAN_PULL_REQUEST = [
     "AGENTS.md",
@@ -35,7 +35,7 @@ class ValidationScopeTests(unittest.TestCase):
         parts, note = self.scope("pull_request", TEST_PLAN_PULL_REQUEST)
         self.assertEqual(parts, ["packages"])
         self.assertIn("Markdown-only pull request (6 files)", note)
-        self.assertIn("harness, ui-text and ui-flows were skipped", note)
+        self.assertIn("harness, ui-text, ui-flows and mini-app were skipped", note)
         self.assertIn("document checks", note)
 
     def test_one_other_file_in_the_change_runs_everything(self):

@@ -132,10 +132,13 @@ private struct FixtureTrialStore: DeviceTrialStoring {
                     arguments.firstIndex(of: flag).flatMap { arguments.indices.contains($0 + 1) ? URL(fileURLWithPath: arguments[$0 + 1]) : nil }
                 }
                 if movie, arguments.contains("--recorded-sound") {
-                    // `--recorded-sound` saves one ten-second Recorded Clip with Live Audio in place of the two silent
-                    // clips, as a 16mm or Super 8 records with the microphone allowed.
+                    // `--recorded-sound` saves one four-second Recorded Clip with Live Audio in place of the two silent
+                    // clips, as a 16mm or Super 8 records with the microphone allowed. Four seconds develop for about
+                    // 7 s on a Mac, well past the lock `DevelopmentStopWorkflowTests` makes about a second in, and leave
+                    // that test inside its 3-minute allowance on a loaded CI runner, where ten seconds' Development
+                    // resumed ran past two minutes.
                     let clip = fixtures.appendingPathComponent("recorded-clip-with-sound.mov")
-                    try await Self.writeClipWithSound(to: clip, seconds: 10)
+                    try await Self.writeClipWithSound(to: clip, seconds: 4)
                     let recorded = try await VerifiedMedia.movie(at: clip, allowsAudio: true)
                     try model.repository.saveMovieClip(filmID: film.id, sourceData: Data(contentsOf: clip),
                         durationSeconds: recorded.durationSeconds ?? 0, orientation: .landscape)

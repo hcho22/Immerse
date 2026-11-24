@@ -27,8 +27,9 @@ packages:
   Clerk:
     url: https://github.com/clerk/clerk-ios
     exactVersion: 1.7.3
-targets:
-  Immerse:
+# The app's one definition, built as two targets below: the app alone, and the app with the App Clip inside it.
+targetTemplates:
+  ImmerseApp:
     type: application
     platform: iOS
     deploymentTarget: "26.0"
@@ -65,6 +66,75 @@ targets:
         INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription: "Save only the revealed photos or movies you choose to your Photos library."
         INFOPLIST_KEY_UISupportedInterfaceOrientations: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
         TARGETED_DEVICE_FAMILY: 1
+targets:
+  # The app alone: v1, and v2's full app for Stages 1 and 2. Every test builds this one.
+  Immerse:
+    templates: [ImmerseApp]
+  # The same app with the mini-app inside it, as v2 ships once Stage 3 is proved (v2 PRD V2-FR-19). It is a target of
+  # its own so that the app alone, its tests and every v1 build never build, sign or carry the App Clip, which needs an
+  # App ID and a provisioning profile of its own (Backend/SETUP.md, step 1a). It has the same bundle identifier and the
+  # same name on the Home Screen; only its product is named apart, since one project cannot build two products of one
+  # name.
+  ImmerseWithClip:
+    templates: [ImmerseApp]
+    dependencies:
+      - target: ImmerseClip
+        embed: true
+    settings:
+      base:
+        CODE_SIGN_ENTITLEMENTS: $(IMMERSE_V2_WITH_CLIP_ENTITLEMENTS)
+  # The mini-app (v2 PRD V2-FR-19): an App Clip of the full app's own Group Film code, with what a guest needs and no
+  # more. It links no sign-in SDK and none of the full app's Journal, catalog, Settings, subscription or hosting
+  # screens. Apple caps a QR-opened App Clip at 15 MB uncompressed (Scripts/verify-app-clip-size.sh holds it).
+  ImmerseClip:
+    type: application.on-demand-install-capable
+    platform: iOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: Clip
+      - path: Sources
+        excludes:
+          - AccountSettings.swift
+          - CameraCatalogView.swift
+          - CameraSamplesView.swift
+          - ClerkHostSignIn.swift
+          - GroupFilmGate.swift
+          - GroupFilmLoad.swift
+          - HostingSetup.swift
+          - ImmerseApp.swift
+          - JournalView.swift
+          - ServerChecksView.swift
+          - SettingsView.swift
+          - SubscriptionView.swift
+    dependencies:
+      - package: FilmDomain
+      - package: FilmPersistence
+      - package: FilmRuntime
+      - package: RenderCore
+      - package: NativeAdapters
+      - package: EntitlementCore
+      - package: MediaCatalog
+      - package: ImmerseServer
+    configFiles:
+      Debug: Config/Server.xcconfig
+      Release: Config/Server.xcconfig
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.immerse.FilmJournal.Clip
+        INFOPLIST_FILE: Config/ClipInfo.plist
+        CODE_SIGN_ENTITLEMENTS: $(IMMERSE_CLIP_ENTITLEMENTS)
+        DEVELOPMENT_TEAM: QH9S83CX4Y
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: $(inherited) APPCLIP
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Immerse
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_NSCameraUsageDescription: "Capture new photos for the Group Film you joined."
+        INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription: "Save only the revealed pictures you choose to your Photos library."
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+        TARGETED_DEVICE_FAMILY: 1
   ImmerseUITests:
     type: bundle.ui-testing
     platform: iOS
@@ -88,6 +158,21 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.immerse.FilmJournal.Tests
         GENERATE_INFOPLIST_FILE: YES
+  # The mini-app's screen tests, which open it by an event's link as iOS does (`_XCAppClipURL`).
+  ImmerseClipUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: ClipUITests
+      - path: UITests/UITestSupport.swift
+      - path: UITests/AuditExceptions.swift
+    dependencies:
+      - target: ImmerseClip
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.immerse.FilmJournal.ClipUITests
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: $(inherited) APPCLIP
 schemes:
   Immerse:
     build:
@@ -98,3 +183,22 @@ schemes:
     test:
       targets: [ImmerseTests, ImmerseUITests]
       parallelizable: false
+  # The mini-app on its own, as Xcode runs an App Clip: opened by the link in `_XCAppClipURL`.
+  ImmerseClip:
+    build:
+      targets:
+        ImmerseClip: all
+        ImmerseClipUITests: [test]
+    run:
+      environmentVariables:
+        - variable: _XCAppClipURL
+          value: https://join.example.com/j/OpenEventCodeForTests0
+          isEnabled: false
+    test:
+      targets: [ImmerseClipUITests]
+      parallelizable: false
+  # The app with the mini-app inside it: what is archived for TestFlight and the App Store once Stage 3 is proved.
+  ImmerseWithClip:
+    build:
+      targets:
+        ImmerseWithClip: all

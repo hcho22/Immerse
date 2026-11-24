@@ -6,8 +6,8 @@ on:
 permissions:
   contents: read
 jobs:
-  # Which parts this change needs: all four, or the packages part alone for a pull request that changes only
-  # Markdown (Scripts/validation-scope.sh). Every push to main runs all four.
+  # Which parts this change needs: all five, or the packages part alone for a pull request that changes only
+  # Markdown (Scripts/validation-scope.sh). Every push to main runs all five.
   scope:
     runs-on: ubuntu-latest
     timeout-minutes: 5

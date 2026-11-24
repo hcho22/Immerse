@@ -11,6 +11,8 @@
 # photo view's hosted-test probe (`PhotoViewProbe` in App/Immerse/Sources/PhotoView.swift) and v2 Stage 1's stand-in
 # server and Server checks (`DebugHosting.swift`, `ServerChecksView.swift`) and v2 Stage 2's stand-in for the event
 # functions (`DebugGroupFilms.swift`) to Debug.
+# The app alone also carries no App Clip in either configuration (v2 Stage 3): the mini-app is embedded only by the
+# ImmerseWithClip scheme, whose own check is Scripts/verify-app-clip-size.sh.
 set -eu
 cd "$(dirname "$0")/.."
 for configuration in Debug Release; do
@@ -19,6 +21,9 @@ for configuration in Debug Release; do
         -derivedDataPath DerivedData/ValidationDevice CODE_SIGNING_ALLOWED=NO build
     bundle="DerivedData/ValidationDevice/Build/Products/$configuration-iphoneos/Immerse.app"
     test -d "$bundle"
+    if [ -e "$bundle/AppClips" ]; then
+        echo "$configuration bundle of the app alone carries an App Clip" >&2; exit 1
+    fi
     if ! grep -rqaF SubscriptionController "$bundle"; then
         echo "$configuration bundle lacks SubscriptionController; the search cannot be trusted" >&2; exit 1
     fi

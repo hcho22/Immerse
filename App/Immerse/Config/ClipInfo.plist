@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSAppClip</key>
+	<dict>
+		<key>NSAppClipRequestEphemeralUserNotification</key>
+		<false/>
+		<key>NSAppClipRequestLocationConfirmation</key>
+		<false/>
+	</dict>
+	<key>ImmerseConvexURL</key>
+	<string>$(IMMERSE_CONVEX_URL)</string>
+	<key>ImmerseJoinHost</key>
+	<string>$(IMMERSE_JOIN_HOST)</string>
+	<key>ImmerseSupportAddress</key>
+	<string>$(IMMERSE_SUPPORT_ADDRESS)</string>
+	<key>ImmerseAppGroup</key>
+	<string>$(IMMERSE_APP_GROUP)</string>
+</dict>
+</plist>

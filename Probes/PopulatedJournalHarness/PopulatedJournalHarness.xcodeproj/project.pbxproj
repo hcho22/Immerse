@@ -54,6 +54,7 @@
 		B5EA37B2EB0AEC7AABB8CE8E /* RenderCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2D94448032AFF48A1178FC9E /* RenderCore */; };
 		C6556A96E3F0E291328DB321 /* InterfaceOrientationLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D73EB8EC912C8421A93511 /* InterfaceOrientationLock.swift */; };
 		C6F2CDCADD409AF15DE40C44 /* GroupFilmsSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 853CA1CC9E0BD354C5653B22 /* GroupFilmsSetup.swift */; };
+		C7EB09506BCC2B32C9E5D6E9 /* JoinConfirmation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99E4C6989B6AE1672C96C184 /* JoinConfirmation.swift */; };
 		C8033A34AC916AF7899B0A98 /* EntitlementCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7174548584A2CC7E0017F828 /* EntitlementCore */; };
 		C87116CB2198C186B54B3EF1 /* DebugHosting.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA941BB5B334282B275C80A /* DebugHosting.swift */; };
 		C96781489842B2A83AE3C3A8 /* Manrope-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0332F53A63CDEC14E3B7A8E6 /* Manrope-Medium.ttf */; };
@@ -134,6 +135,7 @@
 		9251E9408DC829598DAB183B /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		94DE9234901482AD4CCB70C8 /* RetainedWorkflowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetainedWorkflowTests.swift; sourceTree = "<group>"; };
 		95C860200015FE1137D2E001 /* OFL.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = OFL.txt; sourceTree = "<group>"; };
+		99E4C6989B6AE1672C96C184 /* JoinConfirmation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinConfirmation.swift; sourceTree = "<group>"; };
 		9B34F2940DAEFDE2A09B4462 /* CameraSamplesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSamplesView.swift; sourceTree = "<group>"; };
 		9C07737AFFDECE551D6E1CF8 /* RenderCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RenderCore; path = ../../Packages/RenderCore; sourceTree = SOURCE_ROOT; };
 		A5A7E6F1C67A383D78890C42 /* TestingUnlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingUnlock.swift; sourceTree = "<group>"; };
@@ -301,6 +303,7 @@
 				832C8402D953CC52BEDB3929 /* HostingSession.swift */,
 				DEC0A0DEAB08850170E2424A /* HostingSetup.swift */,
 				35D73EB8EC912C8421A93511 /* InterfaceOrientationLock.swift */,
+				99E4C6989B6AE1672C96C184 /* JoinConfirmation.swift */,
 				8681BF5B8F679782806990D9 /* JournalModel.swift */,
 				3000C80787BFE05052237403 /* JournalView.swift */,
 				9086F51CA1E7770D35C16DE2 /* LowStorage.swift */,
@@ -468,6 +471,7 @@
 				CA3A8B83A659D634406CF6D4 /* HostingSession.swift in Sources */,
 				66A38730719F388229BDAB6A /* HostingSetup.swift in Sources */,
 				C6556A96E3F0E291328DB321 /* InterfaceOrientationLock.swift in Sources */,
+				C7EB09506BCC2B32C9E5D6E9 /* JoinConfirmation.swift in Sources */,
 				E356F161029518C4A53542B1 /* JournalModel.swift in Sources */,
 				F95AF4AD2943063AF813CA3F /* JournalView.swift in Sources */,
 				ADC5301961A81CA4038CEB73 /* LowStorage.swift in Sources */,
