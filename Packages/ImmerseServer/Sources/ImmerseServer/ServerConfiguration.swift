@@ -31,10 +31,10 @@ public struct ServerConfiguration: Equatable, Sendable {
     }
 
     /// The configuration in an Info.plist, or nil when either value is missing, empty or malformed. Only an https address
-    /// is accepted, except a loopback address for a local backend.
+    /// is accepted, except a loopback address for a local backend, and only a publishable key Clerk can decode
+    /// (`clerkPublishableKey(in:)`).
     public init?(infoDictionary: [String: Any]) {
-        guard let key = (infoDictionary[Self.clerkPublishableKeyKey] as? String)?.trimmingCharacters(in: .whitespaces),
-              key.hasPrefix("pk_"), let url = Self.serverURL(in: infoDictionary)
+        guard let key = Self.clerkPublishableKey(in: infoDictionary), let url = Self.serverURL(in: infoDictionary)
         else { return nil }
         self.init(convexURL: url, clerkPublishableKey: key, joinHost: Self.joinHost(in: infoDictionary),
                   supportAddress: Self.supportAddress(in: infoDictionary))
@@ -52,6 +52,31 @@ public struct ServerConfiguration: Equatable, Sendable {
         let loopback = host == "127.0.0.1" || host == "localhost"
         guard url.scheme == "https" || (url.scheme == "http" && loopback) else { return nil }
         return url
+    }
+
+    /// The publishable key, where Clerk can decode it. Clerk's iOS SDK (1.7.3, `ConfigurationManager`) trims the key, takes
+    /// what follows `pk_live_` or `pk_test_`, decodes it from base64url to UTF-8 text and requires that text to be a host
+    /// containing a `.`, with none of `$/?#@:%` or a space in it, followed by one `$`. On any other key its `configure`
+    /// stops a Debug build with an assertion and leaves a Release build's Clerk unconfigured, so such a key counts as
+    /// missing and the app shows nothing of Group Films. This follows Clerk's rule step for step; check it again when
+    /// the clerk-ios version changes.
+    static func clerkPublishableKey(in infoDictionary: [String: Any]) -> String? {
+        guard let key = (infoDictionary[clerkPublishableKeyKey] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines),
+              key.hasPrefix("pk_test_") || key.hasPrefix("pk_live_") else { return nil }
+        // Clerk takes what follows the first `pk_live_` with something after it, anywhere in the key, then the first
+        // `pk_test_` likewise.
+        let encoded = ["pk_live_", "pk_test_"].lazy.compactMap { prefix in
+            key.ranges(of: prefix).map { key[$0.upperBound...] }.first { !$0.isEmpty }
+        }.first
+        guard let encoded else { return nil }
+        var base64 = encoded.replacingOccurrences(of: "-", with: "+").replacingOccurrences(of: "_", with: "/")
+        if base64.count % 4 != 0 { base64 += String(repeating: "=", count: 4 - base64.count % 4) }
+        guard let data = Data(base64Encoded: base64), let decoded = String(data: data, encoding: .utf8),
+              decoded.hasSuffix("$") else { return nil }
+        let host = decoded.dropLast()
+        guard host.allSatisfy({ !"$/?#@:% ".contains($0) }),
+              URL(string: "https://\(host)")?.host()?.contains(".") == true else { return nil }
+        return key
     }
 
     /// A bare host name: letters, digits, dots and hyphens.

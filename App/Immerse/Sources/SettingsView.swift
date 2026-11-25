@@ -9,6 +9,7 @@ struct SettingsView: View {
     @Environment(JournalModel.self) private var model
     @Environment(\.hosting) private var hosting
     @Environment(\.groupFilms) private var groupFilms
+    @Environment(\.rollShop) private var rollShop
 
     var body: some View {
         NavigationStack {
@@ -69,6 +70,12 @@ struct SettingsView: View {
             // area, so a drag beside the Dynamic Island scrolls it.
             .ignoresSafeArea(.container, edges: .horizontal)
             .orbitSheetGround(screen: true)
+            // Here rather than in the Account section, which is absent while signed out: a session Clerk restores after
+            // launch still shows its Account when Settings opens.
+            .task {
+                await hosting?.refresh()
+                await rollShop?.refresh()
+            }
             .navigationTitle("Settings")
             .toolbarTitleDisplayMode(dynamicTypeSize.isAccessibilitySize ? .large : .inlineLarge)
             .toolbar {

@@ -26,6 +26,17 @@ final class HostingUITests: ScreenTestCase {
         XCTAssertTrue(app.staticTexts.containing(NSPredicate(format: "label BEGINSWITH 'No Accounts, sign-in'")).firstMatch.exists)
     }
 
+    func testSignedOutSettingsHasNoAccountHeading() {
+        let app = app(hosting: "signedOut")
+        app.launch()
+        app.buttons["Settings"].tap()
+        XCTAssertTrue(app.navigationBars["Settings"].waitForExistence(timeout: 5))
+        XCTAssertTrue(heading("Privacy", app).exists(within: 5), "Settings' own headings show")
+        XCTAssertFalse(heading("Account", app).exists, "Signed out, Settings has no Account heading with nothing under it")
+        XCTAssertFalse(app.buttons["sign-out"].exists)
+        keep(app, "Settings-signed-out")
+    }
+
     func testPersonalFilmsNeverAskForSignIn() {
         let app = app(hosting: "signedOut")
         app.launch()
@@ -123,8 +134,15 @@ final class HostingUITests: ScreenTestCase {
         XCTAssertFalse(app.staticTexts.containing(NSPredicate(format: "label BEGINSWITH 'No Accounts'")).firstMatch.exists)
         let signOut = app.buttons["sign-out"]
         XCTAssertTrue(signOut.exists(within: 5))
+        XCTAssertTrue(heading("Account", app).exists, "Signed in, the Account has its heading")
         tapWhole(app, signOut)
         XCTAssertTrue(signOut.isGone(within: 5))
+        XCTAssertTrue(heading("Account", app).isGone(within: 5), "Signed out, the Account's heading goes with it")
+    }
+
+    /// A section heading (`OrbitSectionLabel`), drawn in capitals and labeled as written.
+    private func heading(_ label: String, _ app: XCUIApplication) -> XCUIElement {
+        app.staticTexts.matching(NSPredicate(format: "label == %@", label)).firstMatch
     }
 
     private func keep(_ app: XCUIApplication, _ name: String) {
