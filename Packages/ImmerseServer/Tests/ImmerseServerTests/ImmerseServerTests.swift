@@ -4,20 +4,52 @@ import ImmerseServer
 import XCTest
 
 final class ServerConfigurationTests: XCTestCase {
+    /// A made-up publishable key in Clerk's shape: `pk_test_` and the base64 of `clerk.immerse.invalid$`.
+    static let key = "pk_test_Y2xlcmsuaW1tZXJzZS5pbnZhbGlkJA"
+
+    private func configuration(key: String) -> ServerConfiguration? {
+        ServerConfiguration(infoDictionary: ["ImmerseConvexURL": "https://a.convex.cloud", "ImmerseClerkPublishableKey": key])
+    }
+
     func testAbsentOrMalformedConfigurationMeansNoServer() {
         XCTAssertNil(ServerConfiguration(infoDictionary: [:]))
         XCTAssertNil(ServerConfiguration(infoDictionary: ["ImmerseConvexURL": "", "ImmerseClerkPublishableKey": ""]))
         XCTAssertNil(ServerConfiguration(infoDictionary: ["ImmerseConvexURL": "https://a.convex.cloud", "ImmerseClerkPublishableKey": ""]))
         XCTAssertNil(ServerConfiguration(infoDictionary: ["ImmerseConvexURL": "https://a.convex.cloud", "ImmerseClerkPublishableKey": "secret"]))
-        XCTAssertNil(ServerConfiguration(infoDictionary: ["ImmerseConvexURL": "http://a.convex.cloud", "ImmerseClerkPublishableKey": "pk_test_x"]))
+        XCTAssertNil(ServerConfiguration(infoDictionary: ["ImmerseConvexURL": "http://a.convex.cloud", "ImmerseClerkPublishableKey": Self.key]))
         // An unexpanded build setting, as a build without the local configuration file leaves it.
         XCTAssertNil(ServerConfiguration(infoDictionary: ["ImmerseConvexURL": "$(IMMERSE_CONVEX_URL)", "ImmerseClerkPublishableKey": "$(IMMERSE_CLERK_PUBLISHABLE_KEY)"]))
     }
 
     func testAnHTTPSDeploymentOrALocalBackendIsAccepted() {
-        let cloud = ServerConfiguration(infoDictionary: ["ImmerseConvexURL": "https://a.convex.cloud", "ImmerseClerkPublishableKey": "pk_test_x"])
+        let cloud = configuration(key: Self.key)
         XCTAssertEqual(cloud?.convexURL.absoluteString, "https://a.convex.cloud")
-        XCTAssertNotNil(ServerConfiguration(infoDictionary: ["ImmerseConvexURL": "http://127.0.0.1:3210", "ImmerseClerkPublishableKey": "pk_test_x"]))
+        XCTAssertNotNil(ServerConfiguration(infoDictionary: ["ImmerseConvexURL": "http://127.0.0.1:3210", "ImmerseClerkPublishableKey": Self.key]))
+    }
+
+    /// Clerk decodes the key after `pk_test_` or `pk_live_` from base64 to a host with a `.` followed by one `$`, and stops
+    /// a Debug build with an assertion on a key it cannot decode (clerk-ios 1.7.3, `ConfigurationManager`).
+    func testAPublishableKeyClerkCanDecodeIsAccepted() {
+        XCTAssertEqual(configuration(key: Self.key)?.clerkPublishableKey, Self.key)
+        // Padded base64, a live key, and the newline a configuration file can leave, which Clerk trims too.
+        XCTAssertNotNil(configuration(key: "pk_test_Y2xlcmsuaW1tZXJzZS5pbnZhbGlkJA=="))
+        XCTAssertNotNil(configuration(key: "pk_live_Y2xlcmsuaW1tZXJzZS5pbnZhbGlkJA"))
+        XCTAssertEqual(configuration(key: " \(Self.key)\n")?.clerkPublishableKey, Self.key)
+    }
+
+    func testAPublishableKeyClerkCannotDecodeMeansNoServer() {
+        let keys = [
+            "pk_test_xxx", // not base64 of a host
+            "pk_test_REPLACE_ME", // the example configuration file's placeholder
+            "pk_test_bG9jYWxob3N0JA", // localhost$: a host with no "."
+            "pk_test_Y2xlcmsuaW1tZXJzZS5pbnZhbGlk", // clerk.immerse.invalid: no "$" after the host
+            "pk_test_Y2xlcmsuaW1tZXJzZS5pbnZhbGlkJCQ", // clerk.immerse.invalid$$: more than one "$"
+            "pk_test_Y2xlcmsuaW1tZXJzZS5pbnZhbGlkL3BhdGgk", // clerk.immerse.invalid/path$: more than a host
+            "pk_test_Y2xlcmsuaW1tZXJzZS5pbnZhbGlkJA!!", // not base64
+            "pk_test_", // nothing to decode
+            "pk_other_Y2xlcmsuaW1tZXJzZS5pbnZhbGlkJA", // neither a test nor a live key
+        ]
+        for key in keys { XCTAssertNil(configuration(key: key), key) }
     }
 }
 

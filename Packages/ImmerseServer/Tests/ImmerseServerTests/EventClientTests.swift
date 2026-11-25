@@ -156,7 +156,7 @@ final class JoinLinkTests: XCTestCase {
     }
 
     func testTheJoinHostAndSupportAddressAreOptionalConfiguration() {
-        let base: [String: Any] = ["ImmerseConvexURL": "https://a.convex.cloud", "ImmerseClerkPublishableKey": "pk_test_x"]
+        let base: [String: Any] = ["ImmerseConvexURL": "https://a.convex.cloud", "ImmerseClerkPublishableKey": ServerConfigurationTests.key]
         XCTAssertNil(ServerConfiguration(infoDictionary: base)?.joinHost)
         var full = base
         full["ImmerseJoinHost"] = "Join.Example"
